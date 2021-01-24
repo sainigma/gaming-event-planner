@@ -14,8 +14,11 @@ Websovellus peli-iltojen suunnitteluun. Sovelluksella voi sopia ryhmien kesken p
 
 ## Perustoiminnallisuudet
 
+- Käyttäjien luonti, kirjautuminen, keksillä kirjautuminen
+- Käyttäjäryhmät, ryhmäoikeudet
+- Käyttäjärelaatiot
+- Tapahtumat voivat olla ryhmäkohtaisia tai julkisia
 - Tapahtumat ovat aktiivisia rajallisen aikaa
-- Tapahtumalla on useita näkyvyysasetuksia (kaverit, kaverien kaverit, julkinen)
 - Tapahtumaan voi liittyä viestiketju
     - Viestien replyhaarautuminen
 - Tapahtumia voi suunnitella joko peli- tai käyttäjävetoisesti
