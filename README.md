@@ -12,6 +12,15 @@
 
 Websovellus peli-iltojen suunnitteluun. Sovelluksella voi sopia ryhmien kesken peliaikoja ja valita pelattavia pelejä.
 
+## Asennus
+
+Lataa repositorio, anna asennuss/ajoskriptalle ajo-oikeudet ja aja se:
+
+    git clone https://github.com/sainigma/tsoha-harjoitustyo.git
+    chmod +x ./tsoha-harjoitustyo/backend/run.sh
+    ./tsoha-harjoitustyo/backend/run.sh
+
+
 ## Perustoiminnallisuudet
 
 - Käyttäjien luonti, kirjautuminen, keksillä kirjautuminen
