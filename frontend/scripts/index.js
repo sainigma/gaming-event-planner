@@ -1,10 +1,20 @@
+import Login from '/scripts/login.js'
+import Services from '/scripts/services.js'
+
 let container, sites, currentSite
 
 const init = () => {
+    const login = new Login()
+    const services = new Services()
+    window.login = login
+    window.services = services
+    
+    window.loadSite = loadSite
+
     const siteList = ['frontpage', 'login']
     
     container = document.getElementById("container")
-    container.innerHTML ="js works"
+    container.innerHTML = ""
 
     console.log(siteList)
     sites = new Map()
@@ -15,18 +25,14 @@ const init = () => {
     loadSite('frontpage')
 }
 
-const getSite = (label) => {
-    let xhr = new XMLHttpRequest()
-    xhr.open('GET', `./pages/${label}.html?${Date.now()}`)
-    xhr.onload = (res) => {
-        const div = document.createElement('div')
-        div.id = label
-        div.innerHTML = res.target.response
-        sites.set(label, {content:div, ready:true})
-        container.appendChild(div)
-        loadSite(label)
-    }
-    xhr.send()
+const getSite = async (label) => {
+    const response = await services.get(`./pages/${label}.html?${Date.now()}`)
+    const div = document.createElement('div')
+    div.id = label
+    sites.set(label, {content:div, ready:true})
+    container.appendChild(div)
+    div.innerHTML = response.target.response
+    loadSite(label)
 }
 
 function loadSite(label) {

@@ -1,0 +1,20 @@
+{
+    "users":[
+        {
+            "username":"Alice",
+            "password":"salasana"
+        },
+        {
+            "username":"Bob",
+            "password":"salasanavaarinpain"
+        }
+    ],
+    "games":[
+        {
+            "giantbomb":"3030-3874"
+        },
+        {
+            "giantbomb":"3030-17448"
+        }
+    ]
+}

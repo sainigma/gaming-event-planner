@@ -1,1 +1,5 @@
-salasana:
+<label for="loginusername">Username</label>
+<input id="loginusername" oninput="login.setUsername(this.value)" type="text"></br>
+<label for="loginpassword">Password</label>
+<input id="loginpassword" oninput="login.setPassword(this.value)" type="password"></br>
+<button id="inputsubmit" type="button" onclick="login.login()">Login</button>
