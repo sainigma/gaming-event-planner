@@ -9,7 +9,7 @@ class SQLiteGateway(GatewayInterface):
             'uuid':'int',
             'timestamp':'date'
         }
-        self.connection = sqlite3.connect('./dummy.db')
+        self.connection = sqlite3.connect('./dummy.db', check_same_thread=False)
         self.cursor = self.connection.cursor()
         self.populate()
         #self.connection.close()
@@ -20,7 +20,10 @@ class SQLiteGateway(GatewayInterface):
         return type
 
     def executeQuery(self, query):
-        self.cursor.execute(query)
+        cursor = self.connection.cursor()
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        return rows
 
     def verify(self, username, password):
         # Kirjautuminen

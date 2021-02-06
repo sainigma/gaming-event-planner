@@ -19,6 +19,7 @@ function _init {
   pip3 install python-dotenv
   pip3 install igdb-api-v4
   pip3 install requests
+  pip3 install pyjwt
   deactivate
 }
 

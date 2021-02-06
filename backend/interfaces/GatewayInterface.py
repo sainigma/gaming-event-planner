@@ -1,10 +1,11 @@
-import hashlib, uuid, json
+import hashlib, uuid, json, os, time, jwt
 
 class GatewayInterface:
     def __init__(self, gameDB):
         self.entryTypes = {
-            'users':self.newUser
+            'users':self.newUserQuery
         }
+        self.secret = os.getenv("SECRET")
         self.gameDB = gameDB
         self.loadStructure()
         self.loadDummy()
@@ -24,10 +25,12 @@ class GatewayInterface:
         query += ' );'
         return query
 
-    def newUser(self, entry):
-        # TODO testaa ensin onko käyttäjä olemassa
+    def newUserQuery(self, entry):
         hashedPassword = self.hash(entry['password'])
         return 'insert into users (username, auth) values ("' + entry['username'] + '", "' + hashedPassword + '");'
+
+    def newTokenQuery(self, token, timeout):
+        return 'insert into verifications (bearer, timeout) values ("' + token + '", ' + str(timeout) + ');'
 
     def createEntryQuery(self, table, entry):
         if (table in self.entryTypes):
@@ -76,6 +79,21 @@ class GatewayInterface:
         # Muutoin -1
         pass
 
+    def createToken(self, username):
+        expires = int(time.time() + 3600 * 24 * 30)
+        payload = {"username":username, "expires":expires}
+        token = jwt.encode(payload, self.secret, algorithm="HS256")
+        query = self.newTokenQuery(token, expires)
+        self.executeQuery(query)
+        return token
+
+    def getHashedPassword(self, username):
+        query = 'select auth from users where username = "' + username + '"'
+        result = self.executeQuery(query)
+        if (len(result) == 0):
+            return None
+        return result[0][0]
+
     def hashWithSalt(self, target, salt):
         return hashlib.sha256(salt.encode() + target.encode()).hexdigest() + ':' + salt
     
@@ -85,4 +103,8 @@ class GatewayInterface:
 
     def login(self, username, password):
         hashedPassword, salt = self.getHashedPassword(username).split(':')
-        return hashedPassword == self.hashWithSalt(password, salt)
+        testPassword = self.hashWithSalt(password, salt).split(':')[0]
+        if (hashedPassword == testPassword):
+            token = self.createToken(username)
+            return token
+        return None

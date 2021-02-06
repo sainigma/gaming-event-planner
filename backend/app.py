@@ -10,8 +10,9 @@ gateway = SQLiteGateway(gameDB)
 
 def tryLogin(username, password):
     if (len(username) < 3 or len(username) < 3):
-        return -1
-    return 'afdsjlkasjfldsaf'
+        return None
+    token = gateway.login(username, password)
+    return token
 
 app = Flask(__name__, static_url_path="", static_folder="./../frontend/")
 
@@ -30,9 +31,9 @@ def login():
     req = request.json
 
     if ("username" in req and "password" in req):
-        verification = tryLogin(req["username"], req["password"])
-        if (verification != -1):
-            result = "{'verification':'adfsklhjadsfkj'}"
+        token = tryLogin(req["username"], req["password"])
+        if (token != None):
+            result = "{'bearer':'" + token + "'}"
             return Response(result, status = 200, mimetype='application/json')
         return Response("", status = 401)
     return Response("", status = 400)
