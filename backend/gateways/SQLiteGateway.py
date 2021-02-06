@@ -5,16 +5,22 @@ from interfaces.GatewayInterface import GatewayInterface
 class SQLiteGateway(GatewayInterface):
 
     def initialize(self):
-        exists = -1
-        if (os.path.isfile('dummy.db')):
-            exists = 1
-        connection = sqlite3.connect('./dummy.db')
-        self.populate(connection)
-        connection.close()
-        pass
+        self.enumValues = {
+            'uuid':'int',
+            'timestamp':'date'
+        }
+        self.connection = sqlite3.connect('./dummy.db')
+        self.cursor = self.connection.cursor()
+        self.populate()
+        #self.connection.close()
 
-    def populate(self, connection):
-        pass
+    def enumerate(self, type):
+        if type in self.enumValues:
+            return self.enumValues[type]
+        return type
+
+    def executeQuery(self, query):
+        self.cursor.execute(query)
 
     def verify(self, username, password):
         # Kirjautuminen

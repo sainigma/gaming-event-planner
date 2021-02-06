@@ -1,7 +1,12 @@
 from flask import Flask, render_template, request, jsonify, Response
 from gateways.SQLiteGateway import SQLiteGateway
+from controllers.GameDBController import GameDBController
+from dotenv import load_dotenv
 
-gateway = SQLiteGateway()
+load_dotenv()
+gameDB = GameDBController()
+gateway = SQLiteGateway(gameDB)
+
 
 def tryLogin(username, password):
     if (len(username) < 3 or len(username) < 3):
@@ -32,4 +37,5 @@ def login():
         return Response("", status = 401)
     return Response("", status = 400)
 
-app.run(debug=True)
+if (__name__ == "__main__" ):
+    app.run(debug=True)

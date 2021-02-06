@@ -1,3 +1,5 @@
 venv/
 __pycache__/
 dummy.db
+dummy.db-journal
+.env

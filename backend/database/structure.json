@@ -2,11 +2,11 @@
     "tables":{
         "users":{
             "id":"uuid",
-            "username":"string",
-            "auth":"string"
+            "username":"text",
+            "auth":"text"
         },
         "verifications":{
-            "bearer":"string",
+            "bearer":"text",
             "timeout":"timestamp"
         },
         "userrelations":{
@@ -18,37 +18,37 @@
             "id":"uuid",
             "root":"uuid",
             "user":"uuid",
-            "content":"string",
+            "content":"text",
             "time":"timestamp"
         },
         "games":{
             "id":"uuid",
-            "name":"string",
-            "giantbomb":"string"
+            "name":"text",
+            "igdb":"text"
         },
         "gamepreferences":{
             "user":"uuid",
             "game":"uuid",
             "rating":"int"
         },
-        "groups":{
+        "usergroups":{
             "id":"uuid",
-            "name":"string"
+            "name":"text"
         },
-        "groupregister":{
+        "usergroupregister":{
             "id":"uuid",
             "inviter":"uuid",
-            "group":"uuid",
+            "usergroup":"uuid",
             "rights":"int",
-            "verified":"bool",
-            "accepted":"bool"
+            "verified":"boolean",
+            "accepted":"boolean"
         },
         "events":{
             "id":"uuid",
             "owner":"uuid",
-            "group":"uuid",
-            "name":"string",
-            "description":"string",
+            "usergroup":"uuid",
+            "name":"text",
+            "description":"text",
             "created":"timestamp",
             "timeout":"timestamp",
             "optupper":"int",
