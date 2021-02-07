@@ -33,7 +33,7 @@ def login():
     if ("username" in req and "password" in req):
         token = tryLogin(req["username"], req["password"])
         if (token != None):
-            result = "{'bearer':'" + token + "'}"
+            result = '{"bearer":"' + token + '"}'
             return Response(result, status = 200, mimetype='application/json')
         return Response("", status = 401)
     return Response("", status = 400)

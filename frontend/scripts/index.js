@@ -1,17 +1,16 @@
 import Login from '/scripts/login.js'
 import Services from '/scripts/services.js'
 
-let container, sites, currentSite
+let container, sites, currentSite, history
 
 const init = () => {
-    const login = new Login()
     const services = new Services()
-    window.login = login
-    window.services = services
     
-    window.loadSite = loadSite
-
+    window.services = services
+    window.toggleSite = toggleSite
+    
     const siteList = ['frontpage', 'login']
+    history = []
     
     container = document.getElementById("container")
     container.innerHTML = ""
@@ -20,9 +19,12 @@ const init = () => {
     sites = new Map()
     for (let i in siteList) {
         const site = siteList[i]
-        sites.set(site, {content:null, ready:false})        
+        sites.set(site, {content:null, ready:false, visible:false})        
     }
-    loadSite('frontpage')
+    const login = new Login()
+    window.login = login
+    
+    toggleSite('frontpage')
 }
 
 const getSite = async (label) => {
@@ -32,20 +34,17 @@ const getSite = async (label) => {
     sites.set(label, {content:div, ready:true})
     container.appendChild(div)
     div.innerHTML = response.target.response
-    loadSite(label)
+    toggleSite(label)
 }
 
-function loadSite(label) {
+function toggleSite(label) {
     let site = sites.get(label)
     if (!site.ready) {
         console.log(`loading ${label}..`)
         getSite(label)
     } else {
-        if (currentSite) {
-            currentSite.style.display = 'none'
-        }
-        site.content.style.display = 'block'
-        currentSite = site.content
+        site.visible = !site.visible
+        site.content.style.display = site.visible ? 'block' : 'none'
     }
 }
 

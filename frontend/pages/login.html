@@ -1,5 +1,7 @@
-<label for="loginusername">Username</label>
-<input id="loginusername" oninput="login.setUsername(this.value)" type="text"></br>
-<label for="loginpassword">Password</label>
-<input id="loginpassword" oninput="login.setPassword(this.value)" type="password"></br>
-<button id="inputsubmit" type="button" onclick="login.login()">Login</button>
+<div id="loginprompt">
+    <form onsubmit="return false;">
+        <label class="loginlabel" for="username">Username </label><input class="loginfield" id="username" type="text" name="username" /></br>
+        <label class="loginlabel" for="password">Password </label><input class="loginfield" id="password" type="password" name="password" /></br>
+        <label class="loginlabel"></label><button class="loginfield" id="loginsubmit" type="submit" onclick="login.login()">Login</button>
+    </form>
+</div>

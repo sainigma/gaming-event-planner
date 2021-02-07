@@ -23,3 +23,11 @@ class User(QueryInterface):
             self.executeQuery(tokenQuery)
             return token
         return None
+
+    def verify(self, username, bearer):
+        token = bearer # poista bearerosuus
+        query = 'select timeout from verifications where bearer = "' + token + '"'
+        result = self.executeQuery(query)
+        if (len(result) == 0):
+            return None
+        # prosessoi
