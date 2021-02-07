@@ -1,7 +1,7 @@
 import Login from '/scripts/login.js'
 import Services from '/scripts/services.js'
 
-let container, sites, currentSite, history
+let container, sites
 
 const init = () => {
     const services = new Services()
@@ -10,8 +10,7 @@ const init = () => {
     window.toggleSite = toggleSite
     
     const siteList = ['frontpage', 'login']
-    history = []
-    
+
     container = document.getElementById("container")
     container.innerHTML = ""
 

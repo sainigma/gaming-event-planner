@@ -16,6 +16,12 @@
 
 Websovellus peli-iltojen suunnitteluun. Sovelluksella voi sopia ryhmien kesken peliaikoja ja valita pelattavia pelejä.
 
+### Sovelluksen nykytilanne
+
+Sovelluksessa pystyy tällä hetkellä kirjautumaan sisään- ja ulos. Tähänastinen kehitystyö on keskittynyt enimmäkseen rakenteen kehittämiseen. Testailua varten käyttäjä/salasanakombinaation voi tarkastaa [täältä](./backend/database/dummy.json).
+
+Sovellusta voi testata [täällä](https://gaming-event-planner.herokuapp.com/).
+
 ## Asennus
 
 ### Asennus ja ajo lokaalisti
@@ -25,7 +31,7 @@ Lataa repositorio ja siirry sen juureen
     git clone https://github.com/sainigma/gaming-event-planner.git
     cd gaming-event-planner/
 
-Luo ja säädä .env tiedosto, joka sijaitsee polussa /gaming-event-planner/backend/:in juuressa. [Ohjeet IGDB authin hakemiseen](https://api-docs.igdb.com/#about).
+Luo ja säädä .env tiedosto, joka sijaitsee polussa /gaming-event-planner/backend/:in juuressa. Sovelluksen ajaminen vaatii todennuksen Internet Games Databasen rajapintaan. [Ohjeet IGDB authin hakemiseen](https://api-docs.igdb.com/#about).
 
     echo SECRET=salasanaTähän >> ./backend/.env
     echo IGDBID=IGDBidTähän >> ./backend/.env
@@ -33,7 +39,8 @@ Luo ja säädä .env tiedosto, joka sijaitsee polussa /gaming-event-planner/back
 
 Anna ajoskriptalle ajo-oikeudet ja aja se:
 
-    chmod +x ./gaming-event-planner/backend/run.sh
+    chmod +x ./backend/run.sh
+    ./backend/run.sh
 
 ### Asennus ja ajo Herokussa
 

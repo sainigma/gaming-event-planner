@@ -41,6 +41,7 @@ def login():
     req = request.json
 
     if ("username" in req and "password" in req):
+        # Muista sanitointi
         token = tryLogin(req["username"], req["password"])
         if (token != None):
             result = '{"bearer":"' + token + '"}'
