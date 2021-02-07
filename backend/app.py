@@ -1,7 +1,12 @@
+import os
 from flask import Flask, render_template, request, jsonify, Response
 from gateways.SQLiteGateway import SQLiteGateway
 from controllers.GameDBController import GameDBController
 from dotenv import load_dotenv
+
+# for running on venv
+if (os.path.basename(os.getcwd()) == 'backend'):
+    os.chdir('./..')
 
 load_dotenv()
 gameDB = GameDBController()
@@ -13,11 +18,11 @@ def tryLogin(username, password):
     token = gateway.login(username, password)
     return token
 
-app = Flask(__name__, static_url_path="", static_folder="./../frontend/")
+app = Flask(__name__, static_url_path = "/", static_folder = "./../frontend/")
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("/index.html")
 
 # TODO routet
 # /api/vote

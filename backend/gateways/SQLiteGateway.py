@@ -10,9 +10,7 @@ class SQLiteGateway(AbstractGateway):
             'int':'integer',
             'timestamp':'date'
         }
-        self.connection = sqlite3.connect('./dummy.db', check_same_thread=False)
-        self.cursor = self.connection.cursor()
-        #self.connection.close()
+        self.debug = os.getenv('DEBUG')
 
     def enumerate(self, type):
         if type in self.enumValues:
@@ -20,11 +18,15 @@ class SQLiteGateway(AbstractGateway):
         return type
 
     def executeQuery(self, query):
-        print(query)
-        cursor = self.connection.cursor()
-        cursor.execute(query)
-        rows = cursor.fetchall()
-        return rows
+        if (self.debug):
+            print(query)
+        with sqlite3.connect('./backend/dummy.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            conn.commit()
+            return rows
+        return None
 
     def verify(self, username, password):
         # Kirjautuminen

@@ -1,4 +1,4 @@
-import json
+import json, os
 class Populator:
     def __init__(self, parent):
         self.enumerate = parent.enumerate
@@ -9,13 +9,14 @@ class Populator:
             'userrelations':self.newRelation
         }
 
-    def loadStructure(self):
-        with open('database/structure.json') as structure:
-            return json.load(structure)
-
-    def loadDummy(self):
-        with open('database/dummy.json') as dummy:
-            return json.load(dummy)
+    def loadJson(self, filepath):
+        fullpath = os.getcwd() + '/backend/' + filepath
+        if (os.path.exists(fullpath)):
+            with open(fullpath) as jsonfile:
+                return json.load(jsonfile)
+        else:
+            print(filepath + ' not found')
+        return None
 
     def newUser(self, entry):
         username = entry['username']
@@ -29,9 +30,13 @@ class Populator:
         self.parent.newRelation(user, target, relationType)
 
     def populate(self):
-        self.structure = self.loadStructure()
-        self.dummy = self.loadDummy()
+        print('populoin')
+        self.structure = self.loadJson('database/structure.json')
+        self.dummy = self.loadJson('database/dummy.json')
         
+        if (self.structure == None or self.dummy == None):
+            return None
+
         for table in self.structure['tables'].keys():
             self.createTable(table)
         for table in self.dummy.keys():
@@ -42,7 +47,7 @@ class Populator:
     def createTable(self, key):
         table = self.structure['tables'][key]
         idtype = 'id ' + self.enumerate(table['id']) + ' primary key' if 'id' in table else 'id ' + self.enumerate('int') + ' primary key' + ' autoincrement'
-        query = 'create table ' + key + ' ( ' + idtype
+        query = 'create table if not exists ' + key + ' ( ' + idtype
         for field in table.keys():
             if (field != "id"):
                 fiedltType = self.enumerate(table[field])

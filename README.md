@@ -4,9 +4,13 @@
 
 - [Sisällysluettelo](#sisällysluettelo)
     - [Kuvaus](#kuvaus)
-    - [Perustoiminnallisuudet](#perustoiminnallisuudet)
-    - [Taulut](#taulut)
-    - [Jatkokehitys](#jatkokehitys)
+    - [Asennus](#asennus)
+        - [Asennus ja ajo lokaalisti](#asennus-ja-ajo-lokaalisti)
+        - [Asennus ja ajo Herokussa](#asennus-ja-ajo-herokussa)
+    - [Dokumentaatio](#dokumentaatio)
+        - [Perustoiminnallisuudet](#perustoiminnallisuudet)
+        - [Taulut](#taulut)
+        - [Jatkokehitys](#jatkokehitys)
 
 ## Kuvaus
 
@@ -14,14 +18,45 @@ Websovellus peli-iltojen suunnitteluun. Sovelluksella voi sopia ryhmien kesken p
 
 ## Asennus
 
-Lataa repositorio, anna asennuss/ajoskriptalle ajo-oikeudet ja aja se:
+### Asennus ja ajo lokaalisti
 
-    git clone https://github.com/sainigma/tsoha-harjoitustyo.git
-    chmod +x ./tsoha-harjoitustyo/backend/run.sh
-    ./tsoha-harjoitustyo/backend/run.sh
+Lataa repositorio ja siirry sen juureen
 
+    git clone https://github.com/sainigma/gaming-event-planner.git
+    cd gaming-event-planner/
 
-## Perustoiminnallisuudet
+Luo ja säädä .env tiedosto, joka sijaitsee polussa /gaming-event-planner/backend/:in juuressa. [Ohjeet IGDB authin hakemiseen](https://api-docs.igdb.com/#about).
+
+    echo SECRET=salasanaTähän >> ./backend/.env
+    echo IGDBID=IGDBidTähän >> ./backend/.env
+    echo IGDBKEY=IGDBavainTähän >> ./backend/.env
+
+Anna ajoskriptalle ajo-oikeudet ja aja se:
+
+    chmod +x ./gaming-event-planner/backend/run.sh
+
+### Asennus ja ajo Herokussa
+
+Lataa repositorio, mene sen juureen, luo sille herokuappi ja liitä sen remote projektiin:
+
+    git clone https://github.com/sainigma/gaming-event-planner.git
+    cd gaming-event-planner/
+    heroku create apps:create sovelluksennimi
+    heroku git:remote -a sovelluksennimi
+
+Määritä ympäristömuuttujat:
+
+    heroku config:set SECRET=salasanatähän
+    heroku config:set IGDBID=idtähän
+    heroku config:set IGDBKEY=avaintähän
+
+Pushaa projekti herokuun:
+
+    git push heroku HEAD:master    
+
+## Dokumentaatio
+
+### Perustoiminnallisuudet
 
 - Käyttäjien luonti, kirjautuminen, keksillä kirjautuminen
 - Käyttäjäryhmät, ryhmäoikeudet
@@ -43,7 +78,7 @@ Lataa repositorio, anna asennuss/ajoskriptalle ajo-oikeudet ja aja se:
     - Peliajasta äänestys
     - Tapahtuman epäaktivoituminen ja arkistointi (joko manuaalisesti tai ajan perusteella)
 
-## Taulut
+### Taulut
 
 - Käyttäjät
     - id
@@ -142,6 +177,6 @@ Jäsenyys vaatii kutsujan ja kuittauksen. Jos käyttäjä hakee ryhmän jäsenyy
     - kanavan nimi
     - tapahtuman id
 
-## Jatkokehitys
+### Jatkokehitys
 
 Web-käyttöliittymän tueksi discord-botti, jolla voi päivittää kanaville/käyttäjille tapahtumasuunnittelun ja äänestyksien etenemistä.

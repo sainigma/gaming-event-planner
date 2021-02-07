@@ -20,11 +20,14 @@ function _init {
   pip3 install igdb-api-v4
   pip3 install requests
   pip3 install pyjwt
+  pip3 install gunicorn
+  pip3 freeze > ./../requirements.txt
   deactivate
 }
 
 function _clean {
   rm ./dummy.db
+  rm ./../dummy.db
 }
 
 function _start {

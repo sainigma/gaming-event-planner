@@ -7,16 +7,15 @@ class GameDBController():
         self.id = os.getenv("IGDBID")
         self.key = os.getenv("IGDBKEY")
         self.token = os.getenv("IGDBTOKEN")
-        self.timeout = int(os.getenv("IGDBTIMEOUT"))
+        self.timeout = None
         self.active = False
-
-        if (self.token != None):
+        
+        self.token = self.getAccessToken()
+        if (self.token == None):
+            print("IGDB Connection failed")
+        else:
             self.wrapper = IGDBWrapper(self.id, self.token)
             self.active = True
-        else:
-            self.token = self.getAccessToken()
-            if (self.token == None):
-                print("IGDB Connection failed")
         #print(self.getGame(355))
         #print(self.findGames("Quake III Arena"))
 
@@ -26,7 +25,7 @@ class GameDBController():
         return self.testTimeout()
 
     def testTimeout(self):
-        if (time.time() > self.timeout):
+        if (self.timeout == None or time.time() > self.timeout):
             self.getAccessToken()
             if (self.token == None):
                 return False
