@@ -11,7 +11,6 @@ class SQLiteGateway(GatewayInterface):
         }
         self.connection = sqlite3.connect('./dummy.db', check_same_thread=False)
         self.cursor = self.connection.cursor()
-        self.populate()
         #self.connection.close()
 
     def enumerate(self, type):
@@ -20,6 +19,7 @@ class SQLiteGateway(GatewayInterface):
         return type
 
     def executeQuery(self, query):
+        print(query)
         cursor = self.connection.cursor()
         cursor.execute(query)
         rows = cursor.fetchall()
