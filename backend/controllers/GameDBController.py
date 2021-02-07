@@ -13,13 +13,13 @@ class GameDBController():
         if (self.token != None):
             self.wrapper = IGDBWrapper(self.id, self.token)
             self.active = True
-            #self.getGame(355)
-            #self.findGames("Quake III Arena")
         else:
             self.token = self.getAccessToken()
             if (self.token == None):
                 print("IGDB Connection failed")
-    
+        #print(self.getGame(355))
+        #print(self.findGames("Quake III Arena"))
+
     def ok(self):
         if (not self.active):
             return False

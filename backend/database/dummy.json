@@ -7,11 +7,33 @@
         {
             "username":"Bob",
             "password":"salasanavaarinpain"
+        },
+        {
+            "username":"Carol",
+            "password":"salasanaplusinkrementaatio"
+        },
+        {
+            "username":"Erin",
+            "password":"omena"
+        }
+    ],
+    "userrelations":[
+        {
+            "user":"Alice",
+            "target":"Carol",
+            "relationType":1
+        },
+        {
+            "user":"Carol",
+            "target":"Alice",
+            "relationType":1
         }
     ],
     "games":[
         {
             "guid":"355"
         }
+    ],
+    "events":[
     ]
 }

@@ -5,7 +5,8 @@ class Populator:
         self.executeQuery = parent.executeQuery
         self.parent = parent
         self.actions = {
-            'users':self.newUser
+            'users':self.newUser,
+            'userrelations':self.newRelation
         }
 
     def loadStructure(self):
@@ -21,6 +22,12 @@ class Populator:
         password = entry['password']
         self.parent.newUser(username, password)
 
+    def newRelation(self, entry):
+        user = entry['user']
+        target = entry['target']
+        relationType = entry['relationType']
+        self.parent.newRelation(user, target, relationType)
+
     def populate(self):
         self.structure = self.loadStructure()
         self.dummy = self.loadDummy()
@@ -34,7 +41,7 @@ class Populator:
 
     def createTable(self, key):
         table = self.structure['tables'][key]
-        idtype = 'id ' + self.enumerate(table['id']) + ' primary key' if 'id' in table else 'id ' + self.enumerate('int') + ' primary key'
+        idtype = 'id ' + self.enumerate(table['id']) + ' primary key' if 'id' in table else 'id ' + self.enumerate('int') + ' primary key' + ' autoincrement'
         query = 'create table ' + key + ' ( ' + idtype
         for field in table.keys():
             if (field != "id"):

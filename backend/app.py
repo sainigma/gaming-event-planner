@@ -7,7 +7,6 @@ load_dotenv()
 gameDB = GameDBController()
 gateway = SQLiteGateway(gameDB)
 
-
 def tryLogin(username, password):
     if (len(username) < 3 or len(username) < 3):
         return None
@@ -20,10 +19,16 @@ app = Flask(__name__, static_url_path="", static_folder="./../frontend/")
 def index():
     return render_template("index.html")
 
+# TODO routet
 # /api/vote
-# /api/new/event
-# /api/new/user
+# /api/event
+# /api/event/new
+# /api/user
+# /api/user/new
+# /api/user/friends
 # /api/comment
+# /api/game
+# /api/game/find
 #
 
 @app.route("/api/login", methods=['POST'])

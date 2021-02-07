@@ -1,12 +1,13 @@
 import sqlite3, os
-from interfaces.GatewayInterface import GatewayInterface
+from gateways.AbstractGateway import AbstractGateway
 
 # Debuggakseen tarkoitettu gateway
-class SQLiteGateway(GatewayInterface):
+class SQLiteGateway(AbstractGateway):
 
     def initialize(self):
         self.enumValues = {
-            'uuid':'int',
+            'uuid':'integer',
+            'int':'integer',
             'timestamp':'date'
         }
         self.connection = sqlite3.connect('./dummy.db', check_same_thread=False)

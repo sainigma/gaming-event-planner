@@ -1,7 +1,7 @@
 from queries.User import User
 from queries.Populator import Populator
 
-class GatewayInterface:
+class AbstractGateway:
     def __init__(self, gameDB):
         self.initialize()
         self.queries = {
@@ -12,6 +12,9 @@ class GatewayInterface:
 
     def newUser(self, username, password):
         self.queries['users'].new(username, password)
+
+    def newRelation(self, user, target, relationType):
+        self.queries['users'].relate(user, target, relationType)
 
     def login(self, username, password):
         return self.queries['users'].login(username, password)
