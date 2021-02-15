@@ -2,11 +2,11 @@ export default class Services{
     constructor() {
         this.headers = {}
     }
-
+ 
     async _send(method, target, params) {
         return new Promise((response) => {
             let xhr = new XMLHttpRequest()
-            xhr.open(method, target, true)
+            xhr.open(method, target.replace(' ', '+'), true)
             xhr.setRequestHeader('Content-type', 'application/json;charset=UTF-8')
             for (let header in this.headers) {
                 xhr.setRequestHeader(header, this.headers[header])

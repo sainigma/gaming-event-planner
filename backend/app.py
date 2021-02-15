@@ -1,4 +1,4 @@
-import os
+import os, json
 from flask import Flask, render_template, request, jsonify, Response
 from gateways.SQLiteGateway import SQLiteGateway
 from controllers.GameDBController import GameDBController
@@ -27,14 +27,35 @@ def index():
 # TODO routet
 # /api/vote
 # /api/event
-# /api/event/new
 # /api/user
 # /api/user/new
 # /api/user/friends
 # /api/comment
 # /api/game
-# /api/game/find
 #
+
+def headerVerified():
+    return True
+
+@app.route("/api/event/new", methods=['POST'])
+def newEvent():
+    if (not headerVerified()):
+        return Response("", status = 301)
+    req = request.json
+    eventName = req["name"]
+    eventGame = req["gameId"]
+    print(eventName)
+    print(eventGame)
+    # Muista sanitointi
+    return Response("", status = 400)
+
+@app.route("/api/game/find/<string:title>")
+def gamefind(title):
+    result = gameDB.findGames(title)    
+    print(result)
+    if (len(result) > 0):
+        return Response(json.dumps(result), status = 200, mimetype='application/json')
+    return Response("", status = 400)
 
 @app.route("/api/login", methods=['POST'])
 def login():

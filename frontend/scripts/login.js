@@ -3,6 +3,7 @@ export default class Login{
         this.load()        
         this.logindiv = document.getElementById('logindiv')
         this.setLoginDiv()
+        window.login = this
     }
 
     load() {
@@ -18,10 +19,12 @@ export default class Login{
                 this.credentials.token = parsedCredentials['token']
                 window.services.setHeader('Authorization', `Bearer ${this.credentials.token}`)
                 this.status = 200
+                window.state.set('login', true)
                 return
             }
         }
         this.status = 0
+        window.state.set('login', false)
     }
 
     save() {
@@ -84,6 +87,8 @@ export default class Login{
             this.save()
         }
         this.setLoginDiv()
+        window.state.set('login', true)
+        window.render()
     }
 
     logout() {
@@ -91,6 +96,8 @@ export default class Login{
         this.status = 0
         this.save()
         this.setLoginDiv()
+        window.state.set('login', false)
+        window.render()
     }
 
     verification() {

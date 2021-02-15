@@ -1,0 +1,19 @@
+<div id="eventcreator">
+    <h3>New Event</h3>
+    <div id="eventtypeselector" style="display:block">
+        <h4>Select the game for the event..</h2>
+        <button onclick="eventcreator.setGameOriented(true)">Directly</button><button onclick="eventcreator.setGameOriented(false)">Let people vote</button>
+    </div>
+    <div id="eventgameselector" style="display:none">
+        <label>Search for a game</label><input type="text" oninput="eventcreator.setSearch(this.value)" onchange="eventcreator.searchGame(this)">
+        <ul id="eventcreatorgamepicker">
+        </ul>
+    </div>
+    <div id="eventfinalform" style="display:none">
+        <label>Event name</label><input id="eventnameinput" type="text" oninput="eventcreator.setName(this.value)"></br>
+        <label>Selected game: <span id="eventgametitle">user vote</span></label></br>
+        <label>Select group</label><select id="eventusergroups"></select></br>
+        <button id="eventsavebutton" onclick="eventcreator.saveEvent()" disabled>Save</button><button onclick="eventcreator.cancel()">Cancel</button></br>
+        <p id="eventcreationstatus"></p>
+    </div>
+</div>
