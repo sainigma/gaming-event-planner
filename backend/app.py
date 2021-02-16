@@ -68,6 +68,17 @@ def newEvent():
         return Response("", status = 200)
     return Response("", status = 400)
 
+@app.route("/api/event/all")
+def getEvents():
+    username = getUsernameFromVerification(request)
+    if (not username):
+        return Response("", status = 400)
+    result = {}
+    result['my'] = gateway.getEvents(username)
+    result['attending'] = []
+    result['invites'] = []
+    return Response(json.dumps(result), status = 200, mimetype='application/json')
+
 @app.route("/api/game/find/<string:title>")
 def gamefind(title):
     result = gameDB.findGames(title)    

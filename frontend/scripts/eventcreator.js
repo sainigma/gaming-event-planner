@@ -24,6 +24,9 @@ export default class EventCreator{
         const result = await window.services.post(target, params)
         if (result.target.status == 200) {
             this.cancel()
+            window.clearEvents()
+            await window.listEvents()
+            window.render()
         } else {
             savebutton.disabled = false
             eventstatus.innerHTML = 'creation failed'

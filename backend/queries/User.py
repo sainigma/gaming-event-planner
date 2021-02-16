@@ -48,6 +48,16 @@ class User(QueryInterface):
         print(username)
         return username
 
+    def belongsToGroup(self, userId, groupId):
+        if (int(groupId) == -1):
+            return True
+        query = 'select accepted, verified from usergroupregister where user = {0} and usergroup = {1}'.format(int(userId), int(groupId))
+        result = self.executeQuery(query)
+        if (len(result) == 0):
+            return False
+        print(result[0][0], result[0][1])
+        return True
+
     def _getUserID(self, name):
         query = 'select id from users where username = "' + name + '"'
         result = self.executeQuery(query)

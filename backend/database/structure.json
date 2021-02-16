@@ -37,6 +37,7 @@
         },
         "usergroupregister":{
             "id":"uuid",
+            "user":"uuid",
             "inviter":"uuid",
             "usergroup":"uuid",
             "rights":"int",
@@ -48,6 +49,7 @@
             "owner":"uuid",
             "usergroup":"uuid",
             "name":"text",
+            "gameid":"uuid",
             "description":"text",
             "created":"timestamp",
             "timeout":"timestamp",
@@ -59,10 +61,12 @@
             "user":"uuid"
         },
         "eventparticipants":{
+            "id":"uuid",
             "user":"uuid",
             "event":"uuid"
         },
-        "eventgamevotes":{
+        "eventgamevotes":{ 
+            "id":"uuid",
             "voter":"uuid",
             "event":"uuid",
             "game":"uuid",

@@ -11,8 +11,10 @@ const init = async() => {
     window.services = services
     window.toggleSite = toggleSite
     window.render = render
-    
-    const siteList = ['frontpage', 'login', 'eventcreator']
+    window.listEvents = listEvents
+    window.clearEvents = clearEvents
+
+    const siteList = ['frontpage', 'login', 'eventcreator', 'eventeditor']
     container = document.getElementById("container")
     container.innerHTML = ""
 
@@ -57,23 +59,42 @@ function toggleSite(label) {
     }
 }
 
-function listEvents() {
+async function listEvents() {
     const listCategory = (title, events) => {
         const h = document.createElement('h3')
         h.innerHTML = title
         div.appendChild(h)
         if (events.length == 0) {
             const p = document.createElement('p')
+            p.className = 'nosell'
             p.innerHTML = 'no events listed'
             div.appendChild(p)
+        } else {
+            events.forEach(event => {
+                const p = document.createElement('p')
+                const button = document.createElement('button')
+                p.innerHTML = `${event[1]}`
+                button.innerHTML = 'expand'
+                button.onclick = () => {
+                    toggleSite('eventeditor')
+                }
+                p.appendChild(button)
+                div.appendChild(p)
+            })
         }
     }
     
     const div = document.getElementById("eventlist")
-    console.log(div)
+    const res = await window.services.get('/api/event/all')
+    if (res.target.status != 200) {
+        return false
+    } 
     if (div.children.length == 0) {
-        listCategory('Upcoming events', [])
-        listCategory('Open invites', [])
+        const events = await JSON.parse(res.target.response)
+        console.log(events)
+        listCategory('My events', events['my'])
+        listCategory('Upcoming events', events['attending'])
+        listCategory('Open invites', events['invites'])
         const b = document.createElement('button')
         b.innerHTML = "create event"
         b.onclick = async () => {
@@ -82,6 +103,7 @@ function listEvents() {
         }
         div.appendChild(b)
     }
+    return true
 }
 
 function clearEvents() {

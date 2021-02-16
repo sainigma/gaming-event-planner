@@ -13,9 +13,14 @@ class AbstractGateway:
         Populator(self).populate()
 
     def newEvent(self, name, gameId, owner, groupId):
-        print('jee')
-        pass
-        self.queries['events'].new(name, gameId, owner, groupId)
+        ownerId = self.queries['users']._getUserID(owner)
+        if (self.queries['users'].belongsToGroup(ownerId, groupId)):
+            self.queries['events'].new(name, gameId, ownerId, groupId)
+
+    def getEvents(self, username):
+        userId = self.queries['users']._getUserID(username)
+        result = self.queries['events'].getEvents(userId)
+        return result
 
     def newUser(self, username, password):
         self.queries['users'].new(username, password)

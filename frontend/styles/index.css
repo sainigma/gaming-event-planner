@@ -43,7 +43,7 @@ h1 {
     margin-top: 3em;
 }
 
-#eventcreator {
+#eventcreator, #eventeditor {
     position: absolute;
     border-left: 1px solid black;
     border-right: 1px solid black;
