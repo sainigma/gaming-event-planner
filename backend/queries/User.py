@@ -1,3 +1,4 @@
+import time
 from interfaces.QueryInterface import QueryInterface
 from utils.Authentication import Authentication
 
@@ -32,17 +33,20 @@ class User(QueryInterface):
         query = 'insert into userrelations (user, relation, type) values ("' + str(userID) + '", "' + str(targetID) + '", "' + str(relationType) + '")'
         self.executeQuery(query)
 
-    def verify(self, username, bearer):
+    def verify(self, bearer):
         token = bearer[7:]
         query = 'select timeout from verifications where bearer = "' + token + '"'
         result = self.executeQuery(query)
         if (len(result) == 0):
+            print('Invalid verification')
             return None
-        if (True): #timeoutin prosessointi tähän
-            return True
-        query = 'delete from verifications where bearer = "' + token + '"'
-        self.executeQuery(query)
-        return None 
+        expires = int(result[0][0])
+        if (int(time.time()) > expires):
+            print('Verification timeout')
+            return None
+        username = self.auth.getUsername(token)
+        print(username)
+        return username
 
     def _getUserID(self, name):
         query = 'select id from users where username = "' + name + '"'

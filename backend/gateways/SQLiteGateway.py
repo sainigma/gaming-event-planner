@@ -27,15 +27,3 @@ class SQLiteGateway(AbstractGateway):
             conn.commit()
             return rows
         return None
-
-    def verify(self, username, password):
-        # Kirjautuminen
-        # Palauttaa bearerin jos ok
-        # Muutoin -1
-        pass
-
-    def verify(self, key):
-        # Autentikaatio
-        # Palauttaa 1 jos ok
-        # Muutoin -1
-        pass

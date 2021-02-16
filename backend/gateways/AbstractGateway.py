@@ -1,14 +1,21 @@
 from queries.User import User
+from queries.Event import Event
 from queries.Populator import Populator
 
 class AbstractGateway:
     def __init__(self, gameDB):
         self.initialize()
         self.queries = {
-            'users':User(self.enumerate, self.executeQuery)
+            'users':User(self.enumerate, self.executeQuery),
+            'events':Event(self.enumerate, self.executeQuery)
         }
         self.gameDB = gameDB
         Populator(self).populate()
+
+    def newEvent(self, name, gameId, owner, groupId):
+        print('jee')
+        pass
+        self.queries['events'].new(name, gameId, owner, groupId)
 
     def newUser(self, username, password):
         self.queries['users'].new(username, password)
@@ -32,8 +39,5 @@ class AbstractGateway:
         # Jos ei, alustaa tietokannan
         pass
 
-    def verify(self, key):
-        # Autentikaatio
-        # Palauttaa 1 jos ok
-        # Muutoin -1
-        pass
+    def verify(self, bearer):
+        return self.queries['users'].verify(bearer)

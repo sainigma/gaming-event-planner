@@ -5,7 +5,7 @@ import EventCreator from '/scripts/eventcreator.js'
 
 let container, sites
 
-const init = () => {
+const init = async() => {
     const services = new Services()
     
     window.services = services
@@ -26,6 +26,8 @@ const init = () => {
     const state = new StateColletor()
     const login = new Login()
     const eventcreator = new EventCreator()
+
+    await login.load()
 
     toggleSite('frontpage')
 }

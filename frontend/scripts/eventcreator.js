@@ -3,18 +3,23 @@ export default class EventCreator{
         this.name = ''
         this.game = ''
         this.gameId = -1
+        this.groupId = -1
         window.eventcreator = this
     }
 
     async saveEvent() {
         const eventstatus = document.getElementById('eventcreationstatus')
         const savebutton = document.getElementById('eventsavebutton')
+        const groups = document.getElementById('eventusergroups')
         savebutton.disabled = true
+
+        const groupId = await groups.value
 
         const target = '/api/event/new'
         const params = {
             name:this.name,
-            gameId:this.gameId
+            gameId:this.gameId,
+            groupId:groupId
         }
         const result = await window.services.post(target, params)
         if (result.target.status == 200) {

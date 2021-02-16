@@ -27,6 +27,7 @@ def index():
 # TODO routet
 # /api/vote
 # /api/event
+# /api/event/all
 # /api/user
 # /api/user/new
 # /api/user/friends
@@ -34,19 +35,37 @@ def index():
 # /api/game
 #
 
-def headerVerified():
+def sanitize(params):
+    def containsEvil(content):
+        # tarkasta erikoismerkit
+        return False
+
+    print(params)
+    for item in params:
+        if (item == None or containsEvil(item)):
+            return False
     return True
+
+def getUsernameFromVerification(req):
+    bearer = req.headers.get('Authorization')
+    print(bearer)
+    if (bearer == None):
+        return None
+    return gateway.verify(bearer)
 
 @app.route("/api/event/new", methods=['POST'])
 def newEvent():
-    if (not headerVerified()):
+    username = getUsernameFromVerification(request)
+    if (not username):
         return Response("", status = 301)
+    
     req = request.json
-    eventName = req["name"]
-    eventGame = req["gameId"]
-    print(eventName)
-    print(eventGame)
-    # Muista sanitointi
+    eventName = req.get("name")
+    gameId = req.get("gameId")
+    groupId = req.get("groupId")
+    if (sanitize({eventName, gameId, groupId})):
+        gateway.newEvent(eventName, gameId, username, groupId)
+        return Response("", status = 200)
     return Response("", status = 400)
 
 @app.route("/api/game/find/<string:title>")
@@ -59,10 +78,16 @@ def gamefind(title):
 
 @app.route("/api/login", methods=['POST'])
 def login():
-    req = request.json
+    username = getUsernameFromVerification(request)
+    if (username != None):
+        print(username + ' logged in')
+        return Response("", status = 200)
 
-    if ("username" in req and "password" in req):
-        # Muista sanitointi
+    req = request.json
+    username = req.get('username')
+    password = req.get('password')
+
+    if (sanitize({username, password})):
         token = tryLogin(req["username"], req["password"])
         if (token != None):
             result = '{"bearer":"' + token + '"}'

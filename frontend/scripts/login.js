@@ -1,12 +1,10 @@
 export default class Login{
     constructor() {
-        this.load()        
         this.logindiv = document.getElementById('logindiv')
-        this.setLoginDiv()
         window.login = this
     }
 
-    load() {
+    async load() {
         this.credentials = {
             username: undefined,
             token: undefined
@@ -16,15 +14,25 @@ export default class Login{
             let parsedCredentials = JSON.parse(credentials)
             if ('username' in parsedCredentials && 'token' in parsedCredentials) {
                 this.credentials.username = parsedCredentials['username']
-                this.credentials.token = parsedCredentials['token']
+                this.credentials.token = parsedCredentials['token']    
                 window.services.setHeader('Authorization', `Bearer ${this.credentials.token}`)
-                this.status = 200
-                window.state.set('login', true)
+                
+                const res = await window.services.post('/api/login', {null:'null'})
+                this.status = res.target.status
+                if (this.status == 200) {
+                    window.state.set('login', true)
+                } else {
+                    this.credentials = {}
+                    this.save()
+                    window.state.set('login', false)
+                }
+                this.setLoginDiv()
                 return
             }
         }
         this.status = 0
         window.state.set('login', false)
+        this.setLoginDiv()
     }
 
     save() {
@@ -76,6 +84,7 @@ export default class Login{
         const res = await window.services.post('/api/login', params)
         this.status = res.target.status
         if (res.target.status === 200) {
+            console.log(res.target.response)
             let result = JSON.parse(res.target.response)
             const token = result['bearer']
             
@@ -96,6 +105,7 @@ export default class Login{
         this.status = 0
         this.save()
         this.setLoginDiv()
+        window.services.removeHeader('Authorization')
         window.state.set('login', false)
         window.render()
     }

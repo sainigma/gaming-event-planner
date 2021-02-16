@@ -16,3 +16,9 @@ class Authentication:
         payload = {"username":username, "expires":expires}
         token = jwt.encode(payload, self.secret, algorithm="HS256")
         return (token, expires)
+
+    def getUsername(self, token):
+        decodedPayload = jwt.decode(token, self.secret, algorithms=["HS256"])
+        username = decodedPayload.get('username')
+        print(username)
+        return username

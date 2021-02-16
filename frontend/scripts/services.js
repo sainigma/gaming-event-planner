@@ -1,15 +1,20 @@
 export default class Services{
     constructor() {
-        this.headers = {}
+        this.headers = new Map()
+        this.headers.set('Content-type', 'application/json;charset=UTF-8')
     }
  
     async _send(method, target, params) {
         return new Promise((response) => {
             let xhr = new XMLHttpRequest()
             xhr.open(method, target.replace(' ', '+'), true)
-            xhr.setRequestHeader('Content-type', 'application/json;charset=UTF-8')
-            for (let header in this.headers) {
-                xhr.setRequestHeader(header, this.headers[header])
+            this.headers.forEach((content, tag) => {
+                xhr.setRequestHeader(tag, content)
+            })
+            
+            for (let header in this.headers.keys()) {
+                console.log(header)
+                xhr.setRequestHeader(header, this.headers.get(header))
             }
     
             xhr.onload = (res) => {
@@ -33,6 +38,10 @@ export default class Services{
     }
 
     setHeader(tag, content) {
-        this.headers = {...this.headers, tag: content}
+        this.headers.set(tag, content)
+    }
+
+    removeHeader(tag) {
+        this.headers.delete(tag)
     }
 }
