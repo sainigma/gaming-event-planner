@@ -2,8 +2,9 @@ import Login from '/scripts/login.js'
 import StateColletor from '/scripts/state.js'
 import Services from '/scripts/services.js'
 import EventCreator from '/scripts/eventcreator.js'
+import EventEditor from '/scripts/eventeditor.js'
 
-let container, sites
+let container, sites, blocker
 
 const init = async() => {
     const services = new Services()
@@ -13,10 +14,14 @@ const init = async() => {
     window.render = render
     window.listEvents = listEvents
     window.clearEvents = clearEvents
+    window.setBlocker = setBlocker
 
     const siteList = ['frontpage', 'login', 'eventcreator', 'eventeditor']
     container = document.getElementById("container")
     container.innerHTML = ""
+
+    blocker = document.getElementById("blocker")
+    setBlocker(false)
 
     console.log(siteList)
     sites = new Map()
@@ -28,6 +33,7 @@ const init = async() => {
     const state = new StateColletor()
     const login = new Login()
     const eventcreator = new EventCreator()
+    const eventeditor = new EventEditor()
 
     await login.load()
 
@@ -57,6 +63,11 @@ function toggleSite(label) {
             window.render()
         }
     }
+    return true
+}
+
+function setBlocker(state) {
+    blocker.style.display = state ? 'block' : 'none'
 }
 
 async function listEvents() {
@@ -77,6 +88,7 @@ async function listEvents() {
                 button.innerHTML = 'expand'
                 button.onclick = () => {
                     toggleSite('eventeditor')
+                    window.state.set('eventid', event[0])
                 }
                 p.appendChild(button)
                 div.appendChild(p)
@@ -117,6 +129,9 @@ function render() {
         listEvents()
     } else {
         clearEvents()
+    }
+    if (window.state.get('current') == 'eventeditor') {
+        window.eventeditor.update()
     }
 }
 

@@ -26,6 +26,7 @@ export default class EventCreator{
             this.cancel()
             window.clearEvents()
             await window.listEvents()
+            window.setBlocker(false)
             window.render()
         } else {
             savebutton.disabled = false
@@ -55,6 +56,8 @@ export default class EventCreator{
     }
 
     initForm() {
+        window.setBlocker(true)
+        
         this.showDiv('eventtypeselector', true)
         this.showDiv('eventgameselector', false)
         this.showDiv('eventfinalform', false)

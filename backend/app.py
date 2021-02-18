@@ -40,7 +40,6 @@ def sanitize(params):
         # tarkasta erikoismerkit
         return False
 
-    print(params)
     for item in params:
         if (item == None or containsEvil(item)):
             return False
@@ -48,10 +47,14 @@ def sanitize(params):
 
 def getUsernameFromVerification(req):
     bearer = req.headers.get('Authorization')
-    print(bearer)
     if (bearer == None):
         return None
     return gateway.verify(bearer)
+
+@app.route("/api/event/<int:eventId>")
+def getEvent(eventId):
+    event = gateway.getEvent(eventId)
+    return Response(json.dumps(event), status = 200, mimetype='application/json')
 
 @app.route("/api/event/new", methods=['POST'])
 def newEvent():
@@ -73,16 +76,12 @@ def getEvents():
     username = getUsernameFromVerification(request)
     if (not username):
         return Response("", status = 400)
-    result = {}
-    result['my'] = gateway.getEvents(username)
-    result['attending'] = []
-    result['invites'] = []
-    return Response(json.dumps(result), status = 200, mimetype='application/json')
+    events = gateway.getEvents(username)
+    return Response(json.dumps(events), status = 200, mimetype='application/json')
 
 @app.route("/api/game/find/<string:title>")
 def gamefind(title):
     result = gameDB.findGames(title)    
-    print(result)
     if (len(result) > 0):
         return Response(json.dumps(result), status = 200, mimetype='application/json')
     return Response("", status = 400)

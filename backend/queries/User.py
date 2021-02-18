@@ -45,7 +45,6 @@ class User(QueryInterface):
             print('Verification timeout')
             return None
         username = self.auth.getUsername(token)
-        print(username)
         return username
 
     def belongsToGroup(self, userId, groupId):

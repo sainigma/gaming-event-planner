@@ -58,6 +58,7 @@
         },
         "eventinvites":{
             "id":"uuid",
+            "event":"uuid",
             "user":"uuid"
         },
         "eventparticipants":{

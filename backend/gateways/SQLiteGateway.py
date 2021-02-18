@@ -5,13 +5,17 @@ from gateways.AbstractGateway import AbstractGateway
 class SQLiteGateway(AbstractGateway):
 
     def initialize(self):
+        self.databaseURI = './backend/dummy.db'
+
         self.enumValues = {
             'uuid':'integer',
             'int':'integer',
             'timestamp':'date'
         }
-        self.debug = os.getenv('DEBUG')
-
+        self.debug = False
+        if (os.getenv('DEBUG') and os.getenv('DEBUG') == '1'):
+            self.debug = True
+        
     def enumerate(self, type):
         if type in self.enumValues:
             return self.enumValues[type]
@@ -20,7 +24,7 @@ class SQLiteGateway(AbstractGateway):
     def executeQuery(self, query):
         if (self.debug):
             print(query)
-        with sqlite3.connect('./backend/dummy.db') as conn:
+        with sqlite3.connect(self.databaseURI) as conn:
             cursor = conn.cursor()
             cursor.execute(query)
             rows = cursor.fetchall()

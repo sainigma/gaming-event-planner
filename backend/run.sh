@@ -36,7 +36,7 @@ function _start {
     clear
     flask run
     deactivate
-#    _clean
+    _clean
   else
     _init
     _start

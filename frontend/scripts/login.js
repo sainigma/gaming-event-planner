@@ -24,6 +24,7 @@ export default class Login{
                 } else {
                     this.credentials = {}
                     this.save()
+                    this.status = 0
                     window.state.set('login', false)
                 }
                 this.setLoginDiv()
@@ -67,8 +68,10 @@ export default class Login{
             }
         } else {
             const loginprompt = document.getElementById('loginprompt')
-            loginprompt.style.backgroundColor = 'red'
-            p.innerHTML = 'login failed'
+            if (loginprompt != null) {
+                loginprompt.style.backgroundColor = 'red'
+                p.innerHTML = 'login failed'
+            }
         }
         this.logindiv.appendChild(div)
         div.appendChild(p)
