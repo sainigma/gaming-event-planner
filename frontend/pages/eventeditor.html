@@ -1,18 +1,33 @@
 <div id="eventeditor">
-    <div>
-        <h3 id='eventeditortitle'></h3>
-        <label>Description:</label></br>
-        <p id='eventdescription'> tekstiä tähän</p>
-        <label>Participants:</label><p id='eventparticipants'>eka, toka </p>
-        <div id='eventgamefield'>
-            <label>Game:</label><p id='eventgame'>peli tähän</p>
-        </div>
+    <button onclick="eventeditor.close()">close</button>
+    <div class='grid-container'>
+        <div class='grid-title-big'><span id='eventeditortitle'></span></div>
+
+        <div class='grid-title'>Description</div>
+        <div class='grid-item'><span id='eventdescription'> tekstiä tähän</span></div>
+
+        <div class='grid-title'>Participants</div>
+        <div class='grid-item'><span id='eventparticipants'>eka, toka </span></div>
+
+        <div class='grid-title'>Game</div>
+        <div class='grid-item'><span id='eventgame'>peli tähän</span></div>
+
+        <div class='grid-nav'><h3>comments:</h3><input type='text'></div>
+
     </div>
-    <div>
-        <h3>Admin panel</h3>
-        <label>Description</label></br>
-        <textarea rows = "5" cols = "60" id="eventdescriptioneditor"></textarea></br>
-        <label>Limit filters for choosing games/participants</label></br>
-        <input type="range" id="volume" name="volume" min="0" max="10"><input type="range" id="volume" name="volume" min="0" max="10"></br>
+    <div class='grid-container'>
+        <div class='grid-title-big'>Admin panel</div>
+
+        <div class='grid-title'>Edit description</div>
+        <div class='grid-item' style='padding:0'><textarea rows = "5" class='grid-texteditor' id="eventdescriptioneditor"></textarea></div>
+        
+        <div class='grid-title'>Opt filters for selecting games/participants</div>
+        <div class='grid-item'><input type="range" min="0" max="5" class='dualslider-left'><input type="range" id="volume" name="volume" min="5" max="10" class='dualslider-right'></div>
+        
+        <div id="eventeditorinviter" class="grid-nav">
+            <label>Invite: </label><input type="text" oninput="eventcreator.setSearch(this.value)" onchange="eventcreator.searchGame(this)">
+            <ul id="eventeditorinvitelist">
+            </ul>
+        </div>
     </div>
 </div>

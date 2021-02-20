@@ -111,6 +111,7 @@ export default class Login{
         window.services.removeHeader('Authorization')
         window.state.set('login', false)
         window.render()
+        window.setBlocker(false)
     }
 
     verification() {

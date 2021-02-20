@@ -10,6 +10,11 @@ export default class EventEditor{
         return element
     }
 
+    close() {
+        window.toggleSite('eventeditor')
+        window.setBlocker(false)
+    }
+
     async update() {
         this.div = await document.getElementById('eventeditor')
         const eventId = window.state.get('eventid')

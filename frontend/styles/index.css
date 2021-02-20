@@ -60,6 +60,7 @@ body {
 }
 
 #eventlist {
+    width: 30%;
     margin-top: 3em;
 }
 
@@ -71,4 +72,69 @@ body {
     width: 75%;
     left: 12.5%;
     z-index: 20;
+}
+
+.grid-container, .grid-container-small {
+    display: grid;
+    grid-gap: 10px;
+    padding: 10px;
+}
+
+.grid-container-small {
+    grid-template-columns: 1fr 2fr;
+}
+
+.grid-container {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-container > div, .grid-container-small > div {
+    border: 1px solid black;
+    padding: 10px 0;
+}
+
+.grid-container-small > .grid-item {
+    text-align: center;
+}
+
+.grid-title, .grid-title-big {
+    font-weight:bold;
+}
+
+.grid-title-big {
+    text-align: center;
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
+
+.grid-title {
+    text-align: right;
+    grid-column: 1;
+}
+
+.grid-item {
+    text-align: left;
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+.grid-texteditor {
+    width: 100%;
+    padding: 0;
+}
+
+.grid-nav {
+    grid-column: 3;
+    grid-row: 2 / 5;
+}
+
+.dualslider-left, .dualslider-right {
+    width: 49%;
+}
+
+.dualslider-left {
+    margin-right: 0;
+}
+.dualslider-right {
+    margin-left: 0;
 }

@@ -72,26 +72,36 @@ function setBlocker(state) {
 
 async function listEvents() {
     const listCategory = (title, events) => {
-        const h = document.createElement('h3')
-        h.innerHTML = title
-        div.appendChild(h)
-        if (events.length == 0) {
-            const p = document.createElement('p')
-            p.className = 'nosell'
+        const titlediv = document.createElement('div')
+        titlediv.className = 'grid-title-big'
+        titlediv.innerHTML = title
+        div.appendChild(titlediv)
+        
+        if (events.length == 0) {            
+            const p = document.createElement('div')
+            p.className = 'grid-item'
             p.innerHTML = 'no events listed'
+            p.style = 'grid-column: 1 / 3'
             div.appendChild(p)
         } else {
             events.forEach(event => {
-                const p = document.createElement('p')
+                const eventTitle = document.createElement('div')
+                eventTitle.className = 'grid-title'
+                eventTitle.innerHTML = `${event[1]}`
+
+                const buttonDiv = document.createElement('div')
+                buttonDiv.className = 'grid-item'
+                
                 const button = document.createElement('button')
-                p.innerHTML = `${event[1]}`
                 button.innerHTML = 'expand'
                 button.onclick = () => {
                     toggleSite('eventeditor')
                     window.state.set('eventid', event[0])
                 }
-                p.appendChild(button)
-                div.appendChild(p)
+
+                buttonDiv.appendChild(button)
+                div.appendChild(eventTitle)
+                div.appendChild(buttonDiv)
             })
         }
     }
@@ -107,13 +117,16 @@ async function listEvents() {
         listCategory('My events', events['my'])
         listCategory('Upcoming events', events['attending'])
         listCategory('Open invites', events['invites'])
+        const buttonContainer = document.createElement('div')
+        buttonContainer.className = 'grid-title-big'
         const b = document.createElement('button')
         b.innerHTML = "create event"
         b.onclick = async () => {
             await toggleSite('eventcreator')
             window.eventcreator.initForm()
         }
-        div.appendChild(b)
+        buttonContainer.appendChild(b)
+        div.appendChild(buttonContainer)
     }
     return true
 }
