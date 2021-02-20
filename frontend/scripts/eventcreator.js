@@ -1,3 +1,5 @@
+import {listResults} from '/scripts/static/listResults.js'
+
 export default class EventCreator{
     constructor() {
         this.name = ''
@@ -126,32 +128,14 @@ export default class EventCreator{
         window.toggleSite('eventcreator')
     }
 
-    async listResults(res) {
-        let targetUL = document.getElementById('eventcreatorgamepicker')
-        targetUL.innerHTML = ''
-        const arr = await JSON.parse(res)
-        console.log(arr)
-        arr.forEach(element => {
-            const li = document.createElement('li')
-            const title = document.createElement('span')
-            const button = document.createElement('button')
-            li.appendChild(title)
-            li.appendChild(button)
-            targetUL.appendChild(li)
-            title.innerHTML = element.name
-            button.innerHTML = 'Select'
-            button.onclick = () => {
-                this.setGame(element.name, element.id)
-            }
-            console.log(element)
-        });
-    }
-
     async searchGame(e) {
+        const wrapper = (params) => {
+            this.setGame(params.name, params.id)
+        }
         e.disabled = true
         e.value = ''
         const result = await window.services.get('/api/game/find/'+this.game)
         e.disabled = false
-        this.listResults(result.target.response)
+        listResults(result.target.response, 'eventcreatorgamepicker', 'Select', wrapper)
     }
 }

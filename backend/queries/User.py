@@ -25,6 +25,12 @@ class User(QueryInterface):
             return token
         return None
 
+    def find(self, searchstring, username):
+        userID = self._getUserID(username)
+        subquery = "select relation from userrelations where user = {0} and type = 1".format(int(userID))
+        query = "select id, username from users where id in ({1}) and username like '{0}%'".format(str(searchstring), str(subquery))
+        return self.executeQuery(query)
+
     def relate(self, username, target, relationType):
         userID = self._getUserID(username)
         targetID = self._getUserID(target)

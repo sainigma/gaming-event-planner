@@ -1,5 +1,6 @@
 <div id="eventeditor">
     <button onclick="eventeditor.close()">close</button>
+    <button onclick="eventeditor.update()" style='float:right'>update</button>
     <div class='grid-container'>
         <div class='grid-title-big'><span id='eventeditortitle'></span></div>
 
@@ -16,6 +17,9 @@
 
     </div>
     <div class='grid-container'>
+        <div class='grid-title-big'>Vote panel</div>
+    </div>
+    <div class='grid-container'>
         <div class='grid-title-big'>Admin panel</div>
 
         <div class='grid-title'>Edit description</div>
@@ -25,7 +29,7 @@
         <div class='grid-item'><input type="range" min="0" max="5" class='dualslider-left'><input type="range" id="volume" name="volume" min="5" max="10" class='dualslider-right'></div>
         
         <div id="eventeditorinviter" class="grid-nav">
-            <label>Invite: </label><input type="text" oninput="eventcreator.setSearch(this.value)" onchange="eventcreator.searchGame(this)">
+            <label>Invite: </label><input type="text" oninput="eventeditor.setSearch(this.value)" onchange="eventeditor.searchUser(this)">
             <ul id="eventeditorinvitelist">
             </ul>
         </div>

@@ -35,11 +35,11 @@ def index():
 # /api/game
 #
 
-def sanitize(params):
-    def containsEvil(content):
-        # tarkasta erikoismerkit
-        return False
+def containsEvil(content):
+    # tarkasta erikoismerkit
+    return False
 
+def sanitize(params):
     for item in params:
         if (item == None or containsEvil(item)):
             return False
@@ -84,6 +84,38 @@ def gamefind(title):
     result = gameDB.findGames(title)    
     if (len(result) > 0):
         return Response(json.dumps(result), status = 200, mimetype='application/json')
+    return Response("", status = 400)
+
+@app.route("/api/user/invite/", methods=['POST'])
+def inviteUserToEvent():
+    username = getUsernameFromVerification(request)
+    if (not username):
+        return Response("", status = 400)
+    req = request.json
+    print(req)
+    targetUser = req.get('targetuser')
+    eventId = req.get('eventid')
+    if (targetUser != None and eventId != None):
+        gateway.inviteToEvent(username, targetUser, eventId)
+        return Response("", status = 200)
+    return Response("", status = 400)
+
+@app.route("/api/user/find/", methods=['GET'])
+def userfind():
+    username = getUsernameFromVerification(request)
+    if (not username):
+        return Response("", status = 400)
+
+    args = request.args.to_dict()
+    if ('game' in args and 'event' in args):
+        print(args)
+    elif ('search' in args):
+        searchstring = args['search']
+        if (searchstring == '*'):
+            searchstring = ''
+        if (not containsEvil(searchstring)):
+            result = gateway.searchUsers(searchstring, username)
+            return Response(json.dumps(result), status = 200, mimetype='application/json') 
     return Response("", status = 400)
 
 @app.route("/api/login", methods=['POST'])

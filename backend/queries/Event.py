@@ -3,7 +3,8 @@ from interfaces.QueryInterface import QueryInterface
 class Event(QueryInterface):
 
     def new(self, name, gameId, ownerId, groupId):
-        query = 'insert into events (owner, usergroup, name, gameid) values ({0}, {1}, "{2}", {3})'.format(int(ownerId), int(groupId), str(name), int(gameId))
+        placeholderDescription = 'Placeholder description, edit me!'
+        query = 'insert into events (owner, usergroup, name, gameid, description) values ({0}, {1}, "{2}", {3}, "{4}")'.format(int(ownerId), int(groupId), str(name), int(gameId), str(placeholderDescription))
         if (self.usesPSQL):
             query += ' returning id'
             result = self.executeQuery(query)
@@ -16,6 +17,10 @@ class Event(QueryInterface):
 
         eventId = result[0][0]
         self.addParticipant(ownerId, eventId)
+
+    def invite(self, eventId, targetUserId):
+        query = 'insert into eventinvites (event, user) values ({0}, {1})'.format(int(eventId), int(targetUserId))
+        self.executeQuery(query)
 
     def getOwner(self, eventId):
         query = 'select username from users where id = (select owner from events where id = {0})'.format(int(eventId))

@@ -12,6 +12,15 @@ class AbstractGateway:
         self.gameDB = gameDB
         Populator(self).populate()
 
+    def mapItems(self, labels, items):
+        pass
+
+    def searchUsers(self, searchstring, username):
+        users = self.queries['users'].find(searchstring, username)
+        for i in range(0, len(users)):
+            users[i] = dict(zip(['id', 'name'], users[i]))
+        return users
+
     def newEvent(self, name, gameId, owner, groupId):
         ownerId = self.queries['users']._getUserID(owner)
         if (self.queries['users'].belongsToGroup(ownerId, groupId)):
@@ -34,6 +43,11 @@ class AbstractGateway:
         events['invites'] = self.queries['events'].getInvitations(userId)
 
         return events
+
+    def inviteToEvent(self, username, targetuser, eventId):
+        if (self.queries['events'].getOwner(eventId) == username):
+            targetUserId = self.queries['users']._getUserID(targetuser)
+            self.queries['events'].invite(eventId, targetUserId)
 
     def newUser(self, username, password):
         self.queries['users'].new(username, password)
