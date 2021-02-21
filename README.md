@@ -1,4 +1,4 @@
-# tsoha-harjoitustyo
+# gaming-event-planner - tsoha-harjoitustyö
 
 ## Sisällysluettelo
 
@@ -45,6 +45,7 @@ Luo ja säädä .env tiedosto, joka sijaitsee polussa /gaming-event-planner/back
     echo SECRET=salasanaTähän >> ./backend/.env
     echo IGDBID=IGDBidTähän >> ./backend/.env
     echo IGDBKEY=IGDBavainTähän >> ./backend/.env
+    echo SQL=sqlite >> ./backend/.env
 
 Anna ajoskriptalle ajo-oikeudet ja aja se:
 
@@ -65,6 +66,7 @@ Määritä ympäristömuuttujat:
     heroku config:set SECRET=salasanatähän
     heroku config:set IGDBID=idtähän
     heroku config:set IGDBKEY=avaintähän
+    heroku config:set SQL=tietokanta <- sqlite tai psql, toistaiseksi vain ensimmäinen tuettuna
 
 Pushaa projekti herokuun:
 
