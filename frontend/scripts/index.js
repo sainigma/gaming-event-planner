@@ -166,11 +166,11 @@ function render() {
     console.log('Render')
     if (window.state.get('login')) {
         listEvents()
+        if (window.state.get('current') == 'eventeditor') {
+            window.eventeditor.update()
+        }
     } else {
         clearEvents()
-    }
-    if (window.state.get('current') == 'eventeditor') {
-        window.eventeditor.update()
     }
 }
 

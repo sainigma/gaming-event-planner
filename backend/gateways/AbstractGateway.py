@@ -22,7 +22,7 @@ class AbstractGateway:
 
     def getComments(self, username, eventId):
         # tarkista että käyttäjä osa tapahtumaa
-        labels = ['id', 'user', 'event', 'target', 'content', 'time']
+        labels = ['name', 'event', 'target', 'content', 'time']
         comments = self.queries['comments'].get(eventId)
         if (len(comments) > 0):
             return self.mapResult(comments, labels)

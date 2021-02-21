@@ -1,4 +1,4 @@
-import os, json
+import os, json, time
 from flask import Flask, render_template, request, jsonify, Response
 from gateways.SQLiteGateway import SQLiteGateway
 from controllers.GameDBController import GameDBController
@@ -10,6 +10,9 @@ if (os.path.basename(os.getcwd()) == 'backend'):
 
 load_dotenv()
 gateway = SQLiteGateway()
+
+os.environ['TZ'] = 'Europe/Helsinki'
+time.tzset()
 
 def tryLogin(username, password):
     if (len(username) < 3 or len(username) < 3):
@@ -25,17 +28,12 @@ def index():
 
 # TODO routet
 # /api/vote
-# /api/event
-# /api/event/all
-# /api/user
 # /api/user/new
-# /api/user/friends
-# /api/comment
-# /api/game
-#
 
 def containsEvil(content):
-    # tarkasta erikoismerkit
+    # muista tehdä kunnon tarkistus
+    if ';' in str(content):
+        return True
     return False
 
 def sanitize(params):

@@ -16,7 +16,7 @@ class Comment(QueryInterface):
         self.executeQuery(query)
     
     def get(self, eventId):
-        query = 'select id, user, event, target, content, time from comments where event = {0} order by time asc'.format(int(eventId))
+        query = 'select u.username, c.event, c.target, c.content, c.time from comments c left join users u on c.user = u.id where event = {0}'.format(int(eventId))
         result = self.executeQuery(query)
         if (len(result) > 0):
             return result

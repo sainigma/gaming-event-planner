@@ -18,7 +18,16 @@ Websovellus peli-iltojen suunnitteluun. Sovelluksella voi sopia ryhmien kesken p
 
 ### Sovelluksen nykytilanne
 
-Sovelluksessa pystyy tällä hetkellä kirjautumaan sisään- ja ulos. Tähänastinen kehitystyö on keskittynyt enimmäkseen rakenteen kehittämiseen. Testailua varten käyttäjä/salasanakombinaation voi tarkastaa [täältä](./backend/database/dummy.json).
+Sovelluksessa toimii tällä hetkellä kirjautuminen, tapahtumien luonti, käyttäjien kutsuminen tapahtumaan, tapahtumakutsun hyväksyminen, pelien haku tietokannasta sekä tapahtuman kommentointi.
+
+Testailua varten käyttäjä/salasanakombinaation voi tarkastaa [täältä](./backend/database/dummy.json). Tapahtumaan voi kutsua tällä hetkellä vain kaverilistalta. Koska kaverilistan laajentamiseen ei ole vielä käyttöliittymää, debugkäyttäjistä Alice ja Carol ovat asetettu valmiiksi kavereiksi.
+
+Kriittisiä puuttuvia ominaisuuksia tällä hetkellä ovat:
+ - Käyttäjien luonti
+ - Kaverilista
+ - Ryhmien luonti
+ - Äänestyskäyttöliittymä päivämäärille ja peliehdotuksille
+ - Admintyökalut tapahtumille
 
 Sovellusta voi testata [täällä](https://gaming-event-planner.herokuapp.com/).
 
