@@ -16,8 +16,6 @@ class GameDBController():
         else:
             self.wrapper = IGDBWrapper(self.id, self.token)
             self.active = True
-        #print(self.getGame(355))
-        #print(self.findGames("Quake III Arena"))
 
     def ok(self):
         if (not self.active):
@@ -33,16 +31,16 @@ class GameDBController():
 
     def getGame(self, gameid):
         if (self.ok()):
-            req = ['games', 'fields slug, name; where id = 355;']
+            req = ['games', 'fields slug, name, cover; where id = {0};'.format(int(gameid))]
             result = self.dump(req)
-            return result
-        return None
+            if (len(result) > 0):
+                return result[0]
+        return []
 
     def findGames(self, name):
         if (self.ok()):
             req = ['games', 'fields id, slug, name; search "' + name + '";']
             result = self.dump(req)
-            print(result)
             return result
         return None
 

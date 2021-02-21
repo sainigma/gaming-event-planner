@@ -7,10 +7,33 @@ export default class EventEditor{
         this.eventId = -1
     }
 
-    setInnerHTML(target, content) {
-        const element = document.getElementById(target)
+    async setInnerHTML(target, content) {
+        const element = await document.getElementById(target)
         element.innerHTML = content
         return element
+    }
+
+    async setVisibility(target, tag) {
+        const element = await document.getElementById(target)
+        element.style.display = tag
+        return element
+    }
+
+    async comment() {
+        const commentfield = await document.getElementById('commentfield')
+        const target = '/api/comment/new'
+        const params = {
+            eventId:this.eventId,
+            targetId:-1,
+            content:commentfield.value
+        }
+        commentfield.disabled = true
+        console.log(params)
+        const result = await window.services.post(target, params)
+        if (result.target.status == 200) {
+            commentfield.value = ''
+        }
+        commentfield.disabled = false
     }
 
     close() {
@@ -40,7 +63,8 @@ export default class EventEditor{
     }
 
     async update() {
-        this.div = await document.getElementById('eventeditor')
+        this.div = await this.setVisibility('eventeditor', 'none')
+        
         this.eventId = window.state.get('eventid')
         const res = await window.services.get('/api/event/' + this.eventId)
         if (res.target.status !== 200) {
@@ -48,7 +72,8 @@ export default class EventEditor{
         }
         window.setBlocker(true)
 
-        const info = JSON.parse(res.target.response).info
+        const responseBody = JSON.parse(res.target.response)
+        const info = responseBody.info
         const eventInfo = {
             title:info[0],
             description:info[1],
@@ -62,5 +87,30 @@ export default class EventEditor{
         this.setInnerHTML('eventeditortitle', eventInfo.title)
         this.setInnerHTML('eventdescription', eventInfo.description)
         this.setInnerHTML('eventdescriptioneditor', eventInfo.description)
+
+        console.log(eventInfo)
+
+        if (responseBody.owner === window.login.getUser()) {
+            this.setVisibility('eventeditoradminpanel', 'grid')
+        } else {
+            this.setVisibility('eventeditoradminpanel', 'none')
+        }
+        this.setVisibility('eventeditorgamelabel', 'none')
+        this.setVisibility('eventeditorgameitem', 'none')
+        this.setVisibility('eventeditor', 'block')
+        if (eventInfo.gameId != -1) {
+            this.setVisibility('eventeditorgamelabel', 'inherit')
+            this.setVisibility('eventeditorgameitem', 'inherit')
+            this.setInnerHTML('eventeditorgameitem', '<i>fetching..</i>')
+            const gameRes = await window.services.get('/api/game/' + eventInfo.gameId)
+            if (gameRes.target.status == 200) {
+                const gameInfo = JSON.parse(gameRes.target.response)
+                this.setInnerHTML('eventeditorgameitem', `<a target='_blank' href='https://www.igdb.com/games/${gameInfo.slug}/'>${gameInfo.name}</a>`)
+            } else {
+                this.setVisibility('eventeditorgamelabel', 'none')
+                this.setVisibility('eventeditorgameitem', 'none')
+        
+            }
+        }
     }
 }

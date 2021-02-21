@@ -117,4 +117,8 @@ export default class Login{
     verification() {
         return this.verification
     }
+
+    getUser() {
+        return this.credentials.username
+    }
 }

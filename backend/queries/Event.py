@@ -18,9 +18,36 @@ class Event(QueryInterface):
         eventId = result[0][0]
         self.addParticipant(ownerId, eventId)
 
-    def invite(self, eventId, targetUserId):
-        query = 'insert into eventinvites (event, user) values ({0}, {1})'.format(int(eventId), int(targetUserId))
+    def invite(self, eventId, userId):
+        notParticipantQuery = 'select id from eventparticipants where user = {0} and event = {1}'.format(int(userId), int(eventId))
+        result = self.executeQuery(notParticipantQuery)
+        if (len(result) > 0):
+            return
+        invitationExistsQuery = 'select id from eventinvites where user = {0} and event = {1}'.format(int(userId), int(eventId))
+        result = self.executeQuery(invitationExistsQuery)
+        if (len(result) > 0):
+            return
+
+        query = 'insert into eventinvites (event, user) values ({0}, {1})'.format(int(eventId), int(userId))
         self.executeQuery(query)
+
+    def _parseInvitation(self, userId, eventId, accepted):
+        validInvitationQuery = 'select id from eventinvites where event = {0} and user = {1}'.format(int(eventId), int(userId))
+        result = self.executeQuery(validInvitationQuery)
+        if (len(result) == 0):
+            return
+        inviteId = result[0][0]
+        forgetInvitationQuery = 'delete from eventinvites where id = {0}'.format(int(inviteId))
+        self.executeQuery(forgetInvitationQuery)
+        
+        if (accepted):
+            self.addParticipant(userId, eventId)
+
+    def acceptInvitation(self, userId, eventId):
+        self._parseInvitation(userId, eventId, True)
+
+    def declineInvitation(self, userId, eventId):
+        self._parseInvitation(userId, eventId, False)
 
     def getOwner(self, eventId):
         query = 'select username from users where id = (select owner from events where id = {0})'.format(int(eventId))
@@ -53,5 +80,5 @@ class Event(QueryInterface):
         return self._returnEvent(query)
 
     def getParticipating(self, userId):
-        query = 'select id, name from events where id in (select event from eventparticipants where user = {0})'.format(int(userId))
+        query = 'select id, name from events where id in (select event from eventparticipants where user = {0}) and owner != {0}'.format(int(userId))
         return self._returnEvent(query)

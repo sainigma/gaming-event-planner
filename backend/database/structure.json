@@ -24,7 +24,8 @@
         "games":{
             "id":"uuid",
             "name":"text",
-            "igdb":"text"
+            "slug":"text",
+            "cover":"text"
         },
         "gamepreferences":{
             "user":"uuid",
@@ -78,6 +79,14 @@
             "event":"uuid",
             "date":"timestamp",
             "hour":"int"
+        },
+        "comments":{
+            "id":"uuid",
+            "user":"uuid",
+            "event":"uuid",
+            "target":"uuid",
+            "content":"text",
+            "time":"timestamp"
         }
     }
 }

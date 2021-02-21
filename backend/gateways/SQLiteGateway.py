@@ -10,7 +10,7 @@ class SQLiteGateway(AbstractGateway):
         self.enumValues = {
             'uuid':'integer',
             'int':'integer',
-            'timestamp':'date'
+            'timestamp':'integer'
         }
         self.debug = False
         if (os.getenv('DEBUG') and os.getenv('DEBUG') == '1'):

@@ -1,25 +1,59 @@
 from queries.User import User
 from queries.Event import Event
 from queries.Populator import Populator
+from queries.Game import Game
+from queries.Comment import Comment
 
 class AbstractGateway:
-    def __init__(self, gameDB):
+    def __init__(self):
         self.initialize()
         self.queries = {
             'users':User(self.enumerate, self.executeQuery),
-            'events':Event(self.enumerate, self.executeQuery)
+            'events':Event(self.enumerate, self.executeQuery),
+            'games':Game(self.enumerate, self.executeQuery),
+            'comments':Comment(self.enumerate, self.executeQuery)
         }
-        self.gameDB = gameDB
         Populator(self).populate()
 
-    def mapItems(self, labels, items):
-        pass
+    def mapResult(self, result, labels):
+        for i in range(0, len(result)):
+            result[i] = dict(zip(labels, result[i]))
+        return result
 
+    def getComments(self, username, eventId):
+        # tarkista että käyttäjä osa tapahtumaa
+        labels = ['id', 'user', 'event', 'target', 'content', 'time']
+        comments = self.queries['comments'].get(eventId)
+        if (len(comments) > 0):
+            return self.mapResult(comments, labels)
+        return []
+
+    def addComment(self, username, content, eventId, targetId):
+        # tarkista että käyttäjä osa tapahtumaa
+        userId = self.queries['users']._getUserID(username)
+        self.queries['comments'].new(eventId, targetId, userId, content)
+        # jos kommentin lisääminen onnistui, lähetä socketkäsky klinuille uusista kommenteista
+
+    def findGames(self, searchstring):
+        return self.queries['games'].findGames(searchstring)
+
+    def getGame(self, gameId):
+        return self.queries['games'].getGame(gameId)
+
+    def parseInvitations(self, username, eventId, invitationStatus):
+        print('invitation status:',invitationStatus)
+        userId = self.queries['users']._getUserID(username)
+        if (int(invitationStatus) == 1):
+            self.queries['events'].acceptInvitation(userId, eventId)
+        elif (int(invitationStatus) == 0):
+            self.queries['events'].declineInvitation(userId, eventId)
+        
     def searchUsers(self, searchstring, username):
         users = self.queries['users'].find(searchstring, username)
-        for i in range(0, len(users)):
-            users[i] = dict(zip(['id', 'name'], users[i]))
-        return users
+        return self.mapResult(users, ['id', 'name'])
+        # for i in range(0, len(users)):
+        #    users[i] = dict(zip(['id', 'name'], users[i]))
+        # return users
 
     def newEvent(self, name, gameId, owner, groupId):
         ownerId = self.queries['users']._getUserID(owner)
@@ -58,6 +92,9 @@ class AbstractGateway:
     def login(self, username, password):
         return self.queries['users'].login(username, password)
 
+    def verify(self, bearer):
+        return self.queries['users'].verify(bearer)
+
     def executeQuery(self, query):
         # Tietokantapyyntö
         pass
@@ -70,6 +107,3 @@ class AbstractGateway:
         # Tarkistaa onko tietokanta alustettu
         # Jos ei, alustaa tietokannan
         pass
-
-    def verify(self, bearer):
-        return self.queries['users'].verify(bearer)

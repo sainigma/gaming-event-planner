@@ -9,8 +9,7 @@ if (os.path.basename(os.getcwd()) == 'backend'):
     os.chdir('./..')
 
 load_dotenv()
-gameDB = GameDBController()
-gateway = SQLiteGateway(gameDB)
+gateway = SQLiteGateway()
 
 def tryLogin(username, password):
     if (len(username) < 3 or len(username) < 3):
@@ -51,10 +50,45 @@ def getUsernameFromVerification(req):
         return None
     return gateway.verify(bearer)
 
+@app.route("/api/comment/<int:eventId>")
+def getComments(eventId):
+    # muista lisätä käyttäjän tarkistus
+    result = gateway.getComments('', eventId)
+    return Response(json.dumps(result), status = 200, mimetype='application/json')
+
+@app.route("/api/comment/new", methods=['POST'])
+def addComment():
+    username = getUsernameFromVerification(request)
+    if (not username):
+        return Response("", status = 301)    
+    req = request.json
+    
+    eventId = req.get("eventId")
+    targetId = req.get("targetId")
+    content = req.get("content")
+    if (sanitize({eventId, targetId, content})):
+        gateway.addComment(username, content, eventId, targetId)
+        return Response("", status = 200)
+    return Response("", status = 400)
+    
 @app.route("/api/event/<int:eventId>")
 def getEvent(eventId):
     event = gateway.getEvent(eventId)
     return Response(json.dumps(event), status = 200, mimetype='application/json')
+
+@app.route("/api/event/invitations/<int:eventId>", methods=['POST'])
+def parseInvitations(eventId):
+    username = getUsernameFromVerification(request)
+    if (not username):
+        return Response("", status = 301)
+
+    req = request.json
+    invitationStatus = req.get("status")
+    if (sanitize({invitationStatus, eventId})):
+        gateway.parseInvitations(username, eventId, invitationStatus)
+        return Response("", status = 200)
+    return Response("", status = 400)
+    
 
 @app.route("/api/event/new", methods=['POST'])
 def newEvent():
@@ -79,9 +113,16 @@ def getEvents():
     events = gateway.getEvents(username)
     return Response(json.dumps(events), status = 200, mimetype='application/json')
 
+@app.route("/api/game/<int:gameId>")
+def getGame(gameId):
+    result = gateway.getGame(gameId)
+    if (len(result) > 0):
+        return Response(json.dumps(result), status = 200, mimetype='application/json')
+    return Response("", status = 400)
+
 @app.route("/api/game/find/<string:title>")
 def gamefind(title):
-    result = gameDB.findGames(title)    
+    result = gateway.findGames(title)    
     if (len(result) > 0):
         return Response(json.dumps(result), status = 200, mimetype='application/json')
     return Response("", status = 400)

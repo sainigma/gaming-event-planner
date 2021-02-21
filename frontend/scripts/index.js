@@ -92,14 +92,39 @@ async function listEvents() {
                 const buttonDiv = document.createElement('div')
                 buttonDiv.className = 'grid-item'
                 
-                const button = document.createElement('button')
-                button.innerHTML = 'expand'
-                button.onclick = () => {
-                    toggleSite('eventeditor')
-                    window.state.set('eventid', event[0])
+                if (title === 'Open invites') {
+                    const acceptButton = document.createElement('button')
+                    const ignoreButton = document.createElement('button')
+                    acceptButton.innerHTML = 'Accept'
+                    ignoreButton.innerHTML = 'Ignore'
+                    acceptButton.style.width = '40%'
+                    acceptButton.style.marginRight = '5%'
+                    ignoreButton.style.width = '40%'
+                    buttonDiv.appendChild(acceptButton)
+                    buttonDiv.appendChild(ignoreButton)
+
+                    const target = `/api/event/invitations/${event[0]}`
+                    acceptButton.onclick = async () => {
+                        await window.services.post(target, {status:1})
+                        clearEvents()
+                        listEvents()
+                    }
+                    ignoreButton.onclick = async () => {
+                        await window.services.post(target, {status:0})
+                        clearEvents()
+                        listEvents()
+                    }
+                } else {
+                    const button = document.createElement('button')
+                    button.innerHTML = 'Expand'
+                    button.style.width = '80%'
+                    button.onclick = () => {
+                        toggleSite('eventeditor')
+                        window.state.set('eventid', event[0])
+                    }
+                    buttonDiv.appendChild(button)
                 }
 
-                buttonDiv.appendChild(button)
                 div.appendChild(eventTitle)
                 div.appendChild(buttonDiv)
             })
@@ -121,6 +146,7 @@ async function listEvents() {
         buttonContainer.className = 'grid-title-big'
         const b = document.createElement('button')
         b.innerHTML = "create event"
+        b.style.width = '80%'
         b.onclick = async () => {
             await toggleSite('eventcreator')
             window.eventcreator.initForm()

@@ -10,16 +10,21 @@
         <div class='grid-title'>Participants</div>
         <div class='grid-item'><span id='eventparticipants'>eka, toka </span></div>
 
-        <div class='grid-title'>Game</div>
-        <div class='grid-item'><span id='eventgame'>peli tähän</span></div>
+        <div class='grid-title' id='eventeditorgamelabel'>Game</div>
+        <div class='grid-item' id='eventeditorgameitem'><span id='eventgame'>peli tähän</span></div>
 
-        <div class='grid-nav'><h3>comments:</h3><input type='text'></div>
+        <div class='grid-nav'>
+            <form onsubmit="return false;">
+                <input id="commentfield" type="text"/>
+                <input type="submit" style="display:none" onclick="eventeditor.comment()"/>
+            </form>
+        </div>
 
     </div>
     <div class='grid-container'>
         <div class='grid-title-big'>Vote panel</div>
     </div>
-    <div class='grid-container'>
+    <div class='grid-container' id='eventeditoradminpanel'>
         <div class='grid-title-big'>Admin panel</div>
 
         <div class='grid-title'>Edit description</div>
@@ -29,8 +34,9 @@
         <div class='grid-item'><input type="range" min="0" max="5" class='dualslider-left'><input type="range" id="volume" name="volume" min="5" max="10" class='dualslider-right'></div>
         
         <div id="eventeditorinviter" class="grid-nav">
-            <label>Invite: </label><input type="text" oninput="eventeditor.setSearch(this.value)" onchange="eventeditor.searchUser(this)">
-            <ul id="eventeditorinvitelist">
+            <div class='grid-title'>Invite</div>
+            <div class='grid-item'><input type="text" oninput="eventeditor.setSearch(this.value)" onchange="eventeditor.searchUser(this)"></div>
+            <div class='grid-item'><ul id="eventeditorinvitelist"></div>
             </ul>
         </div>
     </div>
