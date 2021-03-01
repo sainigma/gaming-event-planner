@@ -34,11 +34,11 @@ function _start {
   if [ -d "$VENVDIR" ]; then
     source ./venv/bin/activate
     clear
-    flask run
+    flask run --host 0.0.0.0
     deactivate
     # _clean
   else
-    _init
+    _init 
     _start
   fi
 }

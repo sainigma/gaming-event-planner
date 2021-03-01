@@ -77,7 +77,7 @@
         "eventdatevotes":{
             "voter":"uuid",
             "event":"uuid",
-            "date":"timestamp",
+            "date":"text",
             "hour":"int"
         },
         "comments":{

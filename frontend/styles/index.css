@@ -2,6 +2,14 @@ h1 {
     color:red;
 }
 
+.grid-title-wide {
+    padding: 0 0;
+    height: 1em;
+    text-align: center;
+    grid-column-start: 1;
+    grid-column-end: 4;    
+}
+
 body {
     padding: 0;
     margin: 0;
@@ -59,11 +67,6 @@ body {
     width: 150px;
 }
 
-#eventlist {
-    width: 30%;
-    margin-top: 3em;
-}
-
 #eventcreator, #eventeditor {
     position: absolute;
     border-left: 1px solid black;
@@ -74,13 +77,14 @@ body {
     z-index: 20;
 }
 
-.grid-container, .grid-container-small {
+.grid-container, .grid-main, .grid-container-small {
     display: grid;
     grid-gap: 10px;
     padding: 10px;
 }
 
 .grid-container-small {
+    width: 80%;
     grid-template-columns: 1fr 2fr;
 }
 
@@ -88,7 +92,7 @@ body {
     grid-template-columns: 1fr 2fr 3fr;
 }
 
-.grid-container > div, .grid-container-small > div {
+.grid-container, .grid-main, .grid-container-small, .grid-item, .grid-title {
     padding: 10px 5px;
 }
 
@@ -96,12 +100,13 @@ body {
     text-align: center;
 }
 
-.grid-title, .grid-title-big {
+.grid-title, .grid-title-big, .grid-title-wide {
     border: 1px solid black;
     font-weight:bold;
 }
 
 .grid-title-big {
+    padding: 10px 10px;
     text-align: center;
     grid-column-start: 1;
     grid-column-end: 4;
@@ -142,7 +147,7 @@ body {
 .dualslider-right {
     margin-left: 0;
 }
-#eventeditorcomments {
+#eventeditorcomments, .scrollingfield {
     overflow-y: scroll;
     overflow-x: hidden;
     scrollbar-width: thin;
@@ -158,4 +163,55 @@ body {
 }
 #commentfield {
     width: 100%;
+}
+#dateadder {
+    display: none;
+    border: 1px solid black;
+    position: absolute;
+    background-color: white;
+    width: 90%;
+    left: 5%;
+    top: 100px;
+    padding: 10px;
+    z-index: 40;
+}
+table {
+    width: 100%;
+    text-align: left;
+}
+td > button {
+    width: 100%;
+}
+
+.hourtable > tbody > tr > td {
+    border: 1px solid black;
+ }
+
+ .hourtable > tbody > tr > td {
+     text-align: right;
+ }
+ .grid-main {
+     grid-template-columns: auto auto auto;
+     display: grid;
+
+ }
+ .grid-title-wide {
+    padding: 5px 0px;
+    height: 1em;
+    text-align: center;
+    grid-column-start: 1;
+    grid-column-end: 4;    
+}
+.wide-button {
+    height: 2em;
+    width: 100%;
+}
+#eventeditorblocker {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0.3;
+    z-index: 30;
 }

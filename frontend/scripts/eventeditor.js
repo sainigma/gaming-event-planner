@@ -19,6 +19,39 @@ export default class EventEditor{
         return element
     }
 
+    resetDateAdder() {
+        const dateitem = document.getElementById('dateadderdate')
+        dateitem.value = ""
+        this.dateSetRange(0, 23, false)
+        this.setVisibility('eventeditorcontrols', 'block')
+    }
+
+    dateCopy(date, hours) {
+        const dateitem = document.getElementById('dateadderdate')
+        dateitem.value = date
+        console.log(dateitem)
+        hours.forEach(hour => {
+            const item = document.getElementById(`dateaddervalues${hour}`)
+            item.checked = true
+        })
+        this.setVisibility('eventeditorcontrols', 'none')
+        this.setVisibility('eventeditordateadderform', 'block')
+    }
+
+    dateSetRange(start, end, value) {
+        for(let i = start; i <= end; i++) {
+            const item = document.getElementById(`dateaddervalues${i}`)
+            item.checked = value
+        }
+    }
+
+    dateToggleRange(start, end) {
+        for(let i = start; i <= end; i++) {
+            const item = document.getElementById(`dateaddervalues${i}`)
+            item.checked = !item.checked
+        }
+    }
+
     clearComments() {
         const commentParent = document.getElementById('eventeditorcomments')
         commentParent.innerHTML = ''
@@ -77,6 +110,9 @@ export default class EventEditor{
     }
 
     close() {
+        this.setVisibility('dateadder', 'none')
+        this.setVisibility('eventeditordateadderform', 'none')
+        this.resetDateAdder()
         window.toggleSite('eventeditor')
         window.setBlocker(false)
     }
