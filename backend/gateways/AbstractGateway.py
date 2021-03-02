@@ -1,3 +1,6 @@
+from itertools import groupby
+from operator import itemgetter
+
 from queries.User import User
 from queries.Event import Event
 from queries.Populator import Populator
@@ -18,6 +21,54 @@ class AbstractGateway:
     def mapResult(self, result, labels):
         for i in range(0, len(result)):
             result[i] = dict(zip(labels, result[i]))
+        return result
+
+    def voteDate(self, username, eventId, date, hours):
+        # tarkista että käyttäjä osa tapahtumaa
+        userId = self.queries['users']._getUserID(username)
+        self.queries['events'].voteDate(userId, eventId, date, hours)
+
+    def getEventDateVotes(self, username, eventId):
+        userId = self.queries['users']._getUserID(username)
+        votes = self.queries['events'].getDateVotes(userId, eventId)
+        if (len(votes) == 0):
+            return []
+
+        dates = {}
+        for vote in votes:
+            if not(vote[0] in dates):
+                dates[vote[0]] = []
+            dates[vote[0]].append(vote[1])
+
+        result = []
+        for date in dates:
+            result.append({'date':date, 'hours':dates[date]})
+
+        return result
+
+
+    def getAllEventDateVotes(self, eventId):
+        dateVotes = self.queries['events'].getAllDateVotes(eventId)
+        
+        result = []
+        if (len(dateVotes) == 0):
+            return result
+
+        users = {}
+        for vote in dateVotes:
+            if not(vote[0] in users):
+                users[vote[0]] = []
+            users[vote[0]].append((vote[1], vote[2]))
+
+        for user in users:
+            votes = {}
+            target = users[user]
+            for vote in target:
+                if not(vote[0] in votes):
+                    votes[vote[0]] = []
+                votes[vote[0]].append(vote[1])
+            result.append({'name':user, 'votes':votes})
+        
         return result
 
     def getComments(self, username, eventId):

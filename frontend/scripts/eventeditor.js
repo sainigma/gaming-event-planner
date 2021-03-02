@@ -91,6 +91,13 @@ export default class EventEditor{
         commentParent.scrollTop = commentParent.scrollHeight
     }
 
+    async sendForm(event) {
+        const data = new FormData(event.form)
+        data.append('eventId', this.eventId)
+        const formJSON = Object.fromEntries(data.entries())
+        const result = await window.services.post(`/api/vote/date/`, formJSON)
+    }
+
     async comment() {
         const commentfield = await document.getElementById('commentfield')
         const target = '/api/comment/new'

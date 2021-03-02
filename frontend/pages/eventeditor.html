@@ -7,12 +7,12 @@
             <button onclick="eventeditor.setVisibility('eventeditordateadderform', 'block'); eventeditor.setVisibility('eventeditorcontrols', 'none')">Add date</button>
             <button onclick="eventeditor.setVisibility('dateadder', 'none'); eventeditor.setVisibility('eventeditordateadderform', 'none'); eventeditor.dateSetRange(0,23, false); eventeditor.setVisibility('eventeditorblocker', 'none');">Close date editor</button>
         </div>        
-        <form id='eventeditordateadderform' style='display:none'>
+        <form id='eventeditordateadderform' style='display:none' onsubmit="return false">
             <div class='grid-title-big'>New date</div>
             <table>
                 <tr>
                     <th>Date to add</th>
-                    <td><input id='dateadderdate' type='date' min="2021-01-10"></td>
+                    <td><input id='dateadderdate' name='date' type='date' min="2021-01-10"></td>
                 </tr>
                 <tr>
                     <th>Hours when available</th>
@@ -20,32 +20,32 @@
             </table>
             <table class='hourtable'>
                 <tr>
-                    <td>0 <input id='dateaddervalues0' value='0' type='checkbox'></td>
-                    <td>1 <input id='dateaddervalues1' value='1' type='checkbox'></td>
-                    <td>2 <input id='dateaddervalues2' value='2' type='checkbox'></td>
-                    <td>3 <input id='dateaddervalues3' value='3' type='checkbox'></td>
-                    <td>4 <input id='dateaddervalues4' value='4' type='checkbox'></td>
-                    <td>5 <input id='dateaddervalues5' value='5' type='checkbox'></td>
-                    <td>6 <input id='dateaddervalues6' value='6' type='checkbox'></td>
-                    <td>7 <input id='dateaddervalues7' value='7' type='checkbox'></td>
-                    <td>8 <input id='dateaddervalues8' value='8' type='checkbox'></td>
-                    <td>9 <input id='dateaddervalues9' value='9' type='checkbox'></td>
-                    <td>10<input id='dateaddervalues10' value='10' type='checkbox'></td>
-                    <td>11<input id='dateaddervalues11' value='11' type='checkbox'></td>
+                    <td>0 <input id='dateaddervalues0' name='0' value=1 type='checkbox'></td>
+                    <td>1 <input id='dateaddervalues1' name='1' value=1 type='checkbox'></td>
+                    <td>2 <input id='dateaddervalues2' name='2' value=1 type='checkbox'></td>
+                    <td>3 <input id='dateaddervalues3' name='3' value=1 type='checkbox'></td>
+                    <td>4 <input id='dateaddervalues4' name='4' value=1 type='checkbox'></td>
+                    <td>5 <input id='dateaddervalues5' name='5' value=1 type='checkbox'></td>
+                    <td>6 <input id='dateaddervalues6' name='6' value=1 type='checkbox'></td>
+                    <td>7 <input id='dateaddervalues7' name='7' value=1 type='checkbox'></td>
+                    <td>8 <input id='dateaddervalues8' name='8' value=1 type='checkbox'></td>
+                    <td>9 <input id='dateaddervalues9' name='9' value=1 type='checkbox'></td>
+                    <td>10<input id='dateaddervalues10' name='10' value=1 type='checkbox'></td>
+                    <td>11<input id='dateaddervalues11' name='11' value=1 type='checkbox'></td>
                 </tr>
                 <tr>
-                    <td>12 <input id='dateaddervalues12' value='12' type='checkbox'></td>
-                    <td>13 <input id='dateaddervalues13' value='13' type='checkbox'></td>
-                    <td>14 <input id='dateaddervalues14' value='14' type='checkbox'></td>
-                    <td>15 <input id='dateaddervalues15' value='15' type='checkbox'></td>
-                    <td>16 <input id='dateaddervalues16' value='16' type='checkbox'></td>
-                    <td>17 <input id='dateaddervalues17' value='17' type='checkbox'></td>
-                    <td>18 <input id='dateaddervalues18' value='18' type='checkbox'></td>
-                    <td>19 <input id='dateaddervalues19' value='19' type='checkbox'></td>
-                    <td>20 <input id='dateaddervalues20' value='20' type='checkbox'></td>
-                    <td>21 <input id='dateaddervalues21' value='21' type='checkbox'></td>
-                    <td>22 <input id='dateaddervalues22' value='22' type='checkbox'></td>
-                    <td>23 <input id='dateaddervalues23' value='23' type='checkbox'></td>
+                    <td>12 <input id='dateaddervalues12' name='12' value=1 type='checkbox'></td>
+                    <td>13 <input id='dateaddervalues13' name='13' value=1 type='checkbox'></td>
+                    <td>14 <input id='dateaddervalues14' name='14' value=1 type='checkbox'></td>
+                    <td>15 <input id='dateaddervalues15' name='15' value=1 type='checkbox'></td>
+                    <td>16 <input id='dateaddervalues16' name='16' value=1 type='checkbox'></td>
+                    <td>17 <input id='dateaddervalues17' name='17' value=1 type='checkbox'></td>
+                    <td>18 <input id='dateaddervalues18' name='18' value=1 type='checkbox'></td>
+                    <td>19 <input id='dateaddervalues19' name='19' value=1 type='checkbox'></td>
+                    <td>20 <input id='dateaddervalues20' name='20' value=1 type='checkbox'></td>
+                    <td>21 <input id='dateaddervalues21' name='21' value=1 type='checkbox'></td>
+                    <td>22 <input id='dateaddervalues22' name='22' value=1 type='checkbox'></td>
+                    <td>23 <input id='dateaddervalues23' name='23' value=1 type='checkbox'></td>
                 </tr>
             </table>
             <table>
@@ -64,7 +64,7 @@
                 <tr>
                     <td></td>
                     <td></td>
-                    <td><button>save</button></td>
+                    <td><button type="submit" onclick="eventeditor.sendForm(this)">save</button></td>
                     <td><button onclick="eventeditor.setVisibility('eventeditordateadderform', 'none'); eventeditor.resetDateAdder();">cancel</button></td>
                 </tr>
             </table>
@@ -99,15 +99,14 @@
         <div class='grid-title-big'>Vote panel</div>
         <div class='grid-container' style='grid-template-columns: 1fr;'>
             <div style='grid-column: 1;'>
-                <div class='grid-title-wide'>Vote</div>
+                <div class='grid-title-wide'>Add</div>
                 <button class='wide-button' onclick="eventeditor.setVisibility('dateadder', 'block'); eventeditor.setVisibility('eventeditorblocker', 'block');">Date</button>
                 <button class='wide-button' onclick="eventeditor.setVisibility('gameadder', 'block'); eventeditor.setVisibility('eventeditorblocker', 'block');">Game</button>
             </div>
         </div>
         <div class='grid-container' style='grid-column-start: 2; grid-column-end: 4; grid-template-columns: 1fr 1fr;'>
-            <div class='grid-title-wide'>Vote results</div>
             <div style='grid-column: 1;'>
-                <div class='grid-title-wide'>Dates</div>
+                <div class='grid-title-wide'>Overlapping dates</div>
                 <div class='scrollingfield'>
                     <p class='comment'>Fri 10. Jan. 10-12. Users: 4</p>
                     <p class='comment'>Fri 10. Jan. 14-15. Users: 3</p>
@@ -116,7 +115,7 @@
 
             </div>
             <div style='grid-column: 2;'>
-                <div class='grid-title-wide'>Games</div>
+                <div class='grid-title-wide'>Overlapping games</div>
                 <div class='scrollingfield'>
                     <p class='comment'>Quake. Points: 20<button>vote</button></p>
                 </div>

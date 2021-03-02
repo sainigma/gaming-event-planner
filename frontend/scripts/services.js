@@ -11,11 +11,6 @@ export default class Services{
             this.headers.forEach((content, tag) => {
                 xhr.setRequestHeader(tag, content)
             })
-            
-            for (let header in this.headers.keys()) {
-                console.log(header)
-                xhr.setRequestHeader(header, this.headers.get(header))
-            }
     
             xhr.onload = (res) => {
                 response(res)
@@ -34,7 +29,7 @@ export default class Services{
     }
 
     async post(target, params) {
-        return this._send('POST', target, params)
+        return this._send('POST', target, params, false)
     }
 
     setHeader(tag, content) {

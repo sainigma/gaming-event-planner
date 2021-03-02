@@ -18,10 +18,43 @@ class Event(QueryInterface):
         eventId = result[0][0]
         self.addParticipant(ownerId, eventId)
 
-    def invite(self, eventId, userId):
-        notParticipantQuery = 'select id from eventparticipants where user = {0} and event = {1}'.format(int(userId), int(eventId))
-        result = self.executeQuery(notParticipantQuery)
+    def isParticipant(self, userId, eventId):
+        isParticipantQuery = 'select id from eventparticipants where user = {0} and event = {1}'.format(int(userId), int(eventId))
+        result = self.executeQuery(isParticipantQuery)
         if (len(result) > 0):
+            return True
+        return False
+
+    def getDateVotes(self, userId, eventId):
+        query = 'select date, hour from eventdatevotes where user = {0} and event = {1}'.format(int(userId), int(eventId))
+        result = self.executeQuery(query)
+        if (len(result) > 0):
+            return result
+        return []
+
+    def getAllDateVotes(self, eventId):
+        query = 'select u.username, e.date, e.hour from eventdatevotes e left join users u on e.user = u.id where event = {0}'.format(int(eventId))
+        self.executeQuery(query)
+        result = self.executeQuery(query)
+        if (len(result) > 0):
+            return result
+        return []        
+
+    def voteDate(self, userId, eventId, date, hours):
+        if (not self.isParticipant(userId, eventId)):
+            return
+        clearExistingQuery = 'delete from eventdatevotes where user = {0} and event = {1} and date = {2}'.format(int(userId), int(eventId), str(date))
+        self.executeQuery(clearExistingQuery)
+
+        print(date)
+
+        for hour in hours:
+            # Tämän voisi korvata SQL-side funktiolla joka vastaanottaa jaetut parametrit ja listan tunneista
+            query = 'insert into eventdatevotes (user, event, date, hour) values ({0}, {1}, "{2}", {3})'.format(int(userId), int(eventId), str(date), int(hour))
+            self.executeQuery(query)
+
+    def invite(self, eventId, userId):
+        if (self.isParticipant(userId, eventId)):
             return
         invitationExistsQuery = 'select id from eventinvites where user = {0} and event = {1}'.format(int(userId), int(eventId))
         result = self.executeQuery(invitationExistsQuery)

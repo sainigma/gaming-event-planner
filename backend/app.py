@@ -54,11 +54,39 @@ def getComments(eventId):
     result = gateway.getComments('', eventId)
     return Response(json.dumps(result), status = 200, mimetype='application/json')
 
+@app.route("/api/vote/date/", methods=['POST'])
+def voteDate():
+    username = getUsernameFromVerification(request)
+    if (not username):
+        return Response("", status = 301)
+    
+    req = request.json
+    hours = []
+    for i in range(0, 24):
+        hour = req.get(str(i))
+        if (hour != None):
+            hours.append(i)
+    eventId = req.get('eventId')
+    date = req.get('date')
+    # Tarkasta että date on muotoa yyyy-mm-dd
+    if (sanitize(hours) and sanitize(eventId) and sanitize(date)):
+        gateway.voteDate(username, eventId, date, hours)
+        return Response("", status = 200)
+    return Response("", status = 400)
+
+@app.route("/api/vote/date/<int:eventId>")
+def getDateVotes(eventId):
+    username = getUsernameFromVerification(request)
+    if (not username):
+        return Response("", status = 301)
+    result = gateway.getEventDateVotes(username, eventId)
+    return Response(json.dumps(result), status = 200, mimetype='application/json')
+
 @app.route("/api/comment/new", methods=['POST'])
 def addComment():
     username = getUsernameFromVerification(request)
     if (not username):
-        return Response("", status = 301)    
+        return Response("", status = 301)
     req = request.json
     
     eventId = req.get("eventId")

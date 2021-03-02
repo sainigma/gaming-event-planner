@@ -69,13 +69,14 @@
         },
         "eventgamevotes":{ 
             "id":"uuid",
-            "voter":"uuid",
+            "user":"uuid",
             "event":"uuid",
             "game":"uuid",
             "rating":"int"
         },
         "eventdatevotes":{
-            "voter":"uuid",
+            "id":"uuid",
+            "user":"uuid",
             "event":"uuid",
             "date":"text",
             "hour":"int"
