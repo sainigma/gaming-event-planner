@@ -70,6 +70,7 @@ def voteDate():
     date = req.get('date')
     # Tarkasta että date on muotoa yyyy-mm-dd
     if (sanitize(hours) and sanitize(eventId) and sanitize(date)):
+        print(hours)
         gateway.voteDate(username, eventId, date, hours)
         return Response("", status = 200)
     return Response("", status = 400)

@@ -2,7 +2,7 @@
     <div id="dateadder">
         <div class='grid-title-big'>Date editor</div>
         <span><b>Added dates</b></span>
-        <p>Fri 11/Jan 2021: 14-18, 20-23 <button onclick="eventeditor.dateCopy('2021-01-11', [1,3,4])">copy to editor</button><button>remove</button></p>
+        <table id='dateadderdates'></table>
         <div id='eventeditorcontrols'>
             <button onclick="eventeditor.setVisibility('eventeditordateadderform', 'block'); eventeditor.setVisibility('eventeditorcontrols', 'none')">Add date</button>
             <button onclick="eventeditor.setVisibility('dateadder', 'none'); eventeditor.setVisibility('eventeditordateadderform', 'none'); eventeditor.dateSetRange(0,23, false); eventeditor.setVisibility('eventeditorblocker', 'none');">Close date editor</button>
@@ -64,7 +64,7 @@
                 <tr>
                     <td></td>
                     <td></td>
-                    <td><button type="submit" onclick="eventeditor.sendForm(this)">save</button></td>
+                    <td><button type="submit" onclick="eventeditor.sendForm(this, ()=>{eventeditor.setVisibility('eventeditordateadderform', 'none'); eventeditor.resetDateAdder(); eventeditor.activateDateAdder()})">save</button></td>
                     <td><button onclick="eventeditor.setVisibility('eventeditordateadderform', 'none'); eventeditor.resetDateAdder();">cancel</button></td>
                 </tr>
             </table>
@@ -100,7 +100,7 @@
         <div class='grid-container' style='grid-template-columns: 1fr;'>
             <div style='grid-column: 1;'>
                 <div class='grid-title-wide'>Add</div>
-                <button class='wide-button' onclick="eventeditor.setVisibility('dateadder', 'block'); eventeditor.setVisibility('eventeditorblocker', 'block');">Date</button>
+                <button class='wide-button' onclick="eventeditor.activateDateAdder();">Date</button>
                 <button class='wide-button' onclick="eventeditor.setVisibility('gameadder', 'block'); eventeditor.setVisibility('eventeditorblocker', 'block');">Game</button>
             </div>
         </div>

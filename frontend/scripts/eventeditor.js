@@ -19,6 +19,81 @@ export default class EventEditor{
         return element
     }
 
+    collapseHours(hours) {
+        let arr1 = []
+        let arr2 = []
+
+        let i = 0
+        let previous = 0
+        arr1.push(hours[0])
+        previous = arr1[0]
+        hours.forEach(hour => {
+            if (hour > previous + 1) {
+                arr1.push(hour)
+                arr2.push(previous)
+            }
+            previous = hour
+            i++
+        })
+        arr2.push(previous)
+
+        let result = ''
+        for(let j = 0; j < arr1.length; j++) {
+            if (arr1[j] == arr2[j]) {
+                result += arr1[j]
+            } else {
+                result += `${arr1[j]} - ${arr2[j]}`
+            }
+            if (j + 1 < arr1.length) {
+                result += ', '
+            }
+        }
+        return result
+    }
+
+    async activateDateAdder() {
+        const dateaddertable = document.getElementById('dateadderdates')
+        dateaddertable.innerHTML = ''
+        const result = await window.services.get(`/api/vote/date/${this.eventId}`)
+        if (result.target.status != 200) {
+            return
+        }
+
+        if (result.target.response != "[]") {
+            const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            const dates = JSON.parse(result.target.response)
+            dates.forEach(date => {
+                const collapsedHours = this.collapseHours(date.hours)
+                const dateObj = new Date(Date.parse(date.date))
+                
+                const tr = document.createElement('tr')
+                const datefield = document.createElement('td')
+                const buttonfield = document.createElement('td')
+                const removebuttonField = document.createElement('td')
+                const copybutton = document.createElement('button')
+                const removebutton = document.createElement('button')
+
+                datefield.innerHTML = `${weekdays[dateObj.getDay()]} ${dateObj.getDate()}/${months[dateObj.getMonth()]} ${dateObj.getFullYear()}: ${collapsedHours}`                
+                
+                copybutton.innerHTML = 'copy to editor'
+                copybutton.onclick = () => {
+                    eventeditor.dateCopy(date.date, date.hours)
+                }
+                removebutton.innerHTML = 'remove'
+
+                buttonfield.appendChild(copybutton)
+                removebuttonField.appendChild(removebutton)
+                tr.appendChild(datefield)
+                tr.appendChild(buttonfield)
+                tr.appendChild(removebuttonField)
+                dateaddertable.appendChild(tr)
+            })
+        }
+        this.setVisibility('dateadder', 'block')
+        this.setVisibility('eventeditorblocker', 'block')
+    }
+
     resetDateAdder() {
         const dateitem = document.getElementById('dateadderdate')
         dateitem.value = ""
@@ -91,11 +166,14 @@ export default class EventEditor{
         commentParent.scrollTop = commentParent.scrollHeight
     }
 
-    async sendForm(event) {
+    async sendForm(event, next) {
         const data = new FormData(event.form)
         data.append('eventId', this.eventId)
         const formJSON = Object.fromEntries(data.entries())
         const result = await window.services.post(`/api/vote/date/`, formJSON)
+        if (result.target.status == 200) {
+            next()
+        }
     }
 
     async comment() {
@@ -196,8 +274,7 @@ export default class EventEditor{
                 this.setInnerHTML('eventeditorgameitem', `<a target='_blank' href='https://www.igdb.com/games/${gameInfo.slug}/'>${gameInfo.name}</a>`)
             } else {
                 this.setVisibility('eventeditorgamelabel', 'none')
-                this.setVisibility('eventeditorgameitem', 'none')
-        
+                this.setVisibility('eventeditorgameitem', 'none')        
             }
         }
     }
