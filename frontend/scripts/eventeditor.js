@@ -51,6 +51,20 @@ export default class EventEditor{
         return result
     }
 
+    dateString(date, precision) {
+        const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    
+        const dateObj = new Date(Date.parse(date))
+        const fields = [`${weekdays[dateObj.getDay()]}`, ` ${dateObj.getDate()}/${months[dateObj.getMonth()]}`, ` ${dateObj.getFullYear()}`]
+        
+        let result = ''
+        for(let i = 0; i < precision; i++) {
+            result += fields[i]
+        }
+        return result
+    }
+
     async activateDateAdder() {
         const dateaddertable = document.getElementById('dateadderdates')
         dateaddertable.innerHTML = ''
@@ -60,13 +74,8 @@ export default class EventEditor{
         }
 
         if (result.target.response != "[]") {
-            const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
             const dates = JSON.parse(result.target.response)
-            dates.forEach(date => {
-                const collapsedHours = this.collapseHours(date.hours)
-                const dateObj = new Date(Date.parse(date.date))
-                
+            dates.forEach((date) => {
                 const tr = document.createElement('tr')
                 const datefield = document.createElement('td')
                 const buttonfield = document.createElement('td')
@@ -74,13 +83,16 @@ export default class EventEditor{
                 const copybutton = document.createElement('button')
                 const removebutton = document.createElement('button')
 
-                datefield.innerHTML = `${weekdays[dateObj.getDay()]} ${dateObj.getDate()}/${months[dateObj.getMonth()]} ${dateObj.getFullYear()}: ${collapsedHours}`                
+                datefield.innerHTML = `${this.dateString(date.date, 3)} : ${this.collapseHours(date.hours)}`                
                 
                 copybutton.innerHTML = 'copy to editor'
                 copybutton.onclick = () => {
                     eventeditor.dateCopy(date.date, date.hours)
                 }
                 removebutton.innerHTML = 'remove'
+                removebutton.onclick = () => {
+                    eventeditor.removeDate(date.date)
+                }
 
                 buttonfield.appendChild(copybutton)
                 removebuttonField.appendChild(removebutton)
@@ -101,10 +113,13 @@ export default class EventEditor{
         this.setVisibility('eventeditorcontrols', 'block')
     }
 
+    removeDate(date) {
+        this.afterDateSubmit()
+    }
+
     dateCopy(date, hours) {
         const dateitem = document.getElementById('dateadderdate')
         dateitem.value = date
-        console.log(dateitem)
         hours.forEach(hour => {
             const item = document.getElementById(`dateaddervalues${hour}`)
             item.checked = true
@@ -166,6 +181,13 @@ export default class EventEditor{
         commentParent.scrollTop = commentParent.scrollHeight
     }
 
+    afterDateSubmit() {
+        eventeditor.setVisibility('eventeditordateadderform', 'none')
+        eventeditor.resetDateAdder()
+        eventeditor.activateDateAdder()
+        eventeditor.updateOverlappingDates()
+    }
+
     async sendForm(event, next) {
         const data = new FormData(event.form)
         data.append('eventId', this.eventId)
@@ -185,7 +207,6 @@ export default class EventEditor{
             content:commentfield.value
         }
         commentfield.disabled = true
-        console.log(params)
         const result = await window.services.post(target, params)
         if (result.target.status == 200) {
             commentfield.value = ''
@@ -213,8 +234,10 @@ export default class EventEditor{
     }
 
     async searchUser(e) {
-        const wrapper = (params) => {
+        const wrapper = (params, event) => {
             this.inviteUser(params.name)
+            event.target.disabled = true
+            event.target.innerHTML = 'Invited!'
         }
         e.disabled = true
         e.value = ''
@@ -223,9 +246,74 @@ export default class EventEditor{
         listResults(result.target.response, 'eventeditorinvitelist', 'Invite', wrapper)
     }
 
+    async updateOverlappingDates() {
+        const targetDiv = document.getElementById('eventeditor-overlappingdates')
+        targetDiv.innerHTML = ''
+        const result = await window.services.get(`/api/vote/date/union/${this.eventId}`)
+        if (result.target.status == 200) {
+            const dates = JSON.parse(result.target.response).slice(0, 5)
+            if (dates.length == 0) {
+                targetDiv.innerHTML = '<tr></tr><tr><td>No dates added yet</td></tr>'
+                return
+            }
+            const usersMax = dates[0].overlapMax
+
+            const hourGrid = document.createElement('div')
+            hourGrid.className = 'hour-grid'
+            targetDiv.appendChild(hourGrid)
+
+            const tr = document.createElement('tr')
+            const td = document.createElement('td')
+            const td2 = document.createElement('td')
+            const img = document.createElement('img')
+            img.src = './styles/hours.png'
+            td.className = 'date-field'
+            td2.className = 'hour-field-header'
+            td2.appendChild(img)
+            tr.appendChild(td)
+            tr.appendChild(td2)
+            targetDiv.appendChild(tr)
+
+            dates.forEach((date) => {
+                const tr = document.createElement('tr')
+                const dateField = document.createElement('td')
+                const hourField = document.createElement('td')
+                
+
+                console.log(date)
+                dateField.innerHTML = this.dateString(date.date, 2)
+                dateField.className = 'date-field'
+
+                hourField.className = 'hour-field'
+
+                const canvas = document.createElement('canvas')
+                canvas.width = 24
+                canvas.height = 1
+                canvas.className = 'pixelart'
+
+                const ctx = canvas.getContext('2d')
+                ctx.fillStyle = `rgb(0, 0, 164)`
+                ctx.fillRect(0, 0, 24, 1)
+                date.hours.forEach((hourObj) => {
+                    const hour = hourObj.hour
+                    const colorCoeff = (hourObj.users / usersMax)
+                    const color = `rgb(${0}, ${colorCoeff * 245}, ${-colorCoeff * 164 + 164})`
+                    ctx.fillStyle = color
+                    ctx.fillRect(hour, 0, 1, 1)
+                })
+
+
+                hourField.appendChild(canvas)
+                tr.appendChild(dateField)
+                tr.appendChild(hourField)
+                targetDiv.appendChild(tr)
+            })
+        }
+    }
+
     async update() {
         this.div = await this.setVisibility('eventeditor', 'none')
-        
+
         const previousEventId = this.eventid
         this.eventId = window.state.get('eventid')
         if (previousEventId != this.eventid) {
@@ -233,11 +321,15 @@ export default class EventEditor{
         }
         const res = await window.services.get('/api/event/' + this.eventId)
         if (res.target.status !== 200) {
+
             return
         }
         window.setBlocker(true)
 
         this.updateComments()
+
+        this.updateOverlappingDates()
+
         const responseBody = JSON.parse(res.target.response)
         const info = responseBody.info
         const eventInfo = {
@@ -264,7 +356,9 @@ export default class EventEditor{
         this.setVisibility('eventeditorgamelabel', 'none')
         this.setVisibility('eventeditorgameitem', 'none')
         this.setVisibility('eventeditor', 'block')
+        this.setVisibility('overlapping-games', 'block')
         if (eventInfo.gameId != -1) {
+            this.setVisibility('overlapping-games', 'none')
             this.setVisibility('eventeditorgamelabel', 'inherit')
             this.setVisibility('eventeditorgameitem', 'inherit')
             this.setInnerHTML('eventeditorgameitem', '<i>fetching..</i>')

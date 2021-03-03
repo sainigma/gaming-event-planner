@@ -64,7 +64,7 @@
                 <tr>
                     <td></td>
                     <td></td>
-                    <td><button type="submit" onclick="eventeditor.sendForm(this, ()=>{eventeditor.setVisibility('eventeditordateadderform', 'none'); eventeditor.resetDateAdder(); eventeditor.activateDateAdder()})">save</button></td>
+                    <td><button type="submit" onclick="eventeditor.sendForm(this, ()=>{eventeditor.afterDateSubmit()})">save</button></td>
                     <td><button onclick="eventeditor.setVisibility('eventeditordateadderform', 'none'); eventeditor.resetDateAdder();">cancel</button></td>
                 </tr>
             </table>
@@ -107,14 +107,11 @@
         <div class='grid-container' style='grid-column-start: 2; grid-column-end: 4; grid-template-columns: 1fr 1fr;'>
             <div style='grid-column: 1;'>
                 <div class='grid-title-wide'>Overlapping dates</div>
-                <div class='scrollingfield'>
-                    <p class='comment'>Fri 10. Jan. 10-12. Users: 4</p>
-                    <p class='comment'>Fri 10. Jan. 14-15. Users: 3</p>
-                    <p class='comment'>Fri 10. Jan. 22-23. Users: 2</p>
-                </div>
+                <table id='eventeditor-overlappingdates' cellspacing="0">
+                </table>
 
             </div>
-            <div style='grid-column: 2;'>
+            <div id='overlapping-games' style='grid-column: 2;'>
                 <div class='grid-title-wide'>Overlapping games</div>
                 <div class='scrollingfield'>
                     <p class='comment'>Quake. Points: 20<button>vote</button></p>

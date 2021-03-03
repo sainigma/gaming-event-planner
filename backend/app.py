@@ -54,6 +54,14 @@ def getComments(eventId):
     result = gateway.getComments('', eventId)
     return Response(json.dumps(result), status = 200, mimetype='application/json')
 
+@app.route("/api/vote/date/union/<int:eventId>")
+def getOverlappingDates(eventId):
+    username = getUsernameFromVerification(request)
+    if (not username):
+        return Response("", status = 301)
+    result = gateway.getOverlappingDates(username, eventId)
+    return Response(json.dumps(result), status = 200, mimetype='application/json')
+
 @app.route("/api/vote/date/", methods=['POST'])
 def voteDate():
     username = getUsernameFromVerification(request)

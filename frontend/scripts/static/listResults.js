@@ -12,8 +12,8 @@ export const listResults = async(res, target, label, next) => {
         targetUL.appendChild(li)
         title.innerHTML = element.name
         button.innerHTML = label
-        button.onclick = () => {
-            next(element)
+        button.onclick = (event) => {
+            next(element, event)
         }
     });
 }

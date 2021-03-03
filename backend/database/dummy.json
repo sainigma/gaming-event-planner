@@ -6,11 +6,11 @@
         },
         {
             "username":"Bob",
-            "password":"salasanavaarinpain"
+            "password":"salasana"
         },
         {
             "username":"Carol",
-            "password":"salasanaplusinkrementaatio"
+            "password":"salasana"
         },
         {
             "username":"Erin",
@@ -25,6 +25,16 @@
         },
         {
             "user":"Carol",
+            "target":"Alice",
+            "relationType":1
+        },
+        {
+            "user":"Alice",
+            "target":"Bob",
+            "relationType":1
+        },
+        {
+            "user":"Bob",
             "target":"Alice",
             "relationType":1
         }

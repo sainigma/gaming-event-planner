@@ -46,6 +46,35 @@ class AbstractGateway:
 
         return result
 
+    def getOverlappingDates(self, username, eventId):
+        userId = self.queries['users']._getUserID(username)
+        votes = self.queries['events'].getOverlappingDates(userId, eventId)
+        if (len(votes) == 0):
+            return []
+
+        dates = {}
+        datesMaxUsers = {}
+        datesTotalHours = {}
+        for vote in votes:
+            day = vote[0]
+            hour = vote[1]
+            users = vote[2]
+
+            if not(day in dates):
+                dates[day] = []
+                datesMaxUsers[day] = users
+                datesTotalHours[day] = 0
+            dates[day].append({'hour':hour, 'users':users})
+            datesTotalHours[day] += users
+            if (users > datesMaxUsers[day]):
+                datesMaxUsers[day] = users
+
+        result = []
+        for date in dates:
+            print(dates[date])
+            result.append({'date':date, 'hours':dates[date], 'overlapMax': datesMaxUsers[date], 'totalSharedHours':datesTotalHours[date]})
+        result = sorted(result, key = lambda item: (-100000 * item['overlapMax'] - item['totalSharedHours']))
+        return result
 
     def getAllEventDateVotes(self, eventId):
         dateVotes = self.queries['events'].getAllDateVotes(eventId)

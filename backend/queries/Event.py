@@ -32,6 +32,15 @@ class Event(QueryInterface):
             return result
         return []
 
+    def getOverlappingDates(self, userId, eventId):
+        if (not self.isParticipant(userId, eventId)):
+            return []
+        query = 'select date, hour, count(id) as c from eventdatevotes where event = {0} group by date, hour order by c desc'.format(int(eventId))
+        result = self.executeQuery(query)
+        if (len(result) > 0):
+            return result
+        return []
+
     def getAllDateVotes(self, eventId):
         query = 'select u.username, e.date, e.hour from eventdatevotes e left join users u on e.user = u.id where event = {0}'.format(int(eventId))
         self.executeQuery(query)
@@ -46,7 +55,8 @@ class Event(QueryInterface):
         clearExistingQuery = 'delete from eventdatevotes where user = {0} and event = {1} and date = "{2}"'.format(int(userId), int(eventId), str(date))
         self.executeQuery(clearExistingQuery)
 
-        print(date)
+        if (len(hours) == 0):
+            return
 
         for hour in hours:
             # Tämän voisi korvata SQL-side funktiolla joka vastaanottaa jaetut parametrit ja listan tunneista
