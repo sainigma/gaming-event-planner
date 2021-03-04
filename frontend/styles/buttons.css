@@ -1,0 +1,55 @@
+button {
+    border-radius: 0.4em;
+    color: black;
+    background-color: var(--color-highlight);
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 2px 0px;
+    cursor: pointer;
+    transition-duration: 0.2s;
+}
+
+.button-accept, .button-refuse {
+    color: white;
+}
+
+.button-accept {
+    background-color: var(--color-button-positive)
+}
+.button-refuse {
+    background-color: var(--color-button-negative)
+}
+
+.button-wide {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.button-expands {
+    position: relative;
+}
+
+.button-expands span {
+    right: 6em;
+    position: absolute;
+    opacity: 0;
+    transition-duration: 0.2s;
+}
+
+.button-expands:hover span {
+    right: 2em;
+    opacity: 1;
+}
+
+button:disabled {
+    color: grey;
+    opacity: 0.3;
+}
+
+button:hover {
+    filter: brightness(104%);
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+  }

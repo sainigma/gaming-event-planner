@@ -1,137 +1,85 @@
-<div id="eventeditor">
-    <div id="dateadder">
-        <div class='grid-title-big'>Date editor</div>
-        <span><b>Added dates</b></span>
-        <table id='dateadderdates'></table>
-        <div id='eventeditorcontrols'>
-            <button onclick="eventeditor.setVisibility('eventeditordateadderform', 'block'); eventeditor.setVisibility('eventeditorcontrols', 'none')">Add date</button>
-            <button onclick="eventeditor.setVisibility('dateadder', 'none'); eventeditor.setVisibility('eventeditordateadderform', 'none'); eventeditor.dateSetRange(0,23, false); eventeditor.setVisibility('eventeditorblocker', 'none');">Close date editor</button>
-        </div>        
-        <form id='eventeditordateadderform' style='display:none' onsubmit="return false">
-            <div class='grid-title-big'>New date</div>
-            <table>
-                <tr>
-                    <th>Date to add</th>
-                    <td><input id='dateadderdate' name='date' type='date' min="2021-01-10"></td>
-                </tr>
-                <tr>
-                    <th>Hours when available</th>
-                </tr>
-            </table>
-            <table class='hourtable'>
-                <tr>
-                    <td>0 <input id='dateaddervalues0' name='0' value=1 type='checkbox'></td>
-                    <td>1 <input id='dateaddervalues1' name='1' value=1 type='checkbox'></td>
-                    <td>2 <input id='dateaddervalues2' name='2' value=1 type='checkbox'></td>
-                    <td>3 <input id='dateaddervalues3' name='3' value=1 type='checkbox'></td>
-                    <td>4 <input id='dateaddervalues4' name='4' value=1 type='checkbox'></td>
-                    <td>5 <input id='dateaddervalues5' name='5' value=1 type='checkbox'></td>
-                    <td>6 <input id='dateaddervalues6' name='6' value=1 type='checkbox'></td>
-                    <td>7 <input id='dateaddervalues7' name='7' value=1 type='checkbox'></td>
-                    <td>8 <input id='dateaddervalues8' name='8' value=1 type='checkbox'></td>
-                    <td>9 <input id='dateaddervalues9' name='9' value=1 type='checkbox'></td>
-                    <td>10<input id='dateaddervalues10' name='10' value=1 type='checkbox'></td>
-                    <td>11<input id='dateaddervalues11' name='11' value=1 type='checkbox'></td>
-                </tr>
-                <tr>
-                    <td>12 <input id='dateaddervalues12' name='12' value=1 type='checkbox'></td>
-                    <td>13 <input id='dateaddervalues13' name='13' value=1 type='checkbox'></td>
-                    <td>14 <input id='dateaddervalues14' name='14' value=1 type='checkbox'></td>
-                    <td>15 <input id='dateaddervalues15' name='15' value=1 type='checkbox'></td>
-                    <td>16 <input id='dateaddervalues16' name='16' value=1 type='checkbox'></td>
-                    <td>17 <input id='dateaddervalues17' name='17' value=1 type='checkbox'></td>
-                    <td>18 <input id='dateaddervalues18' name='18' value=1 type='checkbox'></td>
-                    <td>19 <input id='dateaddervalues19' name='19' value=1 type='checkbox'></td>
-                    <td>20 <input id='dateaddervalues20' name='20' value=1 type='checkbox'></td>
-                    <td>21 <input id='dateaddervalues21' name='21' value=1 type='checkbox'></td>
-                    <td>22 <input id='dateaddervalues22' name='22' value=1 type='checkbox'></td>
-                    <td>23 <input id='dateaddervalues23' name='23' value=1 type='checkbox'></td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th>Quick toggle:</th>
-                </tr>
-                <tr>
-                    <td><button onclick="eventeditor.dateToggleRange(0, 23)">All</button></td>
-                    <td style='width:10px'></td>
-                    <td><button onclick="eventeditor.dateToggleRange(22, 23); eventeditor.dateToggleRange(0, 5);">Night</button></td>
-                    <td><button onclick="eventeditor.dateToggleRange(6, 11)">Morning</button></td>
-                    <td><button onclick="eventeditor.dateToggleRange(12, 16)">Daytime</button></td>
-                    <td><button onclick="eventeditor.dateToggleRange(17, 21)">Evening</button></td>
-                    
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td><button type="submit" onclick="eventeditor.sendForm(this, ()=>{eventeditor.afterDateSubmit()})">save</button></td>
-                    <td><button onclick="eventeditor.setVisibility('eventeditordateadderform', 'none'); eventeditor.resetDateAdder();">cancel</button></td>
-                </tr>
-            </table>
+<div id="dateadder">
+</div>
+
+<div id="gameadder">
+</div>
+
+<div class="blocker" id="eventeditorblocker">
+</div>
+
+<div class='grid-container'>
+    <div class='grid-title-big'>
+        <button class='grid-title-button' style='left:0' onclick="eventeditor.close()">close</button>
+        <span id='eventeditortitle'></span>
+    </div>
+
+    <div class='grid-title'>Description</div>
+    <div class='grid-item'><span id='eventdescription'> tekstiä tähän</span></div>
+
+    <div class='grid-title'>Participants</div>
+    <div class='grid-item'><span id='eventparticipants'></span></div>
+
+    <div class='grid-title'>Event ends</div>
+    <div class='grid-item'><span id='eventenddate'></span></div>
+
+    <div id='eventeditorcommentcontainer' class='grid-nav'>
+        <form class='grid-nav' onsubmit="return false;">
+            <div class='grid-title-wide'>comments</div>
+            <div id="eventeditorcomments" class="scrollingfield"></div>
+            <input type="submit" style="display:none" onclick="eventeditor.comment()"/>
+            <input id="commentfield" class='commentfield' type="text"/>
         </form>
     </div>
-    <div id="eventeditorblocker"></div>
-    <button onclick="eventeditor.close()">close</button>
-    <button disabled onclick="eventeditor.update()" style='float:right'>update</button>
-    <div class='grid-container'>
-        <div class='grid-title-big'><span id='eventeditortitle'></span></div>
+</div>
 
-        <div class='grid-title'>Description</div>
-        <div class='grid-item'><span id='eventdescription'> tekstiä tähän</span></div>
-
-        <div class='grid-title'>Participants</div>
-        <div class='grid-item'><span id='eventparticipants'></span></div>
-
-        <div class='grid-title' id='eventeditorgamelabel'>Game</div>
-        <div class='grid-item' id='eventeditorgameitem'><span id='eventgame'>peli tähän</span></div>
-
-        <div id='eventeditorcommentcontainer' class='grid-nav'>
-            <form onsubmit="return false;">
-                <div class='grid-title-wide'>comments</div>
-                <div id="eventeditorcomments"></div>
-                <input type="submit" style="display:none" onclick="eventeditor.comment()"/>
-                <input id="commentfield" type="text"/>
-            </form>
-        </div>
-
-    </div>
-    <div class='grid-container'>
-        <div class='grid-title-big'>Vote panel</div>
-        <div class='grid-container' style='grid-template-columns: 1fr;'>
-            <div style='grid-column: 1;'>
-                <div class='grid-title-wide'>Add</div>
-                <button class='wide-button' onclick="eventeditor.activateDateAdder();">Date</button>
-                <button class='wide-button' onclick="eventeditor.setVisibility('gameadder', 'block'); eventeditor.setVisibility('eventeditorblocker', 'block');">Game</button>
-            </div>
-        </div>
-        <div class='grid-container' style='grid-column-start: 2; grid-column-end: 4; grid-template-columns: 1fr 1fr;'>
-            <div style='grid-column: 1;'>
-                <div class='grid-title-wide'>Overlapping dates</div>
-                <table id='eventeditor-overlappingdates' cellspacing="0">
-                </table>
-
-            </div>
-            <div id='overlapping-games' style='grid-column: 2;'>
-                <div class='grid-title-wide'>Overlapping games</div>
-                <div class='scrollingfield'>
-                    <p class='comment'>Quake. Points: 20<button>vote</button></p>
-                </div>
-            </div>
+<div class='grid-container'>
+    <div class='grid-title-big'>Vote panel</div>
+    <div class='grid-container smaller-gap' style='grid-template-columns: 1fr;'>
+        <div style='grid-column: 1;'>
+            <div class='grid-title-wide'>Add</div>
+            <button class='button-wide' onclick="eventeditor.activateDateAdder();">Date</button>
+            <button class='button-wide' id='votepanelgameadder' onclick="eventeditor.setVisibility('gameadder', 'block'); eventeditor.setVisibility('eventeditorblocker', 'block');">Game</button>
         </div>
     </div>
-    <div class='grid-container' id='eventeditoradminpanel'>
-        <div class='grid-title-big'>Admin panel</div>
+    <div class='grid-container smaller-gap' style='grid-column-start: 2; grid-column-end: 4; grid-template-columns: 1fr 1fr;'>
+        <div style='grid-column: 1;'>
+            <div class='grid-title-wide'>Overlapping dates</div>
+            <table id='eventeditor-overlappingdates' cellspacing="0">
+            </table>
+            <span id='eventeditor-maxparticipants'></span>
 
-        <div class='grid-title'>Edit description</div>
-        <div class='grid-item' style='padding:0'><textarea rows = "5" class='grid-texteditor' id="eventdescriptioneditor"></textarea></div>
-        
-        <div class='grid-title'>Opt filters for selecting games/participants</div>
-        <div class='grid-item'><input type="range" min="0" max="5" class='dualslider-left'><input type="range" id="volume" name="volume" min="5" max="10" class='dualslider-right'></div>
-        
-        <div id="eventeditorinviter" class="grid-nav">
-            <div class='grid-title'>Invite</div>
-            <div class='grid-item'><input type="text" placeholder='type username' oninput="eventeditor.setSearch(this.value)" onchange="eventeditor.searchUser(this)"></div>
-            <div class='grid-item'><ul id="eventeditorinvitelist"></ul></div>
+        </div>
+        <div id='overlapping-games' style='grid-column: 2;'>
+            <div class='grid-title-wide'>Overlapping games</div>
+            <div class='scrollingfield'>
+                <p class='comment'>Quake. Points: 20<button>vote</button></p>
+            </div>
+        </div>
+        <div id='enforced-game' style='grid-column: 2;'>
+            <div class='grid-title-wide' id='eventeditorgamelabel'>Selected game</div>
+            <div class='grid-item' id='eventeditorgameitem'><span id='eventgame'>peli tähän</span></div>    
         </div>
     </div>
 </div>
+
+<form class='grid-container' id='eventeditoradminpanel' style='width:100%; padding: 4px 0px; display:none' onsubmit="return false;">
+    <div class='grid-title-big'>Admin panel <button class='grid-title-button' type="submit" style='right:0' disabled>update</button></div>
+
+    <div class='grid-title'>Edit description</div>
+    <div class='grid-item' style='padding:0'>
+        <textarea rows = "5" name='description' class='grid-texteditor' id="eventdescriptioneditor"></textarea>
+    </div>
+    
+    <div class='grid-title'>Preference range for games</div>
+    <div class='grid-item'>
+        <input type="range" name='optlower' min="0" max="5" class='dualslider-left'>
+        <input type="range" name="optupper" min="5" max="10" class='dualslider-right'>
+    </div>
+    
+    <div id="eventeditorinviter" class="grid-nav">
+        <div class='grid-title'>Edit final event end date <input style='float:right' id='adminfinaldate' name='date' type='date'></div></br>
+
+        <div class='grid-title'>Invite <input type="text" placeholder='find user, use * for all' oninput="eventeditor.setSearch(this.value)" onchange="eventeditor.searchUser(this)"></div>
+        <div class='grid-item'><ul id="eventeditorinvitelist"></ul></div>
+    </div>
+</form>

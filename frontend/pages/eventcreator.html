@@ -1,19 +1,34 @@
-<div id="eventcreator">
-    <h3>New Event</h3>
-    <div id="eventtypeselector" style="display:block">
-        <h4>Select the game for the event..</h2>
-        <button onclick="eventcreator.setGameOriented(true)">Directly</button><button onclick="eventcreator.setGameOriented(false)">Let people vote</button>
+<div>
+    <div class='grid-title-big'>
+        <button class='grid-title-button button-refuse' style='left:0' onclick="eventcreator.cancel()">cancel</button>
+        Create new event
     </div>
-    <div id="eventgameselector" style="display:none">
-        <label>Search for a game</label><input type="text" oninput="eventcreator.setSearch(this.value)" onchange="eventcreator.searchGame(this)">
-        <ul id="eventcreatorgamepicker">
-        </ul>
+    
+    <div id="eventtypeselector" class='grid-container'>    
+        <div class='grid-title'>Game selection: </div>
+        <button class='button-wide' onclick="eventcreator.setGameOriented(true)">Set game directly</button>
+        <button class='button-wide' onclick="eventcreator.setGameOriented(false)">Let participants vote</button>
     </div>
-    <div id="eventfinalform" style="display:none">
-        <label>Event name</label><input id="eventnameinput" type="text" oninput="eventcreator.setName(this.value)"></br>
-        <label>Selected game: <span id="eventgametitle">user vote</span></label></br>
-        <label>Select group</label><select id="eventusergroups"></select></br>
-        <button id="eventsavebutton" onclick="eventcreator.saveEvent()" disabled>Save</button><button onclick="eventcreator.cancel()">Cancel</button></br>
-        <p id="eventcreationstatus"></p>
+
+    <div id='eventgameselector' class='grid-container-small' style='width:100%; padding: 4px 0px; display:none'>
+        <div class='grid-title'>Find game: </div>
+        <input class='commentfield' type="text" oninput="eventcreator.setSearch(this.value)" onchange="eventcreator.searchGame(this)"></br>
+        <div id='eventcreatorgamepicker'></div>
     </div>
+
+    <form id='eventfinalform' class='grid-container-small' style='width:100%; padding: 4px 0px; display:none' onsubmit="return false;">
+        <div id='eventformgametitle' class='grid-title'>Selected game: </div>
+        <div id='eventformgame' class='grid-item' style='text-align: left;'><span id="eventgametitle">user vote</span></div>
+        
+        <div class='grid-title'>Event name: </div>
+        <input id="eventnameinput" class='commentfield' type="text" oninput="eventcreator.setName(this.value)">
+
+        <div class='grid-title'>Event final date: </div>
+        <input id='eventfinaldate' name='date' type='date' oninput="eventcreator.setDate(this.value)">
+        
+        <div class='grid-title'>Selected group:</div>
+        <select id="eventusergroups"></select>
+
+        <button id="eventsavebutton" type="submit" onclick="eventcreator.saveEvent(this.value)" disabled>Save</button>
+    </form>
 </div>

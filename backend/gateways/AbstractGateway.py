@@ -135,10 +135,10 @@ class AbstractGateway:
         #    users[i] = dict(zip(['id', 'name'], users[i]))
         # return users
 
-    def newEvent(self, name, gameId, owner, groupId):
+    def newEvent(self, name, gameId, owner, groupId, ends):
         ownerId = self.queries['users']._getUserID(owner)
         if (self.queries['users'].belongsToGroup(ownerId, groupId)):
-            self.queries['events'].new(name, gameId, ownerId, groupId)
+            self.queries['events'].new(name, gameId, ownerId, groupId, ends)
 
     def getEvent(self, eventId):
         event = {}

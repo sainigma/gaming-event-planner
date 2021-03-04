@@ -1,0 +1,12 @@
+body {
+    --color-highlight: rgb(201, 228, 221);
+    --color-lighter: rgb(235, 235, 235);
+    --color-background: rgb(255, 255, 255);
+    --color-darker: rgb(46, 46, 46);
+    --color-darkest: hsla(298, 18%, 31%, 1);
+
+    --color-button: hsla(41, 59%, 49%, 1);
+    --color-button-positive: rgb(83, 224, 146);
+    --color-button-negative: rgb(202, 72, 72);
+    --color-button-disabled: hsla(41, 59%, 49%, 1);    
+}

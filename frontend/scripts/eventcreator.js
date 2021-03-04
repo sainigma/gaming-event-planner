@@ -1,9 +1,10 @@
-import {listResults} from '/scripts/static/listResults.js'
+import {listResults, buttonCreator} from '/scripts/static/listResults.js'
 
 export default class EventCreator{
     constructor() {
         this.name = ''
         this.game = ''
+        this.endDate = ''
         this.gameId = -1
         this.groupId = -1
         window.eventcreator = this
@@ -21,7 +22,8 @@ export default class EventCreator{
         const params = {
             name:this.name,
             gameId:this.gameId,
-            groupId:groupId
+            groupId:groupId,
+            ends:this.endDate
         }
         const result = await window.services.post(target, params)
         if (result.target.status == 200) {
@@ -36,14 +38,23 @@ export default class EventCreator{
         }
     }
 
-    setName(e) {
-        this.name = e
+    isReadyToSubmit() {
         const savebutton = document.getElementById('eventsavebutton')
-        if (this.name.length > 3) {
+        if (this.name.length > 3 && this.endDate.length == 10) {
             savebutton.disabled = false
         } else {
             savebutton.disabled = true
         }
+    }
+
+    setName(e) {
+        this.name = e
+        this.isReadyToSubmit()
+    }
+
+    setDate(e) {
+        this.endDate = e
+        this.isReadyToSubmit()
     }
 
     setSearch(e) {
@@ -53,7 +64,7 @@ export default class EventCreator{
     showDiv(tag, state) {
         const div = document.getElementById(tag)
         if (div != null) {
-            div.style.display = state ? 'block' : 'none'
+            div.style.display = state ? '' : 'none'
         }
     }
 
@@ -67,6 +78,12 @@ export default class EventCreator{
         this.game = ''
         this.gameId = -1
         this.name = ''
+        this.endDate = ''
+
+        const dateInput = document.getElementById('eventfinaldate')
+        if (dateInput != null) {
+            dateInput.value = ''
+        }
 
         const nameInput = document.getElementById('eventnameinput')
         if (nameInput != null) {
@@ -114,7 +131,11 @@ export default class EventCreator{
         this.showDiv('eventtypeselector', false)
         if (status) {
             this.showDiv('eventgameselector', true)
+            this.showDiv('eventformgametitle', true)
+            this.showDiv('eventformgame', true)
         } else {
+            this.showDiv('eventformgametitle', false)
+            this.showDiv('eventformgame', false)
             this.game = 'user vote'
             this.showFinalForm()
         }
@@ -126,16 +147,18 @@ export default class EventCreator{
         this.game = ''
         this.gameId = -1
         window.toggleSite('eventcreator')
+        window.setBlocker(false)
     }
 
     async searchGame(e) {
         const wrapper = (params) => {
             this.setGame(params.name, params.id)
         }
+
         e.disabled = true
         e.value = ''
         const result = await window.services.get('/api/game/find/'+this.game)
         e.disabled = false
-        listResults(result.target.response, 'eventcreatorgamepicker', 'Select', wrapper)
+        listResults(result.target.response, 'eventcreatorgamepicker', buttonCreator, wrapper)
     }
 }

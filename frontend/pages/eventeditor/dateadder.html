@@ -1,0 +1,68 @@
+<div class='grid-title-big'>Date editor</div>
+<span><b>Added dates</b></span>
+<table id='dateadderdates'></table>
+<div id='eventeditorcontrols'>
+    <button class='button-accept' onclick="eventeditor.setVisibility('eventeditordateadderform', 'block'); eventeditor.setVisibility('eventeditorcontrols', 'none')">Add date</button>
+    <button class='button-refuse' onclick="eventeditor.setVisibility('dateadder', 'none'); eventeditor.setVisibility('eventeditordateadderform', 'none'); eventeditor.dateSetRange(0,23, false); eventeditor.setVisibility('eventeditorblocker', 'none');">Close date editor</button>
+</div>        
+<form id='eventeditordateadderform' style='display:none' onsubmit="return false">
+    <div class='grid-title-big'>New date</div>
+    <table>
+        <tr>
+            <th>Date to add</th>
+            <td><input id='dateadderdate' name='date' type='date'></td>
+        </tr>
+        <tr>
+            <th>Hours when available</th>
+        </tr>
+    </table>
+    <table class='hourtable'>
+        <tr>
+            <td>0 <input id='dateaddervalues0' name='0' value=1 type='checkbox'></td>
+            <td>1 <input id='dateaddervalues1' name='1' value=1 type='checkbox'></td>
+            <td>2 <input id='dateaddervalues2' name='2' value=1 type='checkbox'></td>
+            <td>3 <input id='dateaddervalues3' name='3' value=1 type='checkbox'></td>
+            <td>4 <input id='dateaddervalues4' name='4' value=1 type='checkbox'></td>
+            <td>5 <input id='dateaddervalues5' name='5' value=1 type='checkbox'></td>
+            <td>6 <input id='dateaddervalues6' name='6' value=1 type='checkbox'></td>
+            <td>7 <input id='dateaddervalues7' name='7' value=1 type='checkbox'></td>
+            <td>8 <input id='dateaddervalues8' name='8' value=1 type='checkbox'></td>
+            <td>9 <input id='dateaddervalues9' name='9' value=1 type='checkbox'></td>
+            <td>10<input id='dateaddervalues10' name='10' value=1 type='checkbox'></td>
+            <td>11<input id='dateaddervalues11' name='11' value=1 type='checkbox'></td>
+        </tr>
+        <tr>
+            <td>12 <input id='dateaddervalues12' name='12' value=1 type='checkbox'></td>
+            <td>13 <input id='dateaddervalues13' name='13' value=1 type='checkbox'></td>
+            <td>14 <input id='dateaddervalues14' name='14' value=1 type='checkbox'></td>
+            <td>15 <input id='dateaddervalues15' name='15' value=1 type='checkbox'></td>
+            <td>16 <input id='dateaddervalues16' name='16' value=1 type='checkbox'></td>
+            <td>17 <input id='dateaddervalues17' name='17' value=1 type='checkbox'></td>
+            <td>18 <input id='dateaddervalues18' name='18' value=1 type='checkbox'></td>
+            <td>19 <input id='dateaddervalues19' name='19' value=1 type='checkbox'></td>
+            <td>20 <input id='dateaddervalues20' name='20' value=1 type='checkbox'></td>
+            <td>21 <input id='dateaddervalues21' name='21' value=1 type='checkbox'></td>
+            <td>22 <input id='dateaddervalues22' name='22' value=1 type='checkbox'></td>
+            <td>23 <input id='dateaddervalues23' name='23' value=1 type='checkbox'></td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <th style='white-space: nowrap;'>Quick toggle:</th>
+        </tr>
+        <tr>
+            <td style='width:10px'><button class='button-wide' onclick="eventeditor.dateToggleRange(0, 23)">All</button></td>
+            <td style='width:10px'></td>
+            <td><button class='button-wide' onclick="eventeditor.dateToggleRange(22, 23); eventeditor.dateToggleRange(0, 5);">Night</button></td>
+            <td><button class='button-wide' onclick="eventeditor.dateToggleRange(6, 11)">Morning</button></td>
+            <td><button class='button-wide' onclick="eventeditor.dateToggleRange(12, 16)">Daytime</button></td>
+            <td><button class='button-wide' onclick="eventeditor.dateToggleRange(17, 21)">Evening</button></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td><button class='button-accept button-wide' type="submit" onclick="eventeditor.sendForm(this, ()=>{eventeditor.afterDateSubmit()})">save</button></td>
+            <td><button class='button-refuse button-wide' onclick="eventeditor.setVisibility('eventeditordateadderform', 'none'); eventeditor.resetDateAdder();">cancel</button></td>
+        </tr>
+    </table>
+</form>

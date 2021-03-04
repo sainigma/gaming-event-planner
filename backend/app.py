@@ -1,4 +1,4 @@
-import os, json, time
+import os, json, time, datetime
 from flask import Flask, render_template, request, jsonify, Response
 from gateways.SQLiteGateway import SQLiteGateway
 from controllers.GameDBController import GameDBController
@@ -41,6 +41,15 @@ def sanitize(params):
         if (item == None or containsEvil(item)):
             return False
     return True
+
+def createDate(dateString):
+    try:
+        print(dateString)
+        eTime = int(time.mktime(datetime.datetime.strptime(dateString, "%Y-%m-%d").timetuple()))
+        return eTime
+    except ValueError:
+        print('valueerror')
+        return None
 
 def getUsernameFromVerification(req):
     bearer = req.headers.get('Authorization')
@@ -135,8 +144,15 @@ def newEvent():
     eventName = req.get("name")
     gameId = req.get("gameId")
     groupId = req.get("groupId")
-    if (sanitize({eventName, gameId, groupId})):
-        gateway.newEvent(eventName, gameId, username, groupId)
+    ends = req.get("ends")
+
+    etime = 0
+    if (sanitize({ends})):
+        etime = createDate(ends)
+    print(etime)
+
+    if (sanitize({eventName, gameId, groupId}) and etime != None):
+        gateway.newEvent(eventName, gameId, username, groupId, etime)
         return Response("", status = 200)
     return Response("", status = 400)
 

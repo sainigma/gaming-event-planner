@@ -1,10 +1,31 @@
-import {listResults} from '/scripts/static/listResults.js'
+import {listResults, listCreator} from '/scripts/static/listResults.js'
+
+//Luokka alkaa olla vaarallisen laaja
 
 export default class EventEditor{
     constructor() {
         window.eventeditor = this
         this.div = null
         this.eventId = -1
+        this.initiated = false
+    }
+
+    async init() {
+        const dateAdderDiv = document.getElementById('dateadder')
+        if (dateAdderDiv == null) {
+            return
+        }
+
+        const getPage = async(label) => {
+            const result = await services.get(`./pages/eventeditor/${label}.html?${Date.now()}`)
+            if (result.target.status == 200) {
+                return result.target.response
+            }
+            return ''
+        }
+
+        dateAdderDiv.innerHTML = await getPage('dateadder')
+        this.initiated = true
     }
 
     async setInnerHTML(target, content) {
@@ -65,7 +86,16 @@ export default class EventEditor{
         return result
     }
 
+    getDateISOString(time) {
+        const date = new Date(time)
+        return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`
+    }
+
     async activateDateAdder() {
+
+        const dateadderinput = document.getElementById('dateadderdate')
+        dateadderinput.min = this.getDateISOString(Date.now())
+
         const dateaddertable = document.getElementById('dateadderdates')
         dateaddertable.innerHTML = ''
         const result = await window.services.get(`/api/vote/date/${this.eventId}`)
@@ -77,26 +107,27 @@ export default class EventEditor{
             const dates = JSON.parse(result.target.response)
             dates.forEach((date) => {
                 const tr = document.createElement('tr')
-                const datefield = document.createElement('td')
                 const buttonfield = document.createElement('td')
                 const removebuttonField = document.createElement('td')
                 const copybutton = document.createElement('button')
                 const removebutton = document.createElement('button')
 
-                datefield.innerHTML = `${this.dateString(date.date, 3)} : ${this.collapseHours(date.hours)}`                
+                const dateInner = `${this.dateString(date.date, 3)} : ${this.collapseHours(date.hours)}`
                 
-                copybutton.innerHTML = 'copy to editor'
+                copybutton.innerHTML = `${dateInner} <span>copy to editor</span>`
                 copybutton.onclick = () => {
                     eventeditor.dateCopy(date.date, date.hours)
                 }
+                copybutton.className = 'button-wide button-expands'
+                copybutton.style = 'text-align: left;'
                 removebutton.innerHTML = 'remove'
+                removebutton.className = 'button-refuse button-wide'
                 removebutton.onclick = () => {
                     eventeditor.removeDate(date.date)
                 }
 
                 buttonfield.appendChild(copybutton)
                 removebuttonField.appendChild(removebutton)
-                tr.appendChild(datefield)
                 tr.appendChild(buttonfield)
                 tr.appendChild(removebuttonField)
                 dateaddertable.appendChild(tr)
@@ -239,11 +270,14 @@ export default class EventEditor{
             event.target.disabled = true
             event.target.innerHTML = 'Invited!'
         }
+        const listObject = (params, next) => {
+            return listCreator(params, 'Invite', next)
+        }
         e.disabled = true
         e.value = ''
         const result = await window.services.get('/api/user/find/?search='+this.usertofind)
         e.disabled = false
-        listResults(result.target.response, 'eventeditorinvitelist', 'Invite', wrapper)
+        listResults(result.target.response, 'eventeditorinvitelist', listObject, wrapper)
     }
 
     async updateOverlappingDates() {
@@ -257,6 +291,8 @@ export default class EventEditor{
                 return
             }
             const usersMax = dates[0].overlapMax
+            const maxParticipantsSpan = await this.setVisibility('eventeditor-maxparticipants', 'block')
+            maxParticipantsSpan.innerHTML = 'Max participants: ' + usersMax
 
             const hourGrid = document.createElement('div')
             hourGrid.className = 'hour-grid'
@@ -312,6 +348,9 @@ export default class EventEditor{
     }
 
     async update() {
+        if (!this.initiated) {
+            this.init()
+        }
         this.div = await this.setVisibility('eventeditor', 'none')
 
         const previousEventId = this.eventid
@@ -357,7 +396,9 @@ export default class EventEditor{
         this.setVisibility('eventeditorgameitem', 'none')
         this.setVisibility('eventeditor', 'block')
         this.setVisibility('overlapping-games', 'block')
+        this.setVisibility('votepanelgameadder', 'block')
         if (eventInfo.gameId != -1) {
+            this.setVisibility('votepanelgameadder', 'none')
             this.setVisibility('overlapping-games', 'none')
             this.setVisibility('eventeditorgamelabel', 'inherit')
             this.setVisibility('eventeditorgameitem', 'inherit')

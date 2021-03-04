@@ -1,10 +1,10 @@
-import os
+import os, time
 from interfaces.QueryInterface import QueryInterface
 class Event(QueryInterface):
 
-    def new(self, name, gameId, ownerId, groupId):
+    def new(self, name, gameId, ownerId, groupId, ends):
         placeholderDescription = 'Placeholder description, edit me!'
-        query = 'insert into events (owner, usergroup, name, gameid, description) values ({0}, {1}, "{2}", {3}, "{4}")'.format(int(ownerId), int(groupId), str(name), int(gameId), str(placeholderDescription))
+        query = 'insert into events (owner, usergroup, name, gameid, description, ends) values ({0}, {1}, "{2}", {3}, "{4}", {5})'.format(int(ownerId), int(groupId), str(name), int(gameId), str(placeholderDescription), int(ends))
         if (self.usesPSQL):
             query += ' returning id'
             result = self.executeQuery(query)
@@ -97,7 +97,7 @@ class Event(QueryInterface):
         return self.executeQuery(query)[0][0]
 
     def getInfo(self, eventId):
-        query = 'select name, description, usergroup, gameid, created, timeout, optupper, optlower from events where id = {0}'.format(int(eventId))
+        query = 'select name, description, usergroup, gameid, created, ends, optupper, optlower from events where id = {0}'.format(int(eventId))
         return self.executeQuery(query)[0]
 
     def getParticipants(self, eventId):
@@ -115,13 +115,16 @@ class Event(QueryInterface):
         self.executeQuery(query)
 
     def getEventsByUser(self, userId):
+        now = int(time.time())
         query = 'select id, name from events where owner = {0}'.format(int(userId))
         return self._returnEvent(query)
 
     def getInvitations(self, userId):
+        now = int(time.time())
         query = 'select id, name from events where id in (select event from eventinvites where user = {0})'.format(int(userId))
         return self._returnEvent(query)
 
     def getParticipating(self, userId):
+        now = int(time.time())
         query = 'select id, name from events where id in (select event from eventparticipants where user = {0}) and owner != {0}'.format(int(userId))
         return self._returnEvent(query)

@@ -1,19 +1,33 @@
-export const listResults = async(res, target, label, next) => {
-    let targetUL = document.getElementById(target)
-    targetUL.innerHTML = ''
+export const buttonCreator = (element, next) => {
+    const button = document.createElement('button')
+    button.className = 'button-expands'
+    button.innerHTML = `${element.name} <span>select</span>`
+    button.onclick = (event) => {
+        next(element, next)
+    }
+    return button
+}
+
+export const listCreator = (element, buttonlabel, next) => {
+    const li = document.createElement('li')
+    const title = document.createElement('span')
+    const button = document.createElement('button')
+    li.appendChild(title)
+    li.appendChild(button)
+    title.innerHTML = element.name
+    button.innerHTML = buttonlabel
+    button.onclick = (event) => {
+        next(element, event)
+    }
+    return li
+}
+
+export const listResults = async(res, target, contentGenerator, next) => {
+    let targetElement = document.getElementById(target)
+    targetElement.innerHTML = ''
     const arr = await JSON.parse(res)
-    console.log(arr)
     arr.forEach(element => {
-        const li = document.createElement('li')
-        const title = document.createElement('span')
-        const button = document.createElement('button')
-        li.appendChild(title)
-        li.appendChild(button)
-        targetUL.appendChild(li)
-        title.innerHTML = element.name
-        button.innerHTML = label
-        button.onclick = (event) => {
-            next(element, event)
-        }
+        const child = contentGenerator(element, next)
+        targetElement.appendChild(child)
     });
 }

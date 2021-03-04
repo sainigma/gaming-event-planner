@@ -72,10 +72,16 @@ function setBlocker(state) {
 
 async function listEvents() {
     const listCategory = (title, events) => {
+        const categoryContainer = document.createElement('div')
+        categoryContainer.className = 'scrollingfield grid-wide'
+        categoryContainer.style.width = '100%'
+
         const titlediv = document.createElement('div')
         titlediv.className = 'grid-title-big'
         titlediv.innerHTML = title
+
         div.appendChild(titlediv)
+        div.appendChild(categoryContainer)
         
         if (events.length == 0) {            
             const p = document.createElement('div')
@@ -86,22 +92,27 @@ async function listEvents() {
         } else {
             events.forEach(event => {
                 const eventTitle = document.createElement('div')
-                eventTitle.className = 'grid-title'
-                eventTitle.innerHTML = `${event[1]}`
+                eventTitle.className = 'grid-event'
 
-                const buttonDiv = document.createElement('div')
-                buttonDiv.className = 'grid-item'
-                
                 if (title === 'Open invites') {
+                    const d = document.createElement('div')
+                    d.className = 'grid-title'
+                    d.innerHTML = event[1]
+                    d.style.background = 'var(--color-background)'
+                    d.style.border = 'none'
+                    d.style.textAlign = 'left'
                     const acceptButton = document.createElement('button')
                     const ignoreButton = document.createElement('button')
                     acceptButton.innerHTML = 'Accept'
                     ignoreButton.innerHTML = 'Ignore'
-                    acceptButton.style.width = '40%'
-                    acceptButton.style.marginRight = '5%'
-                    ignoreButton.style.width = '40%'
-                    buttonDiv.appendChild(acceptButton)
-                    buttonDiv.appendChild(ignoreButton)
+                    
+                    acceptButton.className = 'button-accept grid-title-button'
+                    ignoreButton.className = 'button-refuse grid-title-button'
+                    
+                    acceptButton.style.right = '8em'
+                    ignoreButton.style.right = '0'
+                    d.appendChild(acceptButton)
+                    d.appendChild(ignoreButton)
 
                     const target = `/api/event/invitations/${event[0]}`
                     acceptButton.onclick = async () => {
@@ -114,19 +125,18 @@ async function listEvents() {
                         clearEvents()
                         listEvents()
                     }
+                    eventTitle.appendChild(d)
                 } else {
                     const button = document.createElement('button')
-                    button.innerHTML = 'Expand'
-                    button.style.width = '80%'
+                    button.className = 'button-wide button-expands'
+                    button.innerHTML = `${event[1]} <span>expand</span>`
                     button.onclick = () => {
                         toggleSite('eventeditor')
                         window.state.set('eventid', event[0])
                     }
-                    buttonDiv.appendChild(button)
+                    eventTitle.appendChild(button)
                 }
-
-                div.appendChild(eventTitle)
-                div.appendChild(buttonDiv)
+                categoryContainer.appendChild(eventTitle)
             })
         }
     }
@@ -140,19 +150,19 @@ async function listEvents() {
         const events = await JSON.parse(res.target.response)
         console.log(events)
         listCategory('My events', events['my'])
-        listCategory('Upcoming events', events['attending'])
-        listCategory('Open invites', events['invites'])
-        const buttonContainer = document.createElement('div')
-        buttonContainer.className = 'grid-title-big'
+
         const b = document.createElement('button')
+        b.className = "button-wide"
         b.innerHTML = "create event"
-        b.style.width = '80%'
+        b.style = 'grid-column-start:1; grid-column-end: 4'
         b.onclick = async () => {
             await toggleSite('eventcreator')
             window.eventcreator.initForm()
         }
-        buttonContainer.appendChild(b)
-        div.appendChild(buttonContainer)
+        div.appendChild(b)
+
+        listCategory('Upcoming events', events['attending'])
+        listCategory('Open invites', events['invites'])
     }
     return true
 }
