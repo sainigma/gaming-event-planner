@@ -28,7 +28,7 @@ export default class EventCreator{
         const result = await window.services.post(target, params)
         if (result.target.status == 200) {
             this.cancel()
-            window.clearEvents()
+            window.clear()
             await window.listEvents()
             window.setBlocker(false)
             window.render()

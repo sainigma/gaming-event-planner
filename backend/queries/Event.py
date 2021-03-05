@@ -115,16 +115,16 @@ class Event(QueryInterface):
         self.executeQuery(query)
 
     def getEventsByUser(self, userId):
-        now = int(time.time())
-        query = 'select id, name from events where owner = {0}'.format(int(userId))
+        now = int(time.time()) - 24 * 3600
+        query = 'select id, name from events where owner = {0} and ends > {1}'.format(int(userId), int(now))
         return self._returnEvent(query)
 
     def getInvitations(self, userId):
-        now = int(time.time())
-        query = 'select id, name from events where id in (select event from eventinvites where user = {0})'.format(int(userId))
+        now = int(time.time()) - 24 * 3600
+        query = 'select id, name from events where id in (select event from eventinvites where user = {0}) and ends > {1}'.format(int(userId), int(now))
         return self._returnEvent(query)
 
     def getParticipating(self, userId):
-        now = int(time.time())
-        query = 'select id, name from events where id in (select event from eventparticipants where user = {0}) and owner != {0}'.format(int(userId))
+        now = int(time.time()) - 24 * 3600
+        query = 'select id, name from events where id in (select event from eventparticipants where user = {0}) and owner != {0} and ends > {1}'.format(int(userId), int(now))
         return self._returnEvent(query)

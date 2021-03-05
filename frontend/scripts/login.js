@@ -2,6 +2,7 @@ export default class Login{
     constructor() {
         this.logindiv = document.getElementById('logindiv')
         window.login = this
+        this.initLoginEvents()
     }
 
     async load() {
@@ -21,19 +22,32 @@ export default class Login{
                 this.status = res.target.status
                 if (this.status == 200) {
                     window.state.set('login', true)
+                    this.setLoginDiv('loginsuccess')
                 } else {
                     this.credentials = {}
                     this.save()
                     this.status = 0
                     window.state.set('login', false)
                 }
-                this.setLoginDiv()
                 return
             }
         }
         this.status = 0
         window.state.set('login', false)
         this.setLoginDiv()
+    }
+
+    cancel() {
+        this.setLoginDiv()
+        const a = document.getElementById('login')
+        const b = document.getElementById('newuser')
+        console.log(a, b)
+        if (a != undefined && a.style.display != 'none') {
+            toggleSite('login')
+        }
+        if (b != undefined && b.style.display != 'none') {
+            toggleSite('newuser')
+        }
     }
 
     save() {
@@ -46,22 +60,60 @@ export default class Login{
         }
     }
 
-    setLoginDiv() {
+    initLoginEvents() {
+        this.events = {}
+        this.events['default'] = (span) => {
+            span.innerHTML = `<button class='button-login' onclick="login.clearLoginDiv(); toggleSite('login')">Login</button> <button class='button-login' onclick="login.clearLoginDiv(); toggleSite('newuser')">Sign up</up>`
+        }
+        this.events['loginfailed'] = () => {
+            const errorSpan = document.getElementById('loginerrorspan')
+            const loginprompt = document.getElementById('loginprompt')
+            if (loginprompt != null) {
+                loginprompt.style.backgroundColor = 'red'
+                errorSpan.innerHTML = 'login failed'
+            }
+        }
+        this.events['newuserfailed'] = () => {
+            const errorSpan = document.getElementById('newusererrorspan')
+            const loginprompt = document.getElementById('newuserprompt')
+            if (loginprompt != null) {
+                loginprompt.style.backgroundColor = 'red'
+                errorSpan.innerHTML = 'username already taken'
+            }
+        }
+        this.events['loginsuccess'] = (span) => {
+            span.innerHTML = `logged in as <b>${this.credentials.username}</b>, <a href='#' onclick="login.logout()">logout</a>`
+            const loginprompt = document.getElementById('loginprompt')
+            if (loginprompt) {
+                loginprompt.style.backgroundColor = ''
+            }
+        }
+    }
+
+    setLoginDiv(event) {
+        let key = event == undefined ? 'default' : event
+
+        this.clearLoginDiv()
+        const div = document.createElement('div')
+        const span = document.createElement('span')
+        div.className = 'loginstatus'
+
+        this.events[key](span)
+
+        div.appendChild(span)
+        this.logindiv.appendChild(div)
+    }
+
+    setLoginDivOld() {
         this.clearLoginDiv()
         const div = document.createElement('div')
         const p = document.createElement('span')
         const a = document.createElement('a')
         div.className = "loginstatus"
         if (this.status == 0) {
-            p.innerHTML = 'not logged in, '
-            a.href = '#'
-            a.onclick = () => { this.clearLoginDiv(); window.toggleSite('login') }
-            a.innerHTML = 'login'
+            p.innerHTML = `<button class='button-login' onclick="login.clearLoginDiv(); toggleSite('login')">Login</button> <button class='button-login' onclick="login.clearLoginDiv(); toggleSite('newuser')">Sign up</up>`
         } else if (this.status == 200){
-            p.innerHTML = `logged in as <b>${this.credentials.username}</b>, `
-            a.href = '#'
-            a.onclick = () => { this.logout() }
-            a.innerHTML = 'logout'
+            p.innerHTML = `logged in as <b>${this.credentials.username}</b>, <a href='#' onclick="login.logout()">logout</a>`
             const loginprompt = document.getElementById('loginprompt')
             if (loginprompt) {
                 loginprompt.style.backgroundColor = ''
@@ -78,29 +130,62 @@ export default class Login{
         p.appendChild(a)
     }
 
+    getLoginParams(usernameTag, passwordTag) {
+        return {
+            username: document.getElementById(usernameTag).value,
+            password: document.getElementById(passwordTag).value
+        }
+    }
+
+    async new() {
+        this.logindiv.innerHTML = ''
+        const params = this.getLoginParams('newusername', "newpassword")
+        const res = await window.services.post('/api/login/new', params)
+        const success = this.completeLogin(res, params)
+        if (success) {
+            window.state.set('login', true)
+            this.setLoginDiv('loginsuccess')
+        } else {
+            window.state.set('login', false)
+            this.setLoginDiv('newuserfailed')
+        }
+        window.state.set('login', true)
+        window.render()
+    }
+
     async login() {
         this.logindiv.innerHTML = ''
-        const params = {
-            username: document.getElementById('username').value,
-            password: document.getElementById('password').value
-        }
+        const params = this.getLoginParams('username', 'password')
+        
         const res = await window.services.post('/api/login', params)
-        this.status = res.target.status
-        if (res.target.status === 200) {
+        const success = this.completeLogin(res, params)
+        if (success) {
+            window.state.set('login', true)
+            this.setLoginDiv('loginsuccess')
+        } else {
+            window.state.set('login', false)
+            this.setLoginDiv('loginfailed')
+        }
+        
+        window.render()
+    }
+
+    completeLogin(res, params) {
+        if (res.target.status == 200) {
             console.log(res.target.response)
             let result = JSON.parse(res.target.response)
             const token = result['bearer']
-            
+
             this.credentials.username = params.username
             this.credentials.token = token
             
             window.services.setHeader('Authorization', `Bearer ${token}`)
             window.toggleSite('login')
             this.save()
+            
+            return true
         }
-        this.setLoginDiv()
-        window.state.set('login', true)
-        window.render()
+        return false
     }
 
     logout() {

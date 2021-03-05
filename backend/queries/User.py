@@ -6,10 +6,21 @@ class User(QueryInterface):
     def initialize(self):
         self.auth = Authentication()
 
+    def userExists(self, username):
+        query = 'select id from users where username = "{0}"'.format(str(username))
+        result = self.executeQuery(query)
+        if (len(result) > 0):
+            return True
+        return False
+
     def new(self, username, password):
+        if (self.userExists(username)):
+            print('user exists')
+            return False
         hashedPassword = self.auth.hash(password)
         query = 'insert into users (username, auth) values ("' + username + '", "' + hashedPassword + '");'
         self.executeQuery(query)
+        return self.login(username, password)
         
     def login(self, username, password):
         query = 'select auth from users where username = "' + username + '"'

@@ -164,7 +164,7 @@ class AbstractGateway:
             self.queries['events'].invite(eventId, targetUserId)
 
     def newUser(self, username, password):
-        self.queries['users'].new(username, password)
+        return self.queries['users'].new(username, password)
 
     def newRelation(self, user, target, relationType):
         self.queries['users'].relate(user, target, relationType)

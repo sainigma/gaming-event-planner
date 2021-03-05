@@ -23,11 +23,10 @@ Sovelluksessa toimii tällä hetkellä kirjautuminen, tapahtumien luonti, käytt
 Testailua varten käyttäjä/salasanakombinaation voi tarkastaa [täältä](./backend/database/dummy.json). Tapahtumaan voi kutsua tällä hetkellä vain kaverilistalta. Koska kaverilistan laajentamiseen ei ole vielä käyttöliittymää, debugkäyttäjistä Alice ja Carol ovat asetettu valmiiksi kavereiksi.
 
 Kriittisiä puuttuvia ominaisuuksia tällä hetkellä ovat:
- - Käyttäjien luonti
  - Kaverilista
- - Ryhmien luonti
- - Äänestyskäyttöliittymä päivämäärille ja peliehdotuksille
+ - Äänestyskäyttöliittymä peliehdotuksille
  - Admintyökalut tapahtumille
+ - Ryhmien luonti (aika loppuu luult. kesken)
 
 Sovellusta voi testata [täällä](https://gaming-event-planner.herokuapp.com/).
 

@@ -13,10 +13,10 @@ const init = async() => {
     window.toggleSite = toggleSite
     window.render = render
     window.listEvents = listEvents
-    window.clearEvents = clearEvents
+    window.clear = clear
     window.setBlocker = setBlocker
 
-    const siteList = ['frontpage', 'login', 'eventcreator', 'eventeditor']
+    const siteList = ['frontpage', 'login', 'eventcreator', 'eventeditor', 'newuser']
     container = document.getElementById("container")
     container.innerHTML = ""
 
@@ -50,13 +50,13 @@ const getSite = async (label) => {
     toggleSite(label)
 }
 
-function toggleSite(label) {
+function toggleSite(label, forcedState) {
     let site = sites.get(label)
     if (!site.ready) {
         console.log(`loading ${label}..`)
         getSite(label)
     } else {
-        site.visible = !site.visible
+        site.visible = forcedState == undefined ? !site.visible : forcedState
         site.content.style.display = site.visible ? 'block' : 'none'
         if (site.visible) {
             window.state.set('current', label)
@@ -68,6 +68,51 @@ function toggleSite(label) {
 
 function setBlocker(state) {
     blocker.style.display = state ? 'block' : 'none'
+}
+
+async function listFriends() {
+    const div = document.getElementById("friendslist")
+
+    if (div.children.length != 0) {
+        return
+    }
+
+    const res = await window.services.get('/api/user/find/?search=*')
+
+    const titlediv = document.createElement('div')
+    titlediv.className = 'grid-title-big'
+    titlediv.innerHTML = 'My friends'
+
+    const categoryContainer = document.createElement('div')
+    categoryContainer.className = 'scrollingfield grid-wide'
+    categoryContainer.style.width = '100%'
+
+    const b = document.createElement('button')
+    b.className = "button-wide"
+    b.innerHTML = "add friend"
+    b.style = 'grid-column-start:1; grid-column-end: 4'
+    b.onclick = async () => {
+        //await toggleSite('eventcreator')
+        //window.eventcreator.initForm()
+    }
+
+    div.appendChild(titlediv)
+    div.appendChild(categoryContainer)
+    div.appendChild(b)
+
+    if (res.target.status == 200) {
+        const friendsList = JSON.parse(res.target.response)
+        console.log(friendsList)
+        
+        if (friendsList.length == 0) {
+            categoryContainer.innerHTML = 'no friends'
+            return
+        }
+
+        friendsList.forEach(friend => {
+
+        })
+    }
 }
 
 async function listEvents() {
@@ -117,12 +162,12 @@ async function listEvents() {
                     const target = `/api/event/invitations/${event[0]}`
                     acceptButton.onclick = async () => {
                         await window.services.post(target, {status:1})
-                        clearEvents()
+                        clear()
                         listEvents()
                     }
                     ignoreButton.onclick = async () => {
                         await window.services.post(target, {status:0})
-                        clearEvents()
+                        clear()
                         listEvents()
                     }
                     eventTitle.appendChild(d)
@@ -167,20 +212,23 @@ async function listEvents() {
     return true
 }
 
-function clearEvents() {
+function clear() {
     const div = document.getElementById("eventlist")
+    const div2 = document.getElementById("friendslist")
     div.innerHTML = ''
+    div2.innerHTML = ''
 }
 
 function render() {
     console.log('Render')
     if (window.state.get('login')) {
         listEvents()
+        listFriends()
         if (window.state.get('current') == 'eventeditor') {
             window.eventeditor.update()
         }
     } else {
-        clearEvents()
+        clear()
     }
 }
 

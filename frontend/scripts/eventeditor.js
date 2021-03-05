@@ -76,7 +76,8 @@ export default class EventEditor{
         const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     
-        const dateObj = new Date(Date.parse(date))
+        const epoch = parseInt(date)
+        const dateObj = epoch > 9999 ? new Date(epoch * 1000) : new Date(Date.parse(date))
         const fields = [`${weekdays[dateObj.getDay()]}`, ` ${dateObj.getDate()}/${months[dateObj.getMonth()]}`, ` ${dateObj.getFullYear()}`]
         
         let result = ''
@@ -95,6 +96,7 @@ export default class EventEditor{
 
         const dateadderinput = document.getElementById('dateadderdate')
         dateadderinput.min = this.getDateISOString(Date.now())
+        dateadderinput.max = this.getDateISOString(parseInt(this.endDate)*1000)
 
         const dateaddertable = document.getElementById('dateadderdates')
         dateaddertable.innerHTML = ''
@@ -315,8 +317,6 @@ export default class EventEditor{
                 const dateField = document.createElement('td')
                 const hourField = document.createElement('td')
                 
-
-                console.log(date)
                 dateField.innerHTML = this.dateString(date.date, 2)
                 dateField.className = 'date-field'
 
@@ -384,6 +384,8 @@ export default class EventEditor{
         this.setInnerHTML('eventeditortitle', eventInfo.title)
         this.setInnerHTML('eventdescription', eventInfo.description)
         this.setInnerHTML('eventdescriptioneditor', eventInfo.description)
+        this.setInnerHTML('eventenddate', this.dateString(eventInfo.timeout, 3))
+        this.endDate = eventInfo.timeout
 
         this.setInnerHTML('eventparticipants', responseBody.participants.join(', '))
 

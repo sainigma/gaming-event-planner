@@ -1,7 +1,10 @@
-<div id="loginprompt">
+<div class="loginprompt" id="loginprompt">
     <form onsubmit="return false;">
         <label class="loginlabel" for="username">Username </label><input class="loginfield" id="username" type="text" name="username" /></br>
         <label class="loginlabel" for="password">Password </label><input class="loginfield" id="password" type="password" name="password" /></br>
-        <label class="loginlabel"></label><button class="loginfield" id="loginsubmit" type="submit" onclick="login.login(this)">Login</button>
+        
+        <label class="loginlabel"></label><button class="button-accept loginfield" id="loginsubmit" type="submit" onclick="login.login(this)">Login</button></br>
+        <label class="loginlabel"></label><button class="button-refuse loginfield" onclick="login.cancel(this)">Cancel</button></br>
+        <label class="loginlabel"></label><span id="loginerrorspan"></span>
     </form>
 </div>

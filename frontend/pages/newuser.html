@@ -1,0 +1,10 @@
+<div class="loginprompt" id="newuserprompt">
+    <form onsubmit="return false;">
+        <label class="loginlabel" for="username">Username </label><input class="loginfield" id="newusername" type="text" name="username" /></br>
+        <label class="loginlabel" for="password">Password </label><input class="loginfield" id="newpassword" type="password" name="password" /></br>
+        
+        <label class="loginlabel"></label><button class="button-accept loginfield" type="submit" onclick="login.new(this)">Create user</button></br>
+        <label class="loginlabel"></label><button class="button-refuse loginfield" onclick="login.cancel(this)">Cancel</button></br>
+        <label class="loginlabel"></label><span id="newusererrorspan"></span>
+    </form>
+</div>

@@ -44,11 +44,9 @@ def sanitize(params):
 
 def createDate(dateString):
     try:
-        print(dateString)
         eTime = int(time.mktime(datetime.datetime.strptime(dateString, "%Y-%m-%d").timetuple()))
         return eTime
     except ValueError:
-        print('valueerror')
         return None
 
 def getUsernameFromVerification(req):
@@ -85,8 +83,12 @@ def voteDate():
             hours.append(i)
     eventId = req.get('eventId')
     date = req.get('date')
-    # Tarkasta että date on muotoa yyyy-mm-dd
-    if (sanitize(hours) and sanitize(eventId) and sanitize(date)):
+
+    etime = None
+    if (sanitize(date)):
+        etime = createDate(date)
+
+    if (sanitize(hours) and sanitize(eventId) and etime != None):
         print(hours)
         gateway.voteDate(username, eventId, date, hours)
         return Response("", status = 200)
@@ -223,6 +225,20 @@ def login():
 
     if (sanitize({username, password})):
         token = tryLogin(req["username"], req["password"])
+        if (token != None):
+            result = '{"bearer":"' + token + '"}'
+            return Response(result, status = 200, mimetype='application/json')
+        return Response("", status = 401)
+    return Response("", status = 400)
+
+@app.route("/api/login/new", methods=['POST'])
+def newuser():
+    req = request.json
+    username = req.get('username')
+    password = req.get('password')
+
+    if (sanitize({username, password})):
+        token = gateway.newUser(username, password)
         if (token != None):
             result = '{"bearer":"' + token + '"}'
             return Response(result, status = 200, mimetype='application/json')
