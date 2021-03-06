@@ -29,11 +29,6 @@
             "relationType":1
         },
         {
-            "user":"Alice",
-            "target":"Bob",
-            "relationType":1
-        },
-        {
             "user":"Bob",
             "target":"Alice",
             "relationType":1

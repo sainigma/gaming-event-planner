@@ -2,8 +2,8 @@
 <span><b>Added dates</b></span>
 <table id='dateadderdates'></table>
 <div id='eventeditorcontrols'>
-    <button class='button-accept' onclick="eventeditor.setVisibility('eventeditordateadderform', 'block'); eventeditor.setVisibility('eventeditorcontrols', 'none')">Add date</button>
-    <button class='button-refuse' onclick="eventeditor.setVisibility('dateadder', 'none'); eventeditor.setVisibility('eventeditordateadderform', 'none'); eventeditor.dateSetRange(0,23, false); eventeditor.setVisibility('eventeditorblocker', 'none');">Close date editor</button>
+    <button class='button-accept' onclick="utils.setVisibility('eventeditordateadderform', 'block'); utils.setVisibility('eventeditorcontrols', 'none')">Add date</button>
+    <button class='button-refuse' onclick="utils.setVisibility('dateadder', 'none'); utils.setVisibility('eventeditordateadderform', 'none'); eventeditor.dateSetRange(0,23, false); utils.setVisibility('eventeditorblocker', 'none');">Close date editor</button>
 </div>        
 <form id='eventeditordateadderform' style='display:none' onsubmit="return false">
     <div class='grid-title-big'>New date</div>
@@ -62,7 +62,7 @@
             <td></td>
             <td></td>
             <td><button class='button-accept button-wide' type="submit" onclick="eventeditor.sendForm(this, ()=>{eventeditor.afterDateSubmit()})">save</button></td>
-            <td><button class='button-refuse button-wide' onclick="eventeditor.setVisibility('eventeditordateadderform', 'none'); eventeditor.resetDateAdder();">cancel</button></td>
+            <td><button class='button-refuse button-wide' onclick="utils.setVisibility('eventeditordateadderform', 'none'); eventeditor.resetDateAdder();">cancel</button></td>
         </tr>
     </table>
 </form>

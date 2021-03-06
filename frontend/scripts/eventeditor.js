@@ -1,7 +1,5 @@
 import {listResults, listCreator} from '/scripts/static/listResults.js'
 
-//Luokka alkaa olla vaarallisen laaja
-
 export default class EventEditor{
     constructor() {
         window.eventeditor = this
@@ -26,18 +24,6 @@ export default class EventEditor{
 
         dateAdderDiv.innerHTML = await getPage('dateadder')
         this.initiated = true
-    }
-
-    async setInnerHTML(target, content) {
-        const element = await document.getElementById(target)
-        element.innerHTML = content
-        return element
-    }
-
-    async setVisibility(target, tag) {
-        const element = await document.getElementById(target)
-        element.style.display = tag
-        return element
     }
 
     collapseHours(hours) {
@@ -135,15 +121,15 @@ export default class EventEditor{
                 dateaddertable.appendChild(tr)
             })
         }
-        this.setVisibility('dateadder', 'block')
-        this.setVisibility('eventeditorblocker', 'block')
+        utils.setVisibility('dateadder', 'block')
+        utils.setVisibility('eventeditorblocker', 'block')
     }
 
     resetDateAdder() {
         const dateitem = document.getElementById('dateadderdate')
         dateitem.value = ""
         this.dateSetRange(0, 23, false)
-        this.setVisibility('eventeditorcontrols', 'block')
+        utils.setVisibility('eventeditorcontrols', 'block')
     }
 
     removeDate(date) {
@@ -157,8 +143,8 @@ export default class EventEditor{
             const item = document.getElementById(`dateaddervalues${hour}`)
             item.checked = true
         })
-        this.setVisibility('eventeditorcontrols', 'none')
-        this.setVisibility('eventeditordateadderform', 'block')
+        utils.setVisibility('eventeditorcontrols', 'none')
+        utils.setVisibility('eventeditordateadderform', 'block')
     }
 
     dateSetRange(start, end, value) {
@@ -215,13 +201,15 @@ export default class EventEditor{
     }
 
     afterDateSubmit() {
-        eventeditor.setVisibility('eventeditordateadderform', 'none')
+        utils.setVisibility('eventeditordateadderform', 'none')
         eventeditor.resetDateAdder()
         eventeditor.activateDateAdder()
         eventeditor.updateOverlappingDates()
     }
 
     async sendForm(event, next) {
+        //services.sendForm(event.form, '/api/vote/date/', next)
+        
         const data = new FormData(event.form)
         data.append('eventId', this.eventId)
         const formJSON = Object.fromEntries(data.entries())
@@ -249,11 +237,12 @@ export default class EventEditor{
     }
 
     close() {
-        this.setVisibility('dateadder', 'none')
-        this.setVisibility('eventeditordateadderform', 'none')
+        state.set('current', 'frontpage')
+        utils.setVisibility('dateadder', 'none')
+        utils.setVisibility('eventeditordateadderform', 'none')
         this.resetDateAdder()
-        window.toggleSite('eventeditor')
-        window.setBlocker(false)
+        toggleSite('eventeditor')
+        setBlocker(false)
     }
 
     setSearch(e) {
@@ -293,7 +282,7 @@ export default class EventEditor{
                 return
             }
             const usersMax = dates[0].overlapMax
-            const maxParticipantsSpan = await this.setVisibility('eventeditor-maxparticipants', 'block')
+            const maxParticipantsSpan = await utils.setVisibility('eventeditor-maxparticipants', 'block')
             maxParticipantsSpan.innerHTML = 'Max participants: ' + usersMax
 
             const hourGrid = document.createElement('div')
@@ -351,7 +340,7 @@ export default class EventEditor{
         if (!this.initiated) {
             this.init()
         }
-        this.div = await this.setVisibility('eventeditor', 'none')
+        this.div = await utils.setVisibility('eventeditor', 'none')
 
         const previousEventId = this.eventid
         this.eventId = window.state.get('eventid')
@@ -381,37 +370,37 @@ export default class EventEditor{
             optupper:info[6],
             optlower:info[7]
         }
-        this.setInnerHTML('eventeditortitle', eventInfo.title)
-        this.setInnerHTML('eventdescription', eventInfo.description)
-        this.setInnerHTML('eventdescriptioneditor', eventInfo.description)
-        this.setInnerHTML('eventenddate', this.dateString(eventInfo.timeout, 3))
+        utils.setInnerHTML('eventeditortitle', eventInfo.title)
+        utils.setInnerHTML('eventdescription', eventInfo.description)
+        utils.setInnerHTML('eventdescriptioneditor', eventInfo.description)
+        utils.setInnerHTML('eventenddate', this.dateString(eventInfo.timeout, 3))
         this.endDate = eventInfo.timeout
 
-        this.setInnerHTML('eventparticipants', responseBody.participants.join(', '))
+        utils.setInnerHTML('eventparticipants', responseBody.participants.join(', '))
 
         if (responseBody.owner === window.login.getUser()) {
-            this.setVisibility('eventeditoradminpanel', 'grid')
+            utils.setVisibility('eventeditoradminpanel', 'grid')
         } else {
-            this.setVisibility('eventeditoradminpanel', 'none')
+            utils.setVisibility('eventeditoradminpanel', 'none')
         }
-        this.setVisibility('eventeditorgamelabel', 'none')
-        this.setVisibility('eventeditorgameitem', 'none')
-        this.setVisibility('eventeditor', 'block')
-        this.setVisibility('overlapping-games', 'block')
-        this.setVisibility('votepanelgameadder', 'block')
+        utils.setVisibility('eventeditorgamelabel', 'none')
+        utils.setVisibility('eventeditorgameitem', 'none')
+        utils.setVisibility('eventeditor', 'block')
+        utils.setVisibility('overlapping-games', 'block')
+        utils.setVisibility('votepanelgameadder', 'block')
         if (eventInfo.gameId != -1) {
-            this.setVisibility('votepanelgameadder', 'none')
-            this.setVisibility('overlapping-games', 'none')
-            this.setVisibility('eventeditorgamelabel', 'inherit')
-            this.setVisibility('eventeditorgameitem', 'inherit')
-            this.setInnerHTML('eventeditorgameitem', '<i>fetching..</i>')
+            utils.setVisibility('votepanelgameadder', 'none')
+            utils.setVisibility('overlapping-games', 'none')
+            utils.setVisibility('eventeditorgamelabel', 'inherit')
+            utils.setVisibility('eventeditorgameitem', 'inherit')
+            utils.setInnerHTML('eventeditorgameitem', '<i>fetching..</i>')
             const gameRes = await window.services.get('/api/game/' + eventInfo.gameId)
             if (gameRes.target.status == 200) {
                 const gameInfo = JSON.parse(gameRes.target.response)
-                this.setInnerHTML('eventeditorgameitem', `<a target='_blank' href='https://www.igdb.com/games/${gameInfo.slug}/'>${gameInfo.name}</a>`)
+                utils.setInnerHTML('eventeditorgameitem', `<a target='_blank' href='https://www.igdb.com/games/${gameInfo.slug}/'>${gameInfo.name}</a>`)
             } else {
-                this.setVisibility('eventeditorgamelabel', 'none')
-                this.setVisibility('eventeditorgameitem', 'none')        
+                utils.setVisibility('eventeditorgamelabel', 'none')
+                utils.setVisibility('eventeditorgameitem', 'none')        
             }
         }
     }

@@ -10,6 +10,7 @@
             "timeout":"timestamp"
         },
         "userrelations":{
+            "id":"uuid",
             "user":"uuid",
             "relation":"uuid",
             "type":"int"

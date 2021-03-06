@@ -32,6 +32,16 @@ export default class Services{
         return this._send('POST', target, params, false)
     }
 
+    async sendForm(form, target, next) {
+        const data = form instanceof FormData ? form : new FormData(form)
+        const formJSON = Object.fromEntries(data.entries())
+        const result = await window.services.post(target, formJSON)
+        if (result.target.status == 200) {
+            next(true)
+        }
+        next(false)
+    }
+
     setHeader(tag, content) {
         this.headers.set(tag, content)
     }

@@ -35,21 +35,35 @@ body {
     border-bottom: 1px solid black;
 }
 
-.loginprompt {
+.prompt, .bigprompt {
     border-radius: 0.5em;
     background-color: var(--color-background);
     padding: 1em;
+    border: 1px solid black;
+    z-index: 60;
+}
+
+.prompt {
     padding-bottom: 0;
     position: absolute;
     top: 3em;
+}
+
+.loginprompt {
     right: 0em;
-    border: 1px solid black;
-    z-index: 20;
+}
+
+.bigprompt {
+    position: absolute;
+    top: 6em;
+    right: 6em;
 }
 
 input, textarea {
     background-color: var(--color-background);
+    padding: 0.5em;
 }
+
 
 .loginstatus {
     position: absolute;

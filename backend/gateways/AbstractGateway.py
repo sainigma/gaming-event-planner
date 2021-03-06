@@ -7,6 +7,8 @@ from queries.Populator import Populator
 from queries.Game import Game
 from queries.Comment import Comment
 
+# Tämän voisi periaatteessa jakaa osiin
+
 class AbstractGateway:
     def __init__(self):
         self.initialize()
@@ -166,8 +168,11 @@ class AbstractGateway:
     def newUser(self, username, password):
         return self.queries['users'].new(username, password)
 
-    def newRelation(self, user, target, relationType):
-        self.queries['users'].relate(user, target, relationType)
+    def newRelation(self, username, target, relationType):
+        self.queries['users'].relate(username, target, relationType)
+
+    def getFriendRequests(self, username):
+        return self.queries['users'].getFriendRequests(username)
 
     def login(self, username, password):
         return self.queries['users'].login(username, password)

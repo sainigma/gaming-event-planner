@@ -42,13 +42,28 @@ class User(QueryInterface):
         query = "select id, username from users where id in ({1}) and username like '{0}%'".format(str(searchstring), str(subquery))
         return self.executeQuery(query)
 
+    def relationExists(self, userId, targetId):
+        query = 'select id from userrelations where user = {0} and relation = {1}'.format(int(userId), int(targetId))
+        result = self.executeQuery(query)
+        if (len(result) > 0):
+            return True
+        return False
+
     def relate(self, username, target, relationType):
         userID = self._getUserID(username)
         targetID = self._getUserID(target)
         if (userID == None or targetID == None):
             return
+        if (self.relationExists(userID, targetID)):
+            return
         query = 'insert into userrelations (user, relation, type) values ("' + str(userID) + '", "' + str(targetID) + '", "' + str(relationType) + '")'
         self.executeQuery(query)
+
+    def getFriendRequests(self, username):
+        userID = self._getUserID(username)
+        subquery = 'select relation from userrelations where user = {0}'.format(int(userID))
+        query = 'select username from userrelations left join users u on user = u.id where relation = {0} and user not in ({1})'.format(int(userID), str(subquery))
+        return self.executeQuery(query)
 
     def verify(self, bearer):
         token = bearer[7:]
@@ -75,7 +90,7 @@ class User(QueryInterface):
         return True
 
     def _getUserID(self, name):
-        query = 'select id from users where username = "' + name + '"'
+        query = 'select id from users where username = "{0}"'.format(str(name))
         result = self.executeQuery(query)
         if (len(result) == 0):
             return None

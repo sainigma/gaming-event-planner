@@ -105,6 +105,12 @@
     grid-column-end: 3;
 }
 
+.grid-request {
+    background-color: var(--color-background);
+    border: none;
+    text-align: left;
+}
+
 .grid-title-button {
     position: absolute;
     top: 0;
@@ -118,6 +124,7 @@
 }
 
 .grid-wide {
+    display: grid;
     grid-column-start: 1;
     grid-column-end: 4;
 }

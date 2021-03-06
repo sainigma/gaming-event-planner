@@ -36,7 +36,7 @@ function _start {
     clear
     flask run --host 0.0.0.0
     deactivate
-    # _clean
+    _clean
   else
     _init 
     _start

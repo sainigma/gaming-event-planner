@@ -40,6 +40,32 @@ def userfind():
             return Response(json.dumps(result), status = 200, mimetype='application/json') 
     return Response("", status = 400)
 
+@app.route("/api/user/friend/request", methods=['POST'])
+def friendRequest():
+    username = appUtils.getUsernameFromVerification(request, gateway)
+    if (not username):
+        return Response("", status = 400)
+
+    req = request.json
+    friend = req.get('friend')
+
+    if (appUtils.sanitize({friend})):
+        if (len(friend) < 3):
+            return Response("", status = 203)
+        gateway.newRelation(username, friend, 1)
+    return Response("", status = 200)
+
+@app.route("/api/user/friend/request", methods=['GET'])
+def getFriendRequests():
+    username = appUtils.getUsernameFromVerification(request, gateway)
+    if (not username):
+        return Response("", status = 400)
+
+    result = gateway.getFriendRequests(username)
+    if (len(result) == 0):
+        return Response("", status = 204)
+    return Response(json.dumps(result), status = 200, mimetype='application/json')
+
 @app.route("/api/login", methods=['POST'])
 def login():
     username = appUtils.getUsernameFromVerification(request, gateway)

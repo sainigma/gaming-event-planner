@@ -3,20 +3,25 @@ import StateColletor from '/scripts/state.js'
 import Services from '/scripts/services.js'
 import EventCreator from '/scripts/eventcreator.js'
 import EventEditor from '/scripts/eventeditor.js'
+import Utils from '/scripts/static/utils.js'
+import Friends from '/scripts/friends.js'
 
 let container, sites, blocker
 
 const init = async() => {
     const services = new Services()
-    
+    const utils = new Utils()
+
     window.services = services
+    window.utils = utils
+
     window.toggleSite = toggleSite
     window.render = render
     window.listEvents = listEvents
     window.clear = clear
     window.setBlocker = setBlocker
 
-    const siteList = ['frontpage', 'login', 'eventcreator', 'eventeditor', 'newuser']
+    const siteList = ['frontpage', 'login', 'eventcreator', 'eventeditor', 'newuser', 'addFriend']
     container = document.getElementById("container")
     container.innerHTML = ""
 
@@ -34,7 +39,7 @@ const init = async() => {
     const login = new Login()
     const eventcreator = new EventCreator()
     const eventeditor = new EventEditor()
-
+    const friends = new Friends()
     await login.load()
 
     toggleSite('frontpage')
@@ -70,51 +75,6 @@ function setBlocker(state) {
     blocker.style.display = state ? 'block' : 'none'
 }
 
-async function listFriends() {
-    const div = document.getElementById("friendslist")
-
-    if (div.children.length != 0) {
-        return
-    }
-
-    const res = await window.services.get('/api/user/find/?search=*')
-
-    const titlediv = document.createElement('div')
-    titlediv.className = 'grid-title-big'
-    titlediv.innerHTML = 'My friends'
-
-    const categoryContainer = document.createElement('div')
-    categoryContainer.className = 'scrollingfield grid-wide'
-    categoryContainer.style.width = '100%'
-
-    const b = document.createElement('button')
-    b.className = "button-wide"
-    b.innerHTML = "add friend"
-    b.style = 'grid-column-start:1; grid-column-end: 4'
-    b.onclick = async () => {
-        //await toggleSite('eventcreator')
-        //window.eventcreator.initForm()
-    }
-
-    div.appendChild(titlediv)
-    div.appendChild(categoryContainer)
-    div.appendChild(b)
-
-    if (res.target.status == 200) {
-        const friendsList = JSON.parse(res.target.response)
-        console.log(friendsList)
-        
-        if (friendsList.length == 0) {
-            categoryContainer.innerHTML = 'no friends'
-            return
-        }
-
-        friendsList.forEach(friend => {
-
-        })
-    }
-}
-
 async function listEvents() {
     const listCategory = (title, events) => {
         const categoryContainer = document.createElement('div')
@@ -141,11 +101,8 @@ async function listEvents() {
 
                 if (title === 'Open invites') {
                     const d = document.createElement('div')
-                    d.className = 'grid-title'
+                    d.className = 'grid-title grid-request'
                     d.innerHTML = event[1]
-                    d.style.background = 'var(--color-background)'
-                    d.style.border = 'none'
-                    d.style.textAlign = 'left'
                     const acceptButton = document.createElement('button')
                     const ignoreButton = document.createElement('button')
                     acceptButton.innerHTML = 'Accept'
@@ -212,20 +169,19 @@ async function listEvents() {
     return true
 }
 
-function clear() {
-    const div = document.getElementById("eventlist")
-    const div2 = document.getElementById("friendslist")
+async function clear() {
+    const div = await document.getElementById("eventlist")
     div.innerHTML = ''
-    div2.innerHTML = ''
+    return true
 }
 
 function render() {
     console.log('Render')
     if (window.state.get('login')) {
         listEvents()
-        listFriends()
-        if (window.state.get('current') == 'eventeditor') {
-            window.eventeditor.update()
+        friends.listFriends()
+        if (state.get('current') == 'eventeditor') {
+            eventeditor.update()
         }
     } else {
         clear()
