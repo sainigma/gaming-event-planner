@@ -26,6 +26,21 @@ export default class EventEditor{
         this.initiated = true
     }
 
+    updateEvent(form) {
+        if (!this.readyForUpdate) {
+            return
+        }
+        const data = new FormData(form)
+        data.append('eventId', this.eventId)
+        services.sendForm(data, '/api/event/update', () => {})
+    }
+
+    updateFormChanged() {
+        this.readyForUpdate = true
+        const updateButton = document.getElementById('eventupdatebutton')
+        updateButton.disabled = false
+    }
+
     collapseHours(hours) {
         let arr1 = []
         let arr2 = []
@@ -207,9 +222,7 @@ export default class EventEditor{
         eventeditor.updateOverlappingDates()
     }
 
-    async sendForm(event, next) {
-        //services.sendForm(event.form, '/api/vote/date/', next)
-        
+    async addDate(event, next) {
         const data = new FormData(event.form)
         data.append('eventId', this.eventId)
         const formJSON = Object.fromEntries(data.entries())
@@ -370,9 +383,12 @@ export default class EventEditor{
             optupper:info[6],
             optlower:info[7]
         }
+        this.readyForUpdate = false
+        document.getElementById('eventupdatebutton').disabled = true
+        utils.setInnerHTML('eventeditorinvitelist', '')
         utils.setInnerHTML('eventeditortitle', eventInfo.title)
         utils.setInnerHTML('eventdescription', eventInfo.description)
-        utils.setInnerHTML('eventdescriptioneditor', eventInfo.description)
+        utils.setValue('eventdescriptioneditor', eventInfo.description)
         utils.setInnerHTML('eventenddate', this.dateString(eventInfo.timeout, 3))
         this.endDate = eventInfo.timeout
 

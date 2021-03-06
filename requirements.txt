@@ -8,7 +8,8 @@ igdb-api-v4==0.0.3
 itsdangerous==1.1.0
 Jinja2==2.11.3
 MarkupSafe==1.1.1
-protobuf==3.14.0
+protobuf==3.15.5
+psycopg2-binary==2.8.6
 PyJWT==2.0.1
 python-dotenv==0.15.0
 requests==2.25.1

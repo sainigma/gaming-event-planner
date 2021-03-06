@@ -77,6 +77,9 @@ def login():
     username = req.get('username')
     password = req.get('password')
 
+    if (username == None or password == None):
+        return Response("", status = 401)
+
     if (appUtils.sanitize({username, password})):
         token = tryLogin(req["username"], req["password"])
         if (token != None):
@@ -90,6 +93,8 @@ def newuser():
     req = request.json
     username = req.get('username')
     password = req.get('password')
+
+    print(req)
 
     if (appUtils.sanitize({username, password})):
         token = gateway.newUser(username, password)

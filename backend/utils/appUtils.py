@@ -1,15 +1,26 @@
 import os, time, datetime
 from dotenv import load_dotenv
+from gateways.SQLiteGateway import SQLiteGateway
+from gateways.PSQLGateway import PSQLGateway
 
 def init():
-    # for running on venv
     if (os.path.basename(os.getcwd()) == 'backend'):
+        # for running on venv
         os.chdir('./..')
 
     load_dotenv()
 
     os.environ['TZ'] = 'Europe/Helsinki'
     time.tzset()
+
+def initGateway():
+    selector = os.getenv('SQL')
+    gateway = None
+    if (selector == 'sqlite'):
+        gateway = SQLiteGateway()
+    elif (selector == 'psql'):
+        gateway = PSQLGateway()
+    return gateway
 
 def createDate(dateString):
     try:

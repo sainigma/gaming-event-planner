@@ -28,7 +28,6 @@ export default class Friends{
 
     async myFriends(div) {
         const res = await window.services.get('/api/user/find/?search=*')
-    
         const {titleDiv, categoryContainer} = this.spawnCategory('My friends')
         
         const b = document.createElement('button')
@@ -48,7 +47,6 @@ export default class Friends{
             
             if (friendsList.length == 0) {
                 categoryContainer.innerHTML = 'no friends'
-                return
             }
             
             const span = document.createElement('span')

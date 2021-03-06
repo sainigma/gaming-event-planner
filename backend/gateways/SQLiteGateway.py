@@ -1,5 +1,6 @@
 import sqlite3, os
 from gateways.AbstractGateway import AbstractGateway
+from queries.Populator import Populator
 
 # Debuggakseen tarkoitettu gateway
 class SQLiteGateway(AbstractGateway):
@@ -15,6 +16,7 @@ class SQLiteGateway(AbstractGateway):
         self.debug = False
         if (os.getenv('DEBUG') and os.getenv('DEBUG') == '1'):
             self.debug = True
+        Populator(self).populate()
         
     def enumerate(self, type):
         if type in self.enumValues:

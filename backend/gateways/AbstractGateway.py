@@ -3,7 +3,6 @@ from operator import itemgetter
 
 from queries.User import User
 from queries.Event import Event
-from queries.Populator import Populator
 from queries.Game import Game
 from queries.Comment import Comment
 
@@ -18,7 +17,6 @@ class AbstractGateway:
             'games':Game(self.enumerate, self.executeQuery),
             'comments':Comment(self.enumerate, self.executeQuery)
         }
-        Populator(self).populate()
 
     def mapResult(self, result, labels):
         for i in range(0, len(result)):

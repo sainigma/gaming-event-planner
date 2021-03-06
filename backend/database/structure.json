@@ -11,14 +11,14 @@
         },
         "userrelations":{
             "id":"uuid",
-            "user":"uuid",
+            "userid":"uuid",
             "relation":"uuid",
             "type":"int"
         },
         "messages":{
             "id":"uuid",
             "root":"uuid",
-            "user":"uuid",
+            "userid":"uuid",
             "content":"text",
             "time":"timestamp"
         },
@@ -29,7 +29,7 @@
             "cover":"text"
         },
         "gamepreferences":{
-            "user":"uuid",
+            "userid":"uuid",
             "game":"uuid",
             "rating":"int"
         },
@@ -39,7 +39,7 @@
         },
         "usergroupregister":{
             "id":"uuid",
-            "user":"uuid",
+            "userid":"uuid",
             "inviter":"uuid",
             "usergroup":"uuid",
             "rights":"int",
@@ -61,30 +61,30 @@
         "eventinvites":{
             "id":"uuid",
             "event":"uuid",
-            "user":"uuid"
+            "userid":"uuid"
         },
         "eventparticipants":{
             "id":"uuid",
-            "user":"uuid",
+            "userid":"uuid",
             "event":"uuid"
         },
         "eventgamevotes":{ 
             "id":"uuid",
-            "user":"uuid",
+            "userid":"uuid",
             "event":"uuid",
             "game":"uuid",
             "rating":"int"
         },
         "eventdatevotes":{
             "id":"uuid",
-            "user":"uuid",
+            "userid":"uuid",
             "event":"uuid",
             "date":"text",
             "hour":"int"
         },
         "comments":{
             "id":"uuid",
-            "user":"uuid",
+            "userid":"uuid",
             "event":"uuid",
             "target":"uuid",
             "content":"text",

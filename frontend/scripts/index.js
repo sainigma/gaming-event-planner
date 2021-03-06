@@ -55,7 +55,7 @@ const getSite = async (label) => {
     toggleSite(label)
 }
 
-function toggleSite(label, forcedState) {
+const toggleSite = (label, forcedState) => {
     let site = sites.get(label)
     if (!site.ready) {
         console.log(`loading ${label}..`)
@@ -71,11 +71,11 @@ function toggleSite(label, forcedState) {
     return true
 }
 
-function setBlocker(state) {
+const setBlocker = (state) => {
     blocker.style.display = state ? 'block' : 'none'
 }
 
-async function listEvents() {
+const listEvents = async() => {
     const listCategory = (title, events) => {
         const categoryContainer = document.createElement('div')
         categoryContainer.className = 'scrollingfield grid-wide'
@@ -169,15 +169,17 @@ async function listEvents() {
     return true
 }
 
-async function clear() {
-    const div = await document.getElementById("eventlist")
-    div.innerHTML = ''
-    return true
+const clear = () => {
+    const div = document.getElementById("eventlist")
+    if (div) {
+        div.innerHTML = ''
+    }
 }
 
-function render() {
+const render = () => {
     console.log('Render')
-    if (window.state.get('login')) {
+    if (state.get('login') == true) {
+        console.log('login ok')
         listEvents()
         friends.listFriends()
         if (state.get('current') == 'eventeditor') {

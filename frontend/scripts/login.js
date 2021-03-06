@@ -21,19 +21,20 @@ export default class Login{
                 const res = await window.services.post('/api/login', {null:'null'})
                 this.status = res.target.status
                 if (this.status == 200) {
-                    window.state.set('login', true)
+                    state.set('login', true)
                     this.setLoginDiv('loginsuccess')
                 } else {
                     this.credentials = {}
                     this.save()
                     this.status = 0
-                    window.state.set('login', false)
+                    state.set('login', false)
+                    this.setLoginDiv()
                 }
                 return
             }
         }
         this.status = 0
-        window.state.set('login', false)
+        state.set('login', false)
         this.setLoginDiv()
     }
 
@@ -79,11 +80,22 @@ export default class Login{
             if (loginprompt != null) {
                 loginprompt.style.backgroundColor = 'red'
                 errorSpan.innerHTML = 'username already taken'
+                state.set('login', false)
             }
         }
         this.events['loginsuccess'] = (span) => {
+            this.status = 200
             span.innerHTML = `logged in as <b>${this.credentials.username}</b>, <a href='#' onclick="login.logout()">logout</a>`
             const loginprompt = document.getElementById('loginprompt')
+            if (loginprompt) {
+                loginprompt.style.backgroundColor = ''
+            }
+        }
+        this.events['newusersuccess'] = (span) => {
+            this.status = 200
+            toggleSite('newuser')
+            span.innerHTML = `logged in as <b>${this.credentials.username}</b>, <a href='#' onclick="login.logout()">logout</a>`
+            const loginprompt = document.getElementById('newuserprompt')
             if (loginprompt) {
                 loginprompt.style.backgroundColor = ''
             }
@@ -140,16 +152,16 @@ export default class Login{
     async new() {
         this.logindiv.innerHTML = ''
         const params = this.getLoginParams('newusername', "newpassword")
-        const res = await window.services.post('/api/login/new', params)
+        const res = await services.post('/api/login/new', params)
         const success = this.completeLogin(res, params)
+        console.log(res, success)
         if (success) {
-            window.state.set('login', true)
-            this.setLoginDiv('loginsuccess')
+            state.set('login', true)
+            this.setLoginDiv('newusersuccess')
         } else {
-            window.state.set('login', false)
+            state.set('login', false)
             this.setLoginDiv('newuserfailed')
         }
-        window.state.set('login', true)
         window.render()
     }
 
@@ -162,6 +174,7 @@ export default class Login{
         if (success) {
             window.state.set('login', true)
             this.setLoginDiv('loginsuccess')
+            toggleSite('login')
         } else {
             window.state.set('login', false)
             this.setLoginDiv('loginfailed')
@@ -180,7 +193,6 @@ export default class Login{
             this.credentials.token = token
             
             window.services.setHeader('Authorization', `Bearer ${token}`)
-            window.toggleSite('login')
             this.save()
             
             return true
@@ -193,6 +205,7 @@ export default class Login{
         this.status = 0
         this.save()
         this.setLoginDiv()
+        friends.clear()
         window.services.removeHeader('Authorization')
         window.state.set('login', false)
         window.render()

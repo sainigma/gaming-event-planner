@@ -1,17 +1,25 @@
-import os, json, time, datetime
-from flask import Flask, render_template, request, jsonify, Response
-from gateways.SQLiteGateway import SQLiteGateway
+import os, sys
+from flask import Flask, render_template
 from utils import appUtils
 
+
 appUtils.init()
-gateway = SQLiteGateway()
+gateway = appUtils.initGateway()
 app = Flask(__name__, static_url_path = "/", static_folder = "./../frontend/")
+
+if (not gateway):
+    sys.exit()
+
 
 @app.route("/")
 def index():
     return render_template("/index.html")
 
 if (__name__ == "__main__" ):
-    app.run(debug=True)
+    debug = os.getenv('DEBUG')
+    if (debug):
+        app.run(debug=True)
+    else:
+        app.run(debug=False)
 
 from routes import userRoute, gameRoute, eventRoute, commentRoute, voteRoute

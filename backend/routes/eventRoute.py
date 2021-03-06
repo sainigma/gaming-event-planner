@@ -42,6 +42,16 @@ def newEvent():
         return Response("", status = 200)
     return Response("", status = 400)
 
+@app.route("/api/event/update", methods=['POST'])
+def updateEvent():
+    username = appUtils.getUsernameFromVerification(request, gateway)
+    if (not username):
+        return Response("", status = 301)
+    
+    req = request.json
+    print(req)
+    return Response("", status = 200)
+
 @app.route("/api/event/all")
 def getEvents():
     username = appUtils.getUsernameFromVerification(request, gateway)

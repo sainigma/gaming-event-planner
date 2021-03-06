@@ -1,4 +1,6 @@
 import json, os
+
+#Debuggaukseen
 class Populator:
     def __init__(self, parent):
         self.enumerate = parent.enumerate
@@ -29,20 +31,33 @@ class Populator:
         relationType = entry['relationType']
         self.parent.newRelation(user, target, relationType)
 
-    def populate(self):
-        print('populoin')
+    def loadStructure(self):
         self.structure = self.loadJson('database/structure.json')
-        self.dummy = self.loadJson('database/dummy.json')
-        
-        if (self.structure == None or self.dummy == None):
+        if (self.structure == None):
             return None
 
         for table in self.structure['tables'].keys():
-            self.createTable(table)
-        for table in self.dummy.keys():
-            if (table in self.actions):
-                for entry in self.dummy[table]:
-                    self.actions[table](entry)
+                self.createTable(table)
+        
+        return True
+
+    def populate(self):
+        if (os.getenv('DEBUG') and os.getenv('DEBUG') == '1'):
+            print('populoin')
+            
+            self.dummy = self.loadJson('database/dummy.json')
+
+            if (not self.loadStructure() or self.dummy == None):
+                return None
+
+            for table in self.dummy.keys():
+                if (table in self.actions):
+                    for entry in self.dummy[table]:
+                        self.actions[table](entry)
+        else:
+            if (os.getenv('SQL') and os.getenv('SQL') == 'sqlite'):
+                self.loadStructure()
+            print('production mode, population skipped')
 
     def createTable(self, key):
         table = self.structure['tables'][key]

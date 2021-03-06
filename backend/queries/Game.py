@@ -8,7 +8,7 @@ class Game(QueryInterface):
         pass
 
     def getGame(self, gameId):
-        query = 'select id, name, slug, cover from games where id = {0}'.format(int(gameId))
+        query = "select id, name, slug, cover from games where id = {0}".format(int(gameId))
         result = self.executeQuery(query)
         if (len(result) > 0):
             result = result[0]
@@ -20,7 +20,7 @@ class Game(QueryInterface):
                 "cache":1
             }
         game = self.gameDB.getGame(gameId)
-        insertGame = 'insert into games (id, name, slug, cover) values ({0}, "{1}", "{2}", "{3}")'.format(int(game.get('id')), str(game.get('name')), str(game.get('slug')), str(game.get('cover')))
+        insertGame = "insert into games (id, name, slug, cover) values ({0}, '{1}', '{2}', '{3}')".format(int(game.get('id')), str(game.get('name')), str(game.get('slug')), str(game.get('cover')))
         self.executeQuery(insertGame)
         return(game)
 

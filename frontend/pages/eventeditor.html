@@ -62,22 +62,22 @@
     </div>
 </div>
 
-<form class='grid-container' id='eventeditoradminpanel' style='width:100%; padding: 4px 0px; display:none' onsubmit="return false;">
-    <div class='grid-title-big'>Admin panel <button class='grid-title-button' type="submit" style='right:0' disabled>update</button></div>
+<form class='grid-container' id='eventeditoradminpanel' style='width:100%; padding: 4px 0px; display:none' onsubmit="eventeditor.updateEvent(this); return false;">
+    <div class='grid-title-big'>Admin panel <button id='eventupdatebutton' class='grid-title-button' type="submit" style='right:0' disabled>update</button></div>
 
     <div class='grid-title'>Edit description</div>
     <div class='grid-item' style='padding:0'>
-        <textarea rows = "5" name='description' class='grid-texteditor' id="eventdescriptioneditor"></textarea>
+        <textarea rows = "5" name='description' class='grid-texteditor' id="eventdescriptioneditor" oninput="eventeditor.updateFormChanged()"></textarea>
     </div>
     
     <div class='grid-title'>Preference range for games</div>
     <div class='grid-item'>
-        <input type="range" name='optlower' min="0" max="5" class='dualslider-left'>
-        <input type="range" name="optupper" min="5" max="10" class='dualslider-right'>
+        <input type="range" name='optlower' min="0" max="5" class='dualslider-left' oninput="eventeditor.updateFormChanged()">
+        <input type="range" name="optupper" min="5" max="10" class='dualslider-right' oninput="eventeditor.updateFormChanged()">
     </div>
     
     <div id="eventeditorinviter" class="grid-nav">
-        <div class='grid-title'>Edit final event end date <input style='float:right' id='adminfinaldate' name='date' type='date'></div></br>
+        <div class='grid-title'>Edit final event end date <input style='float:right' id='adminfinaldate' name='date' type='date' oninput="eventeditor.updateFormChanged()"></div></br>
 
         <div class='grid-title'>Invite <input type="text" placeholder='find user, use * for all' oninput="eventeditor.setSearch(this.value)" onchange="eventeditor.searchUser(this)"></div>
         <div class='grid-item'><ul id="eventeditorinvitelist"></ul></div>
