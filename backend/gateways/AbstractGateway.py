@@ -5,6 +5,7 @@ from queries.User import User
 from queries.Event import Event
 from queries.Game import Game
 from queries.Comment import Comment
+from queries.Group import Group
 
 # Tämän voisi periaatteessa jakaa osiin
 
@@ -15,7 +16,8 @@ class AbstractGateway:
             'users':User(self.enumerate, self.executeQuery),
             'events':Event(self.enumerate, self.executeQuery),
             'games':Game(self.enumerate, self.executeQuery),
-            'comments':Comment(self.enumerate, self.executeQuery)
+            'comments':Comment(self.enumerate, self.executeQuery),
+            'groups':Group(self.enumerate, self.executeQuery)
         }
 
     def mapResult(self, result, labels):
@@ -23,8 +25,41 @@ class AbstractGateway:
             result[i] = dict(zip(labels, result[i]))
         return result
 
+    def getGroups(self, username):
+        userId = self.queries['users']._getUserID(username)
+        groups = {}
+        groups['my'] = self.queries['groups'].getOwnedGroups(userId)
+        groups['user'] = self.queries['groups'].getParticipatingGroups(userId)
+        return groups
+
+    def getMyGroups(self, username):
+        userId = self.queries['users']._getUserID(username)
+        groups = {}
+        groups['my'] = self.queries['groups'].getOwnedGroups(userId)
+        return groups
+
+    def sendGroupEventInvites(self, userId, groupId):
+        self.queries['events'].sendGroupEventInvites(userId, groupId)
+
+    def addToGroup(self, username, targetuser, targetgroup):
+        userId = self.queries['users']._getUserID(username)
+        targetUserId = self.queries['users']._getUserID(targetuser)
+        success = self.queries['groups'].addToGroup(userId, targetUserId, targetgroup)
+
+        if (success):
+            self.sendGroupEventInvites(targetUserId, targetgroup)
+    
+    #def removeGroupRequest(self, username, targetuser, group):
+
+    def getGroupRequests(self, username):
+        userId = self.queries['users']._getUserID(username)
+        return self.queries['groups'].getRequests(userId)
+
+    def joinGroup(self, username, targetgroup):
+        userId = self.queries['users']._getUserID(username)
+        return self.queries['groups'].joinGroup(userId, targetgroup)
+
     def voteDate(self, username, eventId, date, hours):
-        # tarkista että käyttäjä osa tapahtumaa
         userId = self.queries['users']._getUserID(username)
         self.queries['events'].voteDate(userId, eventId, date, hours)
 
@@ -183,7 +218,7 @@ class AbstractGateway:
         pass
 
     def enumerate(self, type):
-        # Palauttaa enumeraattorin kautta oikean tietuetyypin, structure.jsonissa käytössä psqldatatyypit
+        # Sqlitellä debuggaukseen, palauttaa enumeraattorin kautta oikean tietuetyypin, structure.jsonissa käytössä psqldatatyypit
         return type
 
     def initialize(self):

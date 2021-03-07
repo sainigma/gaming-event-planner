@@ -81,11 +81,10 @@ class User(QueryInterface):
     def belongsToGroup(self, userId, groupId):
         if (int(groupId) == -1):
             return True
-        query = "select accepted, verified from usergroupregister where userid = {0} and usergroup = {1}".format(int(userId), int(groupId))
+        query = "select 1 from usergroupregister where userid = {0} and usergroup = {1} and accepted = TRUE and verified = TRUE".format(int(userId), int(groupId))
         result = self.executeQuery(query)
         if (len(result) == 0):
             return False
-        print(result[0][0], result[0][1])
         return True
 
     def _getUserID(self, name):

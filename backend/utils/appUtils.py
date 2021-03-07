@@ -35,6 +35,14 @@ def containsEvil(content):
         return True
     return False
 
+def replaceSpecialCharacters(params):
+    result = {}
+    for item in params:
+        if (isinstance(item, str)):
+            print(item)
+            # poista erikoismerkit
+    pass
+
 def sanitize(params):
     for item in params:
         if (item == None or containsEvil(item)):

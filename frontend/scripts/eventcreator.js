@@ -101,16 +101,32 @@ export default class EventCreator{
         }
     }
 
-    showFinalForm() {
+    async showFinalForm() {
         const addGroupOption = (label, id) => {
             const option = document.createElement('option')
             option.value = id
             option.innerHTML = label
-            groups.appendChild(option)
+            groupList.appendChild(option)
         }
-        const groups = document.getElementById('eventusergroups')
-        groups.innerHTML = ''
-        addGroupOption('friends', -1)
+        const groups = []
+        groups.push(['friends', -1])
+
+        const groupList = document.getElementById('eventusergroups')
+        groupList.innerHTML = ''
+        const res = await window.services.get('/api/group/all')
+        if (res.target.status == 200) {
+            const response = JSON.parse(res.target.response)
+            response['my'].forEach(item => {
+                groups.push([item[1], item[0]])
+            })
+            response['user'].forEach(item => {
+                groups.push([item[1], item[0]])
+            })
+        }
+
+        groups.forEach(item => {
+            addGroupOption(item[0], item[1])
+        })
 
         const gametitle = document.getElementById('eventgametitle')
         gametitle.innerHTML = this.game

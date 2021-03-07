@@ -1,8 +1,10 @@
-import os, time
+import time
 from interfaces.QueryInterface import QueryInterface
 class Event(QueryInterface):
 
     def new(self, name, gameId, ownerId, groupId, ends):
+        
+        
         placeholderDescription = 'Placeholder description, edit me!'
         query = "insert into events (owner, usergroup, name, gameid, description, ends) values ({0}, {1}, '{2}', {3}, '{4}', {5})".format(int(ownerId), int(groupId), str(name), int(gameId), str(placeholderDescription), int(ends))
         if (self.usesPSQL):
@@ -17,6 +19,19 @@ class Event(QueryInterface):
 
         eventId = result[0][0]
         self.addParticipant(ownerId, eventId)
+
+        if (groupId != -1):
+            self.sendMassInvites(eventId, groupId, ownerId)
+
+    def sendMassInvites(self, eventId, groupId, owner):
+        query = "select id from usergroupregister where usergroup = {0} and userid != {1}".format(int(groupId), int(owner))
+        rows = self.executeQuery(query)
+        if (len(rows) == 0):
+            return
+        for row in rows:
+            print('moi: ',row)
+            self.invite(eventId, row[0])
+        
 
     def isParticipant(self, userId, eventId):
         isParticipantQuery = "select id from eventparticipants where userid = {0} and event = {1}".format(int(userId), int(eventId))
@@ -96,7 +111,7 @@ class Event(QueryInterface):
         return self.executeQuery(query)[0][0]
 
     def getInfo(self, eventId):
-        query = "select name, description, usergroup, gameid, created, ends, optupper, optlower from events where id = {0}".format(int(eventId))
+        query = "select events.name, description, usergroup, gameid, created, ends, optupper, optlower, ug.name from events left join usergroups ug on usergroup = ug.id where events.id = {0}".format(int(eventId))
         return self.executeQuery(query)[0]
 
     def getParticipants(self, eventId):
@@ -127,3 +142,9 @@ class Event(QueryInterface):
         now = int(time.time()) - 24 * 3600
         query = "select id, name from events where id in (select event from eventparticipants where userid = {0}) and owner != {0} and ends > {1}".format(int(userId), int(now))
         return self._returnEvent(query)
+
+    def sendGroupEventInvites(self, userId, groupId):
+        now = int(time.time()) - 24 * 3600
+        query = "select id from events where usergroup = {0} and ends > {1}".format(int(groupId), int(now))
+        result = self.executeQuery(query)
+        print(result)

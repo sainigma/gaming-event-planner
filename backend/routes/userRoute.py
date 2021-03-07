@@ -14,9 +14,12 @@ def inviteUserToEvent():
     if (not username):
         return Response("", status = 400)
     req = request.json
-    print(req)
+
     targetUser = req.get('targetuser')
     eventId = req.get('eventid')
+    if (not appUtils.sanitize({targetUser, eventId})):
+        return Response("", status = 400)
+
     if (targetUser != None and eventId != None):
         gateway.inviteToEvent(username, targetUser, eventId)
         return Response("", status = 200)
@@ -48,11 +51,17 @@ def friendRequest():
 
     req = request.json
     friend = req.get('friend')
+    accepted = req.get('accepted')
 
-    if (appUtils.sanitize({friend})):
+    print('moi!:', req)
+
+    if (appUtils.sanitize({friend, accepted})):
         if (len(friend) < 3):
             return Response("", status = 203)
-        gateway.newRelation(username, friend, 1)
+        if (int(accepted) == 1):
+            gateway.newRelation(username, friend, 1)
+        #else:
+        #   gateway.removeRelation(friend, username)
     return Response("", status = 200)
 
 @app.route("/api/user/friend/request", methods=['GET'])

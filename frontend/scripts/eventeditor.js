@@ -381,7 +381,8 @@ export default class EventEditor{
             created:info[4],
             timeout:info[5],
             optupper:info[6],
-            optlower:info[7]
+            optlower:info[7],
+            usergroupname:info[8]
         }
         this.readyForUpdate = false
         document.getElementById('eventupdatebutton').disabled = true
@@ -399,6 +400,15 @@ export default class EventEditor{
         } else {
             utils.setVisibility('eventeditoradminpanel', 'none')
         }
+
+        if (eventInfo.usergroup == -1) {
+            utils.setVisibility('eventeditorinviter', 'block')
+            utils.setInnerHTML('eventgroup', `Friends of ${responseBody.owner}`)
+        } else {
+            utils.setVisibility('eventeditorinviter', 'none')
+            utils.setInnerHTML('eventgroup', eventInfo.usergroupname)
+        }
+
         utils.setVisibility('eventeditorgamelabel', 'none')
         utils.setVisibility('eventeditorgameitem', 'none')
         utils.setVisibility('eventeditor', 'block')

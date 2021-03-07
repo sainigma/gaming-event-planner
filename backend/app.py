@@ -16,10 +16,9 @@ def index():
     return render_template("/index.html")
 
 if (__name__ == "__main__" ):
-    debug = os.getenv('DEBUG')
-    if (debug):
-        app.run(debug=True)
-    else:
-        app.run(debug=False)
+    debug = True
+    if (os.getenv('DEBUG') and os.getenv('DEBUG') == 0):
+        debug = False
+    app.run(debug=debug)
 
-from routes import userRoute, gameRoute, eventRoute, commentRoute, voteRoute
+from routes import userRoute, gameRoute, eventRoute, commentRoute, voteRoute, groupRoute

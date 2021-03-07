@@ -21,7 +21,7 @@ const init = async() => {
     window.clear = clear
     window.setBlocker = setBlocker
 
-    const siteList = ['frontpage', 'login', 'eventcreator', 'eventeditor', 'newuser', 'addFriend']
+    const siteList = ['frontpage', 'login', 'eventcreator', 'eventeditor', 'newuser', 'addFriend', 'joinGroup']
     container = document.getElementById("container")
     container.innerHTML = ""
 

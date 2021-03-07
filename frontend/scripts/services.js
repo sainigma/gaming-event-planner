@@ -36,10 +36,7 @@ export default class Services{
         const data = form instanceof FormData ? form : new FormData(form)
         const formJSON = Object.fromEntries(data.entries())
         const result = await window.services.post(target, formJSON)
-        if (result.target.status == 200) {
-            next(true)
-        }
-        next(false)
+        next(result.target.status)
     }
 
     setHeader(tag, content) {
