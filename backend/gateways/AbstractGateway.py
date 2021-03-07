@@ -166,9 +166,9 @@ class AbstractGateway:
     def searchUsers(self, searchstring, username):
         users = self.queries['users'].find(searchstring, username)
         return self.mapResult(users, ['id', 'name'])
-        # for i in range(0, len(users)):
-        #    users[i] = dict(zip(['id', 'name'], users[i]))
-        # return users
+
+    def updateEvent(self, username, eventId, description, date, optlower, optupper):
+        self.queries['events'].update(username, eventId, description, date, optlower, optupper)
 
     def newEvent(self, name, gameId, owner, groupId, ends):
         ownerId = self.queries['users']._getUserID(owner)

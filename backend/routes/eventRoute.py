@@ -48,7 +48,20 @@ def updateEvent():
         return Response("", status = 301)
     
     req = request.json
-    return Response("", status = 200)
+    eventId = req.get('eventId')
+    description = req.get('description')
+    ends = req.get('date')
+    optlower = req.get('optlower')
+    optupper = req.get('optupper')
+
+    etime = 0
+    if (appUtils.sanitize({ends})):
+        etime = appUtils.createDate(ends)
+
+    if (appUtils.sanitize({description, optlower, optupper, eventId}) and etime != None):
+        gateway.updateEvent(username, eventId, description, etime, optlower, optupper)
+        return Response("", status = 200)
+    return Response("", status = 400)
 
 @app.route("/api/event/all")
 def getEvents():

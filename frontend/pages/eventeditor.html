@@ -79,7 +79,7 @@
         <input type="range" name="optupper" min="5" max="10" class='dualslider-right' oninput="eventeditor.updateFormChanged()">
     </div>
     <div class="grid-nav">
-        <div class='grid-title'>Edit final event end date <input style='float:right' id='adminfinaldate' name='date' type='date' oninput="eventeditor.updateFormChanged()"></div></br>
+        <div class='grid-title'>Edit final event end date <input id='adminfinaldate' name='date' type='date' oninput="eventeditor.updateFormChanged()"></div></br>
         <div id="eventeditorinviter">
             <div class='grid-title'>Invite <input type="text" placeholder='find user, use * for all' oninput="eventeditor.setSearch(this.value)" onchange="eventeditor.searchUser(this)"></div>
             <div class='grid-item'><ul id="eventeditorinvitelist"></ul></div>

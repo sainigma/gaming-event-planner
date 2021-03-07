@@ -20,6 +20,7 @@ class Game(QueryInterface):
                 "cache":1
             }
         game = self.gameDB.getGame(gameId)
+        game['name'] = game.get('name').replace("'", "").replace('"', "")
         insertGame = "insert into games (id, name, slug, cover) values ({0}, '{1}', '{2}', '{3}')".format(int(game.get('id')), str(game.get('name')), str(game.get('slug')), str(game.get('cover')))
         self.executeQuery(insertGame)
         return(game)

@@ -19,6 +19,12 @@ class Event(QueryInterface):
         if (groupId != -1):
             self.sendMassInvites(eventId, groupId, ownerId)
 
+    def update(self, username, eventId, description, ends, optlower, optupper):
+        if (username != self.getOwner(eventId)):
+            return
+        query = "update events set description = '{0}', ends = {1}, optlower = {2}, optupper = {3} where id = {4}".format(str(description), int(ends), int(optlower), int(optupper), int(eventId))
+        self.executeQuery(query)
+
     def sendMassInvites(self, eventId, groupId, owner):
         query = "select userid from usergroupregister where usergroup = {0} and userid != {1}".format(int(groupId), int(owner))
         rows = self.executeQuery(query)

@@ -32,7 +32,7 @@ export default class EventEditor{
         }
         const data = new FormData(form)
         data.append('eventId', this.eventId)
-        services.sendForm(data, '/api/event/update', () => {})
+        services.sendForm(data, '/api/event/update', ()=>{this.update()})
     }
 
     updateFormChanged() {
@@ -397,6 +397,7 @@ export default class EventEditor{
 
         if (responseBody.owner === window.login.getUser()) {
             utils.setVisibility('eventeditoradminpanel', 'grid')
+            document.getElementById('adminfinaldate').value = this.getDateISOString(parseInt(this.endDate)*1000)
         } else {
             utils.setVisibility('eventeditoradminpanel', 'none')
         }

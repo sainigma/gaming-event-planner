@@ -55,7 +55,11 @@ Jos on tapahtuman luoja, käyttäjälle näkyy myös erillinen hallintapaneeli. 
 
 Pelipreferensseistä äänestäminen jäi toteuttamatta, mikä olisi ollut hyvä lisä tapahtumien suunnitteluun. Jos pelaajien pelitottumuksia voisi aggregoida, tapahtumien kutsuja voisi rajata vain tapahtuman pelistä kiinnostuneille. Vastaavasti tapahtumissa joissa pelistä äänestetään, äänestysvaihtoehtoja voisi rajata siten että saadaan tapahtumaan mahdollisimman laaja osallistujamäärä.
 
+Käyttäjillä ja ryhmillä pitäisi olla kokonaan omat näkymät, ja arkistoituihin tapahtumiin pitäisi pystyä pääsemään käsiksi. Ryhmäkutsuista kieltäytymistä ei voi tällä hetkellä perua, kuten ei voi myöskään liitoksia tapahtumiin, ryhmiin tai käyttäjiinkään.
+
 Sivun frontend alkaa jo olla vaikeasti ylläpidettävä, joten sen voisi uudelleentoteuttaa esimerkiksi reactilla. Sivun front- ja backendiin voisi myös lisätä tuen socketeille, jolloin muiden käyttäjien tekemiä muutoksia olisi helpompi päivittää muille yhdistäneille käyttäjille.
+
+Backendissä pitäisi toteuttaa yhteyksien poolaus nopeampia tietokantapyyntöjä varten. Myös puhdasta hylkäämistä tarkempi sanitointi pitäisi toteuttaa, esim htmlreplacespecialchars -tyylinen.
 
 ## Asennus
 
