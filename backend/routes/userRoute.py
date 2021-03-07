@@ -53,8 +53,6 @@ def friendRequest():
     friend = req.get('friend')
     accepted = req.get('accepted')
 
-    print('moi!:', req)
-
     if (appUtils.sanitize({friend, accepted})):
         if (len(friend) < 3):
             return Response("", status = 203)
@@ -102,8 +100,6 @@ def newuser():
     req = request.json
     username = req.get('username')
     password = req.get('password')
-
-    print(req)
 
     if (appUtils.sanitize({username, password})):
         token = gateway.newUser(username, password)

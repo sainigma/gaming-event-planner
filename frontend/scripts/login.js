@@ -42,7 +42,6 @@ export default class Login{
         this.setLoginDiv()
         const a = document.getElementById('login')
         const b = document.getElementById('newuser')
-        console.log(a, b)
         if (a != undefined && a.style.display != 'none') {
             toggleSite('login')
         }
@@ -154,7 +153,6 @@ export default class Login{
         const params = this.getLoginParams('newusername', "newpassword")
         const res = await services.post('/api/login/new', params)
         const success = this.completeLogin(res, params)
-        console.log(res, success)
         if (success) {
             state.set('login', true)
             this.setLoginDiv('newusersuccess')
@@ -185,7 +183,6 @@ export default class Login{
 
     completeLogin(res, params) {
         if (res.target.status == 200) {
-            console.log(res.target.response)
             let result = JSON.parse(res.target.response)
             const token = result['bearer']
 

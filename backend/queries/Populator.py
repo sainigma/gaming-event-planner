@@ -57,7 +57,6 @@ class Populator:
         else:
             if (os.getenv('SQL') and os.getenv('SQL') == 'sqlite'):
                 self.loadStructure()
-            print('production mode, population skipped')
 
     def createTable(self, key):
         table = self.structure['tables'][key]

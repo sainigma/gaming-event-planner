@@ -19,7 +19,6 @@ class PSQLGateway(AbstractGateway):
                 cursor.execute(query)
                 try:
                     rows = cursor.fetchall()
-                    print(cursor.statusmessage)
                 except psycopg2.ProgrammingError:
                     # poikkeus on tilanteita varten jossa insert palauttaa arvon
                     rows = []

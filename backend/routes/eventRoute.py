@@ -35,7 +35,6 @@ def newEvent():
     etime = 0
     if (appUtils.sanitize({ends})):
         etime = appUtils.createDate(ends)
-    print(etime)
 
     if (appUtils.sanitize({eventName, gameId, groupId}) and etime != None):
         gateway.newEvent(eventName, gameId, username, groupId, etime)
@@ -49,7 +48,6 @@ def updateEvent():
         return Response("", status = 301)
     
     req = request.json
-    print(req)
     return Response("", status = 200)
 
 @app.route("/api/event/all")

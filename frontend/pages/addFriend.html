@@ -1,5 +1,5 @@
 <div class="bigprompt friendprompt" id="friendprompt">
-    <form class='grid-container-small' style='width: 10em;' onsubmit='friends.friendRequest(this); return false;'>
+    <form class='grid-container-small' style='width: 10em;' onsubmit='friends.friendRequest(this, friends.friendRequestSent); return false;'>
         <div class='grid-title-big'>Send friend request</div>
         <input name='friend' id='friendrequestinput' class='commentfield grid-wide' placeholder="Enter to send" type="text">
         <input name='accepted' type='hidden' value='1'>

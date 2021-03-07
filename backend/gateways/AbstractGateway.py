@@ -38,8 +38,9 @@ class AbstractGateway:
         groups['my'] = self.queries['groups'].getOwnedGroups(userId)
         return groups
 
-    def sendGroupEventInvites(self, userId, groupId):
-        self.queries['events'].sendGroupEventInvites(userId, groupId)
+    def inviteToGroupEvents(self, userId, groupname):
+        groupId = self.queries['groups'].getGroupId(groupname)
+        self.queries['events'].inviteToGroupEvents(userId, groupId)
 
     def addToGroup(self, username, targetuser, targetgroup):
         userId = self.queries['users']._getUserID(username)
@@ -47,7 +48,7 @@ class AbstractGateway:
         success = self.queries['groups'].addToGroup(userId, targetUserId, targetgroup)
 
         if (success):
-            self.sendGroupEventInvites(targetUserId, targetgroup)
+            self.inviteToGroupEvents(targetUserId, targetgroup)
     
     #def removeGroupRequest(self, username, targetuser, group):
 
@@ -106,7 +107,6 @@ class AbstractGateway:
 
         result = []
         for date in dates:
-            print(dates[date])
             result.append({'date':date, 'hours':dates[date], 'overlapMax': datesMaxUsers[date], 'totalSharedHours':datesTotalHours[date]})
         result = sorted(result, key = lambda item: (-100000 * item['overlapMax'] - item['totalSharedHours']))
         return result
@@ -174,7 +174,7 @@ class AbstractGateway:
         ownerId = self.queries['users']._getUserID(owner)
         if (self.queries['users'].belongsToGroup(ownerId, groupId)):
             self.queries['events'].new(name, gameId, ownerId, groupId, ends)
-
+        
     def getEvent(self, eventId):
         event = {}
         event['owner'] = self.queries['events'].getOwner(eventId)

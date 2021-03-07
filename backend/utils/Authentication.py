@@ -20,5 +20,4 @@ class Authentication:
     def getUsername(self, token):
         decodedPayload = jwt.decode(token, self.secret, algorithms=["HS256"])
         username = decodedPayload.get('username')
-        print(username)
         return username

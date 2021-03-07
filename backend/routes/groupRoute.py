@@ -14,7 +14,6 @@ def joinGroup():
         return Response("", status = 400)
 
     if (targetGroup != None):
-        print(targetGroup)
         result = gateway.joinGroup(username, targetGroup)
         if (result):
             return Response("", status = 201)

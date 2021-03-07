@@ -30,18 +30,10 @@ def createDate(dateString):
         return None
 
 def containsEvil(content):
-    # muista tehdä kunnon tarkistus
-    if ';' in str(content):
+    # alkeellinen ratkaisu joka estää tiettyjen merkkien lähetyksen, erikoismerkkien korvaaminen htmlkoodilla olisi parempi
+    if ';' in str(content) or '<' in str(content) or "'" in str(content) or '"' in str(content):
         return True
     return False
-
-def replaceSpecialCharacters(params):
-    result = {}
-    for item in params:
-        if (isinstance(item, str)):
-            print(item)
-            # poista erikoismerkit
-    pass
 
 def sanitize(params):
     for item in params:

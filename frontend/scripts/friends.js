@@ -18,16 +18,16 @@ export default class Friends{
         }
     }
 
-    groupRequest(form) {
-        services.sendForm(form, "/api/group/request", friends.groupRequestSent)
+    groupRequest(form, next) {
+        services.sendForm(form, "/api/group/request", next)
     }
     
-    parseGroupRequest(form) {
-        services.sendForm(form, "/api/group/parserequest", friends.groupRequestSent)
+    parseGroupRequest(form, next) {
+        services.sendForm(form, "/api/group/parserequest", next)
     }
 
-    friendRequest(form) {
-        services.sendForm(form, "/api/user/friend/request", friends.friendRequestSent)
+    friendRequest(form, next) {
+        services.sendForm(form, "/api/user/friend/request", next)
     }
 
     spawnCategory(label) {
@@ -59,10 +59,9 @@ export default class Friends{
     
         if (res.target.status == 200) {
             const friendsList = JSON.parse(res.target.response)
-            console.log(friendsList)
             
             if (friendsList.length == 0) {
-                categoryContainer.innerHTML = 'no friends'
+                categoryContainer.innerHTML = 'no friends :('
             }
             
             const span = document.createElement('span')
@@ -195,6 +194,7 @@ export default class Friends{
                 form.append('group', request[1])
                 form.append('accepted', 1)
                 this.parseGroupRequest(form, ()=>{
+                    friends.groupRequestSent()
                     friends.rerender()
                 })
             }
@@ -205,6 +205,7 @@ export default class Friends{
                 form.append('group', request[1])
                 form.append('accepted', 0)
                 this.parseGroupRequest(form, ()=>{
+                    friends.groupRequestSent()
                     friends.rerender()
                 })
             }

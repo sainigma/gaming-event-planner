@@ -28,7 +28,6 @@ const init = async() => {
     blocker = document.getElementById("blocker")
     setBlocker(false)
 
-    console.log(siteList)
     sites = new Map()
     for (let i in siteList) {
         const site = siteList[i]
@@ -58,7 +57,6 @@ const getSite = async (label) => {
 const toggleSite = (label, forcedState) => {
     let site = sites.get(label)
     if (!site.ready) {
-        console.log(`loading ${label}..`)
         getSite(label)
     } else {
         site.visible = forcedState == undefined ? !site.visible : forcedState
@@ -150,7 +148,6 @@ const listEvents = async() => {
     } 
     if (div.children.length == 0) {
         const events = await JSON.parse(res.target.response)
-        console.log(events)
         listCategory('My events', events['my'])
 
         const b = document.createElement('button')
@@ -177,9 +174,7 @@ const clear = () => {
 }
 
 const render = () => {
-    console.log('Render')
     if (state.get('login') == true) {
-        console.log('login ok')
         listEvents()
         friends.listFriends()
         if (state.get('current') == 'eventeditor') {

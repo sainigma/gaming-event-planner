@@ -30,7 +30,6 @@ def voteDate():
         etime = appUtils.createDate(date)
 
     if (appUtils.sanitize(hours) and appUtils.sanitize(eventId) and etime != None):
-        print(hours)
         gateway.voteDate(username, eventId, date, hours)
         return Response("", status = 200)
     return Response("", status = 400)

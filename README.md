@@ -4,31 +4,58 @@
 
 - [Sisällysluettelo](#sisällysluettelo)
     - [Kuvaus](#kuvaus)
+    - [Käyttö](#käyttö)
+        - [Ryhmän luonti](#ryhmän-luonti,-siihen-liittyminen-ja-kaveripyynnöt)
+        - [Tapahtuman luonti](#tapahtuman-luonti)
+        - [Tapahtumakäyttöliittymä](#tapahtumakäyttöliittymä)
     - [Asennus](#asennus)
         - [Asennus ja ajo lokaalisti](#asennus-ja-ajo-lokaalisti)
         - [Asennus ja ajo Herokussa](#asennus-ja-ajo-herokussa)
-    - [Dokumentaatio](#dokumentaatio)
-        - [Perustoiminnallisuudet](#perustoiminnallisuudet)
-        - [Taulut](#taulut)
-        - [Jatkokehitys](#jatkokehitys)
-
+    - [Toiminnallisuudet](#toiminnallisuudet)
+    - [Taulut](#taulut)
 ## Kuvaus
 
 Websovellus peli-iltojen suunnitteluun. Sovelluksella voi sopia ryhmien kesken peliaikoja ja valita pelattavia pelejä.
 
-### Sovelluksen nykytilanne
-
-Sovelluksessa toimii tällä hetkellä kirjautuminen, tapahtumien luonti, käyttäjien kutsuminen tapahtumaan, tapahtumakutsun hyväksyminen, pelien haku tietokannasta sekä tapahtuman kommentointi.
-
-Testailua varten käyttäjä/salasanakombinaation voi tarkastaa [täältä](./backend/database/dummy.json). Tapahtumaan voi kutsua tällä hetkellä vain kaverilistalta. Koska kaverilistan laajentamiseen ei ole vielä käyttöliittymää, debugkäyttäjistä Alice ja Carol ovat asetettu valmiiksi kavereiksi.
-
-Kriittisiä puuttuvia ominaisuuksia tällä hetkellä ovat:
- - Kaverilista
- - Äänestyskäyttöliittymä peliehdotuksille
- - Admintyökalut tapahtumille
- - Ryhmien luonti (aika loppuu luult. kesken)
-
 Sovellusta voi testata [täällä](https://gaming-event-planner.herokuapp.com/).
+
+## Käyttö
+
+Sivun käyttäminen vaatii javascriptin päälläolon. Sivun käyttämisen voi aloittaa luomalla käyttäjän 'sign up' -napista.
+
+### Ryhmän luonti, siihen liittyminen ja kaveripyynnöt
+
+'My groups' -paneelissa on 'create or join group' -nappi. Tämän kautta voi sekä luoda ryhmiä että lähettää liittymispyyntöjä niihin. Jos ryhmän nimi on vapaa, ryhmä luodaan suoraan. Jos taas ryhmän nimi on jo käytössä, lähetetään ryhmään liittymispyyntö jonka ryhmän luojan pitää hyväksyä.
+
+Kaveripyyntöjen lähettäminen toimii samalla logiikalla. (dialogi ei herjaa jos pyynnön lähettää olemattomalle käyttäjälle, tämä on tietoinen valinta)
+
+Pyynnön hyväksyminen näkyy käyttöliittymässä refreshin jälkeen.
+
+### Tapahtuman luonti
+
+Tapahtumaa luodessa valitaan ensin, valitaanko tapahtuman peli suoraan vai annetaanko käyttäjien äänestää pelattavaa peliä. Jälkimmäistä ominaisuutta en ehtinyt toteuttaa loppuun, joten se on lukittuna käyttöliittymässä.
+
+Pelin valinnan jälkeen tapahtumalle valitaan nimi, päättymispäivä sekä käyttäjäryhmä. Päättymispäivä rajaa päiviä joille sopivia pelihetkiä voi ehdottaa, sekä poistaa tapahtuman käyttöliittymästä kun päivä saavutetaan.
+
+Käyttäjäryhmässä customryhmän valinta lähettää tapahtumasta kutsut kaikille ryhmään nyt tai myöhemmin kuuluville, kun taas 'friends' -ryhmän valitessa kutsut täytyy lähettää manuaalisesti.
+
+### Tapahtumakäyttöliittymä
+
+Sekä ryhmätapahtumakutsut, että manuaaliset kutsut ilmestyvät 'open invites' -paneeliin. Kutsun hyväksymisen jälkeen tapahtumasta syntyy painike tapahtumakäyttöliittymän avaamiseen, 'upcoming events' -paneeliin. Itse luodut tapahtumat taas siirtyy 'My events' -paneeliin.
+
+Tapahtumakäyttöliittymässä tavallinen käyttäjä pystyy lisäämään tapahtumaan kommentteja, sekä ilmoittamaan päiviä ja tunteja jolloin tapahtumaan osallistuminen sopisi.
+
+Ajankohtaäänestyksen saa auki 'date' -nappia painamalla. Käyttäjän lisättyä ensimmäisen ajankohdan, lisätty ajankohta syntyy käyttöliittymään painikkeena jolla voi nopeasti kopioida lisätyn päivämäärän lisäyskäyttöliittymään, päivien lisäilyn nopeuttamiseen.
+
+Ajankohtaäänestykset päivittyy 'overlapping dates' -paneeliin, joka näyttää top-5 parasta ajankohtaa tapahtumalle päivän tunneiksi jaettuna heatmappina. Mitä kirkkaampi vihreä heatmapissa, sitä useampi käyttäjä on äänestänyt kyseistä ajankohtaa sopivaksi. Top-5 listan järjestelyperuste on 1) järjestely suurimman osallistujamäärän mukaan päällekäisissä ajankohdissa, 2) järjestely ihmistuntien mukaan per päivä.
+
+Jos on tapahtuman luoja, käyttäjälle näkyy myös erillinen hallintapaneeli. Hallintapaneelista pystyy muuttamaan tapahtuman kuvausta ja päättymispäivää (sekä suodatinta joka rajaa tapahtuman näkyvyyttä käyttäjille peliäänestysten perusteella, tämä ominaisuus on vielä toteuttamatta). Hallintapaneeliin avautuu myös näkymä käyttäjien kutsumiseen kaverilistalta, jos tapahtuman ryhmäksi on asetettu 'friends'.
+
+## Jatkokehitys
+
+Pelipreferensseistä äänestäminen jäi toteuttamatta, mikä olisi ollut hyvä lisä tapahtumien suunnitteluun. Jos pelaajien pelitottumuksia voisi aggregoida, tapahtumien kutsuja voisi rajata vain tapahtuman pelistä kiinnostuneille. Vastaavasti tapahtumissa joissa pelistä äänestetään, äänestysvaihtoehtoja voisi rajata siten että saadaan tapahtumaan mahdollisimman laaja osallistujamäärä.
+
+Sivun frontend alkaa jo olla vaikeasti ylläpidettävä, joten sen voisi uudelleentoteuttaa esimerkiksi reactilla. Sivun front- ja backendiin voisi myös lisätä tuen socketeille, jolloin muiden käyttäjien tekemiä muutoksia olisi helpompi päivittää muille yhdistäneille käyttäjille.
 
 ## Asennus
 
@@ -41,15 +68,25 @@ Lataa repositorio ja siirry sen juureen
 
 Luo ja säädä .env tiedosto, joka sijaitsee polussa /gaming-event-planner/backend/:in juuressa. Sovelluksen ajaminen vaatii todennuksen Internet Games Databasen rajapintaan. [Ohjeet IGDB authin hakemiseen](https://api-docs.igdb.com/#about).
 
-    echo SECRET=salasanaTähän >> ./backend/.env
-    echo IGDBID=IGDBidTähän >> ./backend/.env
-    echo IGDBKEY=IGDBavainTähän >> ./backend/.env
-    echo SQL=sqlite >> ./backend/.env
+.env tiedoston rakenne:
+
+    SECRET=salaisuusTähän
+    DATABASE_URL=postgresql://jne
+    SQL=psql
+    DEBUG=0
+    IGDBID=igdbidtähän
+    IGDBKEY=igdbavaintähän
+
+SQL muuttujan ollessa sqlite, sovellus ajetaan sqlite3:lla, jolloin sovellusta voi ajaa ilman postgresql-asennusta. Debug muuttujan ollessa 1, sovelluksen tietokantapyynnöt logataan komentolinjalle. SQL muuttujan ollessa sqlite ja Debug muuttujan ollessa 1, sovellus täyttää tietokannan dummy-arvoilla jotka on määritetty [täällä](./backend/database/dummy.db).
+
+Jos käytät sovelluksessa postgresql -tietokantaa, määritä sen yhdistysosoite .env-muuttujaan.
 
 Anna ajoskriptalle ajo-oikeudet ja aja se:
 
     chmod +x ./backend/run.sh
     ./backend/run.sh
+
+Jos käyttöön määritetty tietokanta on sqlite, sen sisältö poistetaan kun sovelluksen ajo päättyy.
 
 ### Asennus ja ajo Herokussa
 
@@ -60,28 +97,31 @@ Lataa repositorio, mene sen juureen, luo sille herokuappi ja liitä sen remote p
     heroku create apps:create sovelluksennimi
     heroku git:remote -a sovelluksennimi
 
+Asenna postgresql addon herokuun ja lisää schema:
+
+    heroku addons:create heroku-postgresql
+    heroku psql < ./backend/schema.sql
+
 Määritä ympäristömuuttujat:
 
-    heroku config:set SECRET=salasanatähän
+    heroku config:set SECRET=salaisuustähän
     heroku config:set IGDBID=idtähän
     heroku config:set IGDBKEY=avaintähän
-    heroku config:set SQL=tietokanta <- sqlite tai psql, toistaiseksi vain ensimmäinen tuettuna
+    heroku config:set SQL=psql
+    heroku config:set DEBUG=0
 
 Pushaa projekti herokuun:
 
-    git push heroku HEAD:master    
+    git push heroku HEAD:master
 
-## Dokumentaatio
-
-### Perustoiminnallisuudet
+## Toiminnallisuudet
 
 - Käyttäjien luonti, kirjautuminen, keksillä kirjautuminen
 - Käyttäjäryhmät, ryhmäoikeudet
 - Käyttäjärelaatiot
-- Tapahtumat voivat olla ryhmäkohtaisia tai julkisia
+- Tapahtumia voi järjestää ryhmille tai kavereille
 - Tapahtumat ovat aktiivisia rajallisen aikaa
-- Tapahtumaan voi liittyä viestiketju
-    - Viestien replyhaarautuminen
+- Tapahtumassa on viestiketju
 - Tapahtumia voi suunnitella joko peli- tai käyttäjävetoisesti
     - Pelivetoisessa tapahtumasuunnittelussa tapahtuman luoja ohittaa pelistä äänestyksen, ja kutsun tapahtumaan voi lähettää vain käyttäjille jotka eivät ole opt-outanneet kyseisen pelin pelaamisesta
     - Käyttäjävetoisessa tapahtumasuunnittelussa tapahtumaan voi valita pelin vain peleistä joista tapahtumaan kutsutut käyttäjät eivät ole opt-outanneet
@@ -93,9 +133,9 @@ Pushaa projekti herokuun:
     - Käyttäjien kutsuminen
     - (jos käyttäjävetoinen suunnittelu) Pelattavasta pelistä äänestys
     - Peliajasta äänestys
-    - Tapahtuman epäaktivoituminen ja arkistointi (joko manuaalisesti tai ajan perusteella)
+    - Tapahtuman epäaktivoituminen ja arkistointi
 
-### Taulut
+## Taulut
 
 - Käyttäjät
     - id
@@ -131,10 +171,8 @@ Opt-out mekanismin kannalta oletan että pelin pelaamishalukkuudella ja taitotas
 - Pelit
     - id
     - nimi
-    - GiantBomb id
+    - IGDB id
     - cachetettu sisältö
-
-Pelaajien maksimimäärä olisi nice-to-have ominaisuus pelien filtteröintiin, tätä tietoa ei vaan saa suoraan ulos giantbombin apista/määritelmä hämärtyy entisestään kun ottaa huomioon että peleissä pelaajamäärät vaihtelee pelimuodon mukaan
 
 - Tapahtumat
     - id
@@ -183,17 +221,3 @@ Jos käyttäjä peruu/hyväksyy kutsun tapahtumaan, kutsu poistetaan taulusta. H
     - kuitattu
 
 Jäsenyys vaatii kutsujan ja kuittauksen. Jos käyttäjä hakee ryhmän jäsenyyttä, jäsenyys vaatii "kutsun" moderaattorilta tai adminilta. Jos käyttäjä kutsutaan ryhmään, jäsenyys vaatii kuittauksen käyttäjältä. Käyttäjäryhmät 0 = jäsen, 1 = moderaattori, 2 = admin
-
-- Discordkäyttäjät
-    - discord id
-    - käyttäjä id
-    - discord tili tunnistettu
-
-- Discordkanavat
-    - ryhmän id
-    - kanavan nimi
-    - tapahtuman id
-
-### Jatkokehitys
-
-Web-käyttöliittymän tueksi discord-botti, jolla voi päivittää kanaville/käyttäjille tapahtumasuunnittelun ja äänestyksien etenemistä.
